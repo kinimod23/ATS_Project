@@ -7,7 +7,8 @@
 
 # Milestones and shedule
 - determine if the hypothesis of comparibatility of complex and simplified syntax trees is correct
-  - Find and use the "best" available Parser to create Syntax trees out of the data
+  - create Syntax trees out of the data
+  - evaluate some example sentences manually
 - Find a good representation of syntax trees in the literature
 - Modify an existing ByteNet implementation to take the new input and visualize in Tensorboard
 - Organise the data such that an encoder can be trained properly
