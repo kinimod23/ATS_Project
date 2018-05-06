@@ -1,0 +1,1868 @@
+(ROOT
+  (S
+    (NP (PRP He))
+    (VP (VBD died)
+      (PP (IN in)
+        (NP (CD 999))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (NNP Gingerbread))
+    (VP (VBD was)
+      (VP (VBN brought)
+        (PP (TO to)
+          (NP
+            (NP (NNP Europe))
+            (PP (IN in)
+              (NP (CD 992)))))
+        (PP (IN by)
+          (NP
+            (NP (DT the) (JJ Armenian) (NN monk) (NNP Gregory))
+            (PP (IN of)
+              (NP
+                (NP
+                  (NP (NNP Nicopolis))
+                  (PRN (-LRB- -LRB-)
+                    (NP (NNP Gregory) (NNP Makar))
+                    (-RRB- -RRB-)))
+                (PRN (-LRB- -LRB-)
+                  (NP (NNP Grégoire) (NNP de) (NNP Nicopolis))
+                  (-RRB- -RRB-))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (PRP It))
+    (VP (VBD was)
+      (NP (DT the) (NN custom)
+        (S
+          (VP (TO to)
+            (VP
+              (VP (VB bake)
+                (NP (JJ white) (NNS biscuits)))
+              (CC and)
+              (VP (VB paint)
+                (NP (PRP them))
+                (PP (IN as)
+                  (NP (NN window) (NNS decorations)))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (PP (IN During)
+      (NP (DT the) (JJ 13th) (NN century)))
+    (, ,)
+    (NP (NN gingerbread))
+    (VP (VBD was)
+      (VP (VBN brought)
+        (PP (TO to)
+          (NP (NNP Sweden)))
+        (PP (IN by)
+          (NP (JJ German) (NNS immigrants)))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (PRP It))
+    (ADVP (RB then))
+    (VP (VBD referred)
+      (PP (TO to)
+        (NP
+          (NP (DT a) (NN confection))
+          (VP (VBN made)
+            (PP (IN with)
+              (NP (NN honey)
+                (CC and)
+                (NNS spices)))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (DT The) (JJ first) (VBN documented) (NN trade))
+      (PP (IN of)
+        (NP (JJ gingerbread) (NNS biscuits))))
+    (VP (VBZ dates)
+      (PP (TO to)
+        (NP
+          (NP (DT the) (JJ 17th) (NN century))
+          (, ,)
+          (SBAR
+            (WHADVP (WRB where))
+            (S
+              (NP (PRP they))
+              (VP (VBD were)
+                (VP (VBN sold)
+                  (PP (IN in)
+                    (NP (NNS monasteries) (, ,) (NNS pharmacies)
+                      (CC and)
+                      (NN town) (NN square) (NNS farmers) ('' ') (NNS markets))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (PRP He))
+    (VP (VBD left)
+      (NP (NNP Nicopolis) (NNP Pompeii))
+      (, ,)
+      (S
+        (VP (TO to)
+          (VP (VB live)
+            (PP (IN in)
+              (NP
+                (NP (NNP Bondaroy))
+                (PRN (-LRB- -LRB-)
+                  (NP (NNP France))
+                  (-RRB- -RRB-))
+                (, ,)
+                (PP (IN near)
+                  (NP
+                    (NP (DT the) (NN town))
+                    (PP (IN of)
+                      (NP (NNP Pithiviers)))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (ADVP (RB Originally))
+    (, ,)
+    (NP
+      (NP (DT the) (NN term) (NN gingerbread))
+      (PRN (-LRB- -LRB-)
+        (PP (IN from)
+          (NP
+            (NP (JJ Latin) (NN zingiber))
+            (PP (IN via)
+              (NP (JJ Old) (JJ French) (NNS gingebras)))))
+        (-RRB- -RRB-)))
+    (VP (VBD referred)
+      (S
+        (VP (TO to)
+          (VP (VB preserved)
+            (NP (NN ginger))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (RB Early) (NNS references))
+      (PP (IN from)
+        (NP (DT the) (NNP Vadstena) (NNP Abbey))))
+    (VP (VBP show)
+      (SBAR
+        (WHADVP (WRB how))
+        (S
+          (NP (DT the) (JJ Swedish) (NNS nuns))
+          (VP (VBD were)
+            (VP (VBG baking)
+              (ADJP (JJ gingerbread)
+                (S
+                  (VP (TO to)
+                    (VP (VB ease)
+                      (NP (NN indigestion))
+                      (PP (IN in)
+                        (NP (CD 1444))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (PP (IN Under)
+      (NP
+        (NP (NNS conditions))
+        (PP (IN of)
+          (NP (JJ high) (NN humidity)))))
+    (, ,)
+    (NP
+      (NP (DT the) (NN rate))
+      (PP (IN of)
+        (NP
+          (NP (NN evaporation))
+          (PP (IN of)
+            (NP
+              (NP (NN sweat))
+              (PP (IN from)
+                (NP (DT the) (NN skin))))))))
+    (VP (VBZ decreases))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (NNP Frederick))
+    (VP (VBD married)
+      (NP
+        (NP (NNP Princess) (NNP Victoria))
+        (, ,)
+        (NP
+          (NP (JJ eldest) (NN daughter))
+          (PP (IN of)
+            (NP
+              (NP (NNP Queen) (NNP Victoria))
+              (PP (IN of)
+                (NP (DT the) (NNP United) (NNP Kingdom))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (DT The) (NN son))
+      (PP (IN of)
+        (NP (DT a) (NN photocopier) (NN technician))))
+    (PRN (, ,)
+      (S
+        (NP (PRP he))
+        (VP (VBN trained)
+          (PP (IN as)
+            (NP (DT a) (NN butcher)))))
+      (, ,))
+    (VP (CC but)
+      (VP (VBD became)
+        (ADJP (VBN involved))
+        (PP (IN in)
+          (NP (NNS graffiti)))
+        (PP (IN during)
+          (NP
+            (NP (DT the) (JJ great) (NNP Bristol) (NN aerosol) (NN boom))
+            (PP (IN of)
+              (NP (DT the) (JJ late) (NNS 1980s)))))))
+    (. .) ('' '')))
+
+(ROOT
+  (S
+    (NP (DT The) (NN film))
+    (VP (VBD was)
+      (VP (VBN released)
+        (PP (IN in)
+          (NP
+            (NP (DT the) (NNP UK))
+            (PP (IN on)
+              (NP (CD 5)))))
+        (NP (NNP March) (CD 2010))))
+    (. .)))
+
+(ROOT
+  (S
+    (PP (IN In)
+      (NP (NNP January) (CD 2011)))
+    (, ,)
+    (NP (PRP he))
+    (VP (VBD was)
+      (VP (VBN nominated)
+        (PP (IN for)
+          (NP (DT the) (NNP Academy) (NN Award)))
+        (PP (IN for)
+          (NP
+            (NP (NNP Best) (NNP Documentary))
+            (PP (IN for)
+              (NP (DT the) (NN film)))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (NNP Banksy) (POS 's))
+      (JJ first) (NN film))
+    (, ,)
+    (PP
+      (NP (NN Exit))
+      (IN Through)
+      (NP (DT the) (NN Gift)))
+    (NP
+      (NP (NNP Shop))
+      (, ,)
+      (VP (VBN billed)
+        (PP (IN as) (`` ``)
+          (NP
+            (NP (DT the) (NN world) (POS 's))
+            (JJ first) (NN street) (NN art) (NN disaster) (NN movie))
+          ('' '')))
+      (, ,))
+    (VP (VBD made)
+      (NP (PRP$ its) (NN debut))
+      (PP (IN at)
+        (NP (DT the) (CD 2010) (NNP Sundance) (NNP Film) (NNP Festival))))
+    (. .)))
+
+(ROOT
+  (S
+    (PP (VBG According)
+      (PP (TO to)
+        (NP
+          (NP
+            (NP (NN author))
+            (CC and)
+            (NP (JJ graphic) (NN designer) (NNP Tristan) (NNP Manco)))
+          (CC and)
+          (NP
+            (NP (DT the) (NN book))
+            (NP (NNP Home) (NNP Sweet) (NNP Home))))))
+    (, ,)
+    (NP (NNP Banksy))
+    (VP (`` ``)
+      (VP (VBD was)
+        (VP (VBN born)
+          (PP (IN in)
+            (NP (CD 1974)))))
+      (CC and)
+      (VP (VBD raised)
+        (PP (IN in)
+          (NP (NNP Bristol) (, ,) (NNP England)))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (NNP Banksy) (POS 's))
+      (NN work))
+    (VP (VBD was)
+      (VP (VBN made)
+        (PRT (RP up))
+        (PP (IN of)
+          (NP
+            (NP (DT the) (NNP Bristol) (JJ underground) (NN scene))
+            (SBAR
+              (WHNP (WDT which))
+              (S
+                (VP (VBD involved)
+                  (NP
+                    (NP (NNS collaborations))
+                    (PP (IN between)
+                      (NP (NNS artists)
+                        (CC and)
+                        (NNS musicians)))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (S
+      (ADVP (RB Banksy))
+      (VP (VBZ does) (RB not)
+        (VP (VB sell)
+          (NP
+            (NP (NNS photographs)
+              (CC or)
+              (NNS reproductions))
+            (PP (IN of)
+              (NP (PRP$ his) (NN street) (NNS graffiti)))))))
+    (, ,)
+    (ADVP (RB however))
+    (, ,)
+    (NP (NN art) (NNS auctioneers))
+    (VP (VBP have)
+      (VP (VBN been)
+        (VP (VBN known)
+          (S
+            (VP (TO to)
+              (VP (VB attempt)
+                (S
+                  (VP (TO to)
+                    (VP
+                      (VP (VB sell)
+                        (NP (PRP$ his) (NN street) (NN art))
+                        (PP (IN on)
+                          (NP (NN location))))
+                      (CC and)
+                      (VP (VB leave)
+                        (NP
+                          (NP (DT the) (NN problem))
+                          (PP (IN of)
+                            (NP (PRP$ its) (NN removal))))
+                        (PP (IN in)
+                          (NP
+                            (NP (DT the) (NNS hands))
+                            (PP (IN of)
+                              (NP (DT the) (VBG winning) (NN bidder)))))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (PRP$ His) (JJ satirical) (NN street) (NN art))
+      (CC and)
+      (NP (JJ subversive) (NNS epigrams)))
+    (VP (VBP combine)
+      (NP (JJ dark) (NN humor))
+      (PP (IN with)
+        (NP
+          (NP (NNS graffiti))
+          (VP (VBN executed)
+            (PP (IN in)
+              (NP (DT a) (JJ distinctive) (NN stencilling) (NN technique)))))))
+    (. .)))
+
+(ROOT
+  (S
+    (S
+      (VP (VBN Known)
+        (PP (IN for)
+          (NP
+            (NP (PRP$ his) (NN contempt))
+            (PP (IN for)
+              (NP (DT the) (NN government)))))
+        (PP (IN in)
+          (S
+            (VP (VBG labeling)
+              (NP (NNS graffiti))
+              (PP (IN as)
+                (NP (NN vandalism))))))))
+    (, ,)
+    (NP (NNP Banksy))
+    (VP (VBZ displays)
+      (NP (PRP$ his) (NN art))
+      (PP (IN on)
+        (NP
+          (NP
+            (ADJP (RB publicly) (JJ visible))
+            (NNS surfaces))
+          (PP (JJ such) (IN as)
+            (NP (NNS walls)))))
+      (, ,)
+      (S
+        (ADVP (RB even))
+        (VP (VBG going)
+          (ADVP (RB as) (RB far) (RB as))
+          (S
+            (VP (TO to)
+              (VP (VB build)
+                (NP (JJ physical) (JJ prop) (NNS pieces))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (NNS Observers))
+    (VP (VBP have)
+      (VP (VBN noted)
+        (SBAR (IN that)
+          (S
+            (NP (PRP$ his) (NN style))
+            (VP (VBZ is)
+              (ADJP (JJ similar)
+                (PP (TO to)
+                  (NP
+                    (NP (NNP Blek) (FW le) (NNP Rat))
+                    (, ,)
+                    (SBAR
+                      (WHNP (WP who))
+                      (S
+                        (VP (VBD began)
+                          (S
+                            (VP (TO to)
+                              (VP (VB work)
+                                (PP (IN with)
+                                  (NP
+                                    (NP (NNS stencils))
+                                    (PP (IN in)
+                                      (NP (CD 1981)))))
+                                (PP (IN in)
+                                  (NP (NNP Paris)))))))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (JJ Such) (JJ artistic) (NNS works))
+      (PP (IN of)
+        (NP (JJ political)
+          (CC and)
+          (JJ social) (NN commentary))))
+    (VP (VBP have)
+      (VP (VBN been)
+        (VP (VBN featured)
+          (PP (IN on)
+            (NP
+              (NP (NNS streets))
+              (, ,)
+              (NP (NNS walls))
+              (, ,)
+              (CC and)
+              (NP
+                (NP (NNS bridges))
+                (PP (IN of)
+                  (NP (NNS cities))))))
+          (PP (IN throughout)
+            (NP (DT the) (NN world))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (NNP Water))
+      (VP (VBG flowing)
+        (PRT (RP out))
+        (PP (IN of)
+          (NP (NNS bogs)))))
+    (VP (VBZ has)
+      (NP
+        (NP (DT a) (JJ characteristic) (JJ brown) (NN color))
+        (, ,)
+        (SBAR
+          (WHNP (WDT which))
+          (S
+            (VP (VBZ comes)
+              (PP (IN from)
+                (NP (JJ dissolved) (NN peat) (NNS tannins))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (S
+      (PP (IN In)
+        (NP (NN general)))
+      (NP
+        (NP (DT the) (JJ low) (NN fertility))
+        (CC and)
+        (NP (JJ cool) (NN climate)))
+      (VP (VBZ results)
+        (PP (IN in)
+          (NP
+            (ADJP (RB relatively) (JJ slow))
+            (NN plant) (NN growth)))))
+    (, ,)
+    (CC but)
+    (S
+      (NP (NN decay))
+      (VP (VBZ is)
+        (ADJP (RB even) (JJR slower))
+        (S
+          (VP (VBG owing)
+            (PP (TO to)
+              (NP (DT the) (JJ saturated) (NN soil)))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (PRP It))
+    (VP (VBZ is)
+      (NP
+        (NP (CD one))
+        (PP (IN of)
+          (NP
+            (NP (DT the) (CD four) (JJ main) (NNS types))
+            (PP (IN of)
+              (NP (NNS wetlands)))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (NNS Bogs))
+    (VP
+      (VP (VBP have)
+        (NP
+          (NP (JJ distinctive) (NNS assemblages))
+          (PP (IN of)
+            (NP (NN plant)
+              (CC and)
+              (NN animal) (NNS species)))))
+      (CC and)
+      (VP (VBP are)
+        (PP
+          (PP (IN of)
+            (NP
+              (NP (JJ high) (NN importance))
+              (PP (IN for)
+                (NP (NN biodiversity)))))
+          (, ,) (RB particularly)
+          (PP (IN in)
+            (NP
+              (NP (NNS landscapes))
+              (SBAR
+                (WHNP (WDT that))
+                (S
+                  (VP (VBP are)
+                    (ADVP (RB otherwise))
+                    (VP (VBN settled)
+                      (CC and)
+                      (VBN farmed))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (NNS Bogs))
+    (VP (VBP occur)
+      (SBAR
+        (WHADVP (WRB where))
+        (S
+          (NP
+            (NP (DT the) (NN water))
+            (PP (IN at)
+              (NP (DT the) (NN ground) (NN surface))))
+          (VP (VBZ is)
+            (ADJP (JJ acidic)
+              (CC and)
+              (JJ low))
+            (PP (IN in)
+              (NP (NNS nutrients)))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (JJ Large) (NNS areas))
+      (PP (IN of)
+        (NP (NN landscape))))
+    (VP (MD can)
+      (VP (VB be)
+        (VP (VBN covered)
+          (NP (JJ many) (NNS metres))
+          (ADVP (RB deep))
+          (PP (IN in)
+            (NP (NN peat))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (PRP They))
+    (VP (VBP are)
+      (ADVP (RB frequently))
+      (VP (VBN covered)
+        (PP (IN in)
+          (NP
+            (NP (JJ ericaceous) (NNS shrubs))
+            (VP (VBN rooted)
+              (PP (IN in)
+                (NP
+                  (NP (DT the) (NN sphagnum))
+                  (ADJP (JJ moss)
+                    (CC and)
+                    (JJ peat)))))))))
+    (. .)))
+
+(ROOT
+  (NP
+    (NP (DT The) (JJ gradual) (NN accumulation))
+    (PP (IN of)
+      (NP
+        (NP (JJ decayed) (NN plant) (NN material))
+        (PP (IN in)
+          (NP (DT a) (NN bog) (NNS functions)))))
+    (PP (IN as)
+      (NP (DT a) (NN carbon) (NN sink)))
+    (. .)))
+
+(ROOT
+  (S
+    (S
+      (NP
+        (NP (JJ Other) (NNS names))
+        (PP (IN for)
+          (NP (NNS bogs))))
+      (VP (VBP include)
+        (NP (NN mire) (, ,) (NN quagmire)
+          (CC and)
+          (NN muskeg))))
+    (: ;)
+    (S
+      (NP (JJ alkaline) (NNS mires))
+      (VP (VBP are)
+        (VP (VBN called)
+          (NP (NNS fens)))))
+    (. .)))
+
+(ROOT
+  (S
+    (ADVP (RB Hence))
+    (NP (NN peat))
+    (VP (VBZ accumulates))
+    (. .)))
+
+(ROOT
+  (S
+    (S
+      (NP (DT A) (NN bog))
+      (VP (VBZ is)
+        (NP
+          (NP (DT a) (NN mire))
+          (SBAR
+            (WHNP (WDT that))
+            (S
+              (VP (VBZ accumulates)
+                (NP
+                  (NP (NN peat))
+                  (, ,)
+                  (NP
+                    (NP (DT a) (NN deposit))
+                    (PP (IN of)
+                      (NP (JJ dead) (NN plant) (NN material-often) (NNS mosses)))))))))))
+    (, ,)
+    (CC and)
+    (S
+      (PP (IN in)
+        (NP
+          (NP (DT a) (NN majority))
+          (PP (IN of)
+            (NP (NNS cases)))))
+      (, ,)
+      (NP (NN sphagnum))
+      (VP (VBZ moss)))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (DT This))
+    (VP (VBZ is)
+      (VP (VBN achieved)
+        (PP (IN by)
+          (S
+            (VP (VBG increasing)
+              (NP
+                (NP (DT the) (NN formation))
+                (PP (IN of)
+                  (NP
+                    (NP (JJ adenosine) (NN triphosphate))
+                    (PRN (-LRB- -LRB-)
+                      (NP (NNP ATP))
+                      (-RRB- -RRB-))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (NNP Creatine))
+    (VP (VBZ is) (RB not)
+      (NP (DT an) (JJ essential) (NN nutrient))
+      (, ,)
+      (SBAR (IN as)
+        (S
+          (NP (PRP it))
+          (VP (VBZ is)
+            (VP (VBN manufactured)
+              (PP (IN in)
+                (NP
+                  (NP (DT the) (JJ human) (NN body))
+                  (PP (IN from)
+                    (NP (NNP L-arginine) (, ,) (NNP glycine) (, ,)
+                      (CC and)
+                      (NNP L-methionine))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (EX There))
+    (VP (VBP are)
+      (NP (JJR fewer) (JJ other) (NNS expatriates))
+      (PP (IN than) (IN in)
+        (NP
+          (NP (DT the) (JJR larger) (NNS centers))
+          (PP (IN of)
+            (NP (NNP Abu) (NNP Dhabi)
+              (CC and)
+              (NNP Dubai))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (NNP Social))
+      (CC and)
+      (NP (JJ governmental) (NN infrastructure)))
+    (VP (VBZ includes)
+      (S
+        (NP
+          (NP (NNP United) (NNP Arab) (NNPS Emirates) (NNP University))
+          (, ,)
+          (NP
+            (NP (JJR Higher) (NNS Colleges))
+            (PP (IN of)
+              (NP
+                (NP (NNP Technology) (, ,) (NNP Abu) (NNP Dhabi) (NNP University))
+                (PRN (-LRB- -LRB-)
+                  (NP (NNP Al) (NNP Ain) (NNP campus))
+                  (-RRB- -RRB-)))))
+          (, ,))
+        (NP
+          (NP (JJ well-equipped) (JJ medical) (NNS facilities))
+          (PP (VBG including)
+            (NP
+              (NP (DT the) (NN teaching) (NN hospital))
+              (PP (IN at)
+                (NP
+                  (NP (NNP Tawam))
+                  (, ,)
+                  (NP (JJ military) (NN training) (NNS areas))
+                  (CC and)
+                  (NP (NNP Al) (NNP Ain) (NNP International) (NNP Airport)))))))))
+    (. .)))
+
+(ROOT
+  (NP
+    (NP (NNP Al))
+    (: -) (`` `)
+    (S
+      (NP (NNP Ain))
+      (VP (VBZ is)
+        (ADVP (RB often))
+        (VP (VBN called)
+          (NP
+            (NP (DT the) (`` `) (NNP Garden) (NNP City))
+            (PP (IN of)
+              (NP
+                (NP (DT The)
+                  (NX (NNP Gulf) (POS ')))
+                (VP (VBN given)
+                  (NP
+                    (NP (DT the) (JJ many) (NNS oases))
+                    (, ,)
+                    (NP (NNS parks))
+                    (, ,)
+                    (NP (JJ tree-lined) (NNS avenues))
+                    (CC and)
+                    (NP (JJ decorative) (NNS roundabouts)))
+                  (PP (IN within)
+                    (NP (DT the) (NN city))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (DT The) (JJ dry) (NN desert) (NN air))
+    (VP (VBZ makes)
+      (S
+        (NP (PRP it))
+        (NP
+          (NP (DT a) (JJ welcome) (NN retreat))
+          (PP (IN from)
+            (NP
+              (NP (DT the) (JJ coastal) (NN humidity))
+              (PP (IN of)
+                (NP (DT the) (JJR larger) (NNS cities))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (DT The) (NN city))
+    (VP (VBZ is)
+      (ADVP (RB home))
+      (PP (TO to)
+        (NP
+          (NP (DT the) (JJ successful) (NN football) (NN club))
+          (, ,)
+          (NP (NNP Al) (NNP Ain) (NNP Club)))))
+    (. .)))
+
+(ROOT
+  (S
+    (S
+      (NP (JJ Other) (NNS attractions))
+      (VP (VBP include)
+        (NP
+          (NP (DT the) (NNP Al) (NNP Ain) (NNP Oasis))
+          (PP (IN in)
+            (NP (DT the) (NN city) (NN center))))))
+    (, ,)
+    (NP (JJ other) (NNS oases))
+    (VP (VBD dotted)
+      (PP (IN around)
+        (NP
+          (NP
+            (NP (DT the) (NN area))
+            (: -)
+            (NP
+              (NP
+                (NP (DT all) (JJ cool) (NNS retreats))
+                (PP (IN in)
+                  (NP
+                    (NP (DT the) (NN middle))
+                    (PP (IN of)
+                      (NP (DT the) (NN summer) (NN heat))))))
+              (: -)
+              (NP
+                (NP (NNP Al) (NNP Ain) (NNP Zoo))
+                (, ,)
+                (NP
+                  (NP (DT an) (NN amusement) (NN park))
+                  (VP (VBN named)
+                    (S (`` ``)
+                      (NP (NNP Hili) (NNP Fun) (NNP City))
+                      ('' '')))))))
+          (, ,)
+          (NP
+            (NP (JJ many) (JJ well-maintained) (NNS parks))
+            (NP
+              (ADJP (JJ popular)
+                (PP (IN with)
+                  (NP
+                    (NP (NNS families))
+                    (PP (IN in)
+                      (NP (DT the) (NN summer))))))
+              (NNS evenings)))
+          (, ,)
+          (CC and)
+          (NP (DT a) (NN heritage) (NN village)))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP
+        (NP (NNP Al) (NNP Ain))
+        (PRN (-LRB- -LRB-)
+          (NP
+            (NP (NNP Arabic))
+            (: :)
+            (NP (NNP العين)))
+          (, ,)
+          (NP
+            (NP (NN al-ʿayn))
+            (, ,)
+            (NP (RB literally) (DT The) (NN Spring)))
+          (-RRB- -RRB-)))
+      (, ,)
+      (VP
+        (ADVP (RB also))
+        (VBN known)
+        (PP (IN as)
+          (NP
+            (NP (DT the) (NNP Garden) (NNP City))
+            (ADJP (JJ due)
+              (PP (TO to)
+                (NP (PRP$ its) (NN greenery)))))))
+      (, ,))
+    (VP (VBZ is)
+      (NP
+        (NP (DT the)
+          (ADJP (JJ second) (JJS largest))
+          (NN city))
+        (PP (IN in)
+          (NP
+            (NP
+              (NP (DT the) (NN Emirate))
+              (PP (IN of)
+                (NP (NNP Abu) (NNP Dhabi))))
+            (CC and)
+            (NP
+              (NP (DT the)
+                (ADJP (JJ fourth) (JJS largest))
+                (NN city))
+              (PP (IN in)
+                (NP (DT the) (NNP United) (NNP Arab) (NNPS Emirates))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (NNP Jebel) (NNP Hafeet))
+      (, ,)
+      (NP (DT a) (JJ 1340-metre-high) (NN mountain))
+      (, ,))
+    (VP (VBZ dominates)
+      (NP (DT the) (VBG surrounding) (NN area)))
+    (. .)))
+
+(ROOT
+  (NP
+    (NP (NNP Al))
+    (: -) (`` `)
+    (S
+      (NP (NNP Ain))
+      (VP (VBZ is)
+        (VP (VBN located)
+          (PP (IN in)
+            (NP
+              (NP (DT the) (NN Emirate))
+              (PP (IN of)
+                (NP (NNP Abu) (NNP Dhabi)))))
+          (, ,)
+          (ADVP (RB inland)
+            (PP (IN on)
+              (NP
+                (NP (DT the) (NN border))
+                (PP (IN with) (`` `)
+                  (NP (NNP Oman)))))))))
+    (. .)))
+
+(ROOT
+  (NP
+    (NP (NNP Al))
+    (: -) (`` `)
+    (S
+      (S
+        (NP (NNP Ain))
+        (VP (VBZ has)
+          (NP
+            (NP (DT a) (JJR higher) (NN proportion))
+            (PP (IN of)
+              (NP (NNP Emirati) (NNS nationals))))
+          (PP (IN than)
+            (NP
+              (NP (RB elsewhere))
+              (PP (IN in)
+                (NP (DT the) (NN country)))))))
+      (, ,)
+      (CC but)
+      (S
+        (NP
+          (NP (DT the) (NN majority))
+          (PP (IN of)
+            (NP (PRP$ its) (NNS residents))))
+        (VP (VBP are)
+          (ADJP (JJ expatriates) (RB particularly))
+          (PP (IN from)
+            (NP (DT the) (JJ Indian) (NN sub-continent))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (DT This) (NN performance))
+    (VP
+      (VP (VBD won)
+        (S
+          (NP (NNP Tallari))
+          (NP
+            (NP (DT the) (`` `) (NN Best) (NN Newcomer) ('' ') (NN award))
+            (PP (IN at)
+              (NP
+                (NP (DT the) (CD 2008) (NN Man))
+                (PP (IN of)
+                  (NP (NN Ice) (NNS Awards))))))))
+      (CC and)
+      (VP (VBD ensured)
+        (NP (PRP$ his) (NN selection))
+        (PP (IN for)
+          (NP (DT the) (CD 2007-08) (NNP EIHL) (NNP All-Star) (NN team)))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (NNP Tallari))
+    (VP (VBD moved)
+      (PP (TO to)
+        (NP
+          (NP (DT the) (NNP Hartford) (NNP Wolf) (NNP Pack))
+          (, ,)
+          (NP (DT the) (NN farm) (NN team))))
+      (PP (IN for)
+        (NP (DT the) (NNP New) (NNP York) (NNPS Rangers))))
+    (. .)))
+
+(ROOT
+  (S
+    (PP (IN In)
+      (NP (CD 2001)))
+    (NP (NNP Tallari))
+    (VP (VBD began)
+      (NP (PRP$ his) (NN career) (NN playing))
+      (PP (IN for)
+        (NP (NNP Niagara) (NNP University)))
+      (SBAR
+        (WHADVP (WRB where))
+        (S
+          (NP (PRP he))
+          (VP (VBD was)
+            (NP
+              (NP (NN team) (POS 's))
+              (JJ senior) (NN captain))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (NNP Joe) (NNP Tallari))
+      (PRN (-LRB- -LRB-)
+        (VP (VBN born)
+          (NP (NNP October) (CD 5) (, ,) (CD 1980))
+          (PP (IN in)
+            (NP
+              (NP (NNP Thunder) (NNP Bay))
+              (, ,)
+              (NP (NNP Ontario)))))
+        (-RRB- -RRB-)))
+    (VP (VBZ is)
+      (NP (DT a) (JJ Canadian) (JJ professional) (NN ice) (NN hockey) (NN player)))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (PRP He))
+    (ADVP (RB then))
+    (VP (VBD moved)
+      (PP (TO to)
+        (NP (NNP Europe)))
+      (, ,)
+      (S
+        (VP (VBG signing)
+          (PP (IN with)
+            (NP
+              (NP (DT the) (NNP Manchester) (NNP Phoenix))
+              (PP (IN in)
+                (NP
+                  (NP (DT the) (NN summer))
+                  (PP (IN of)
+                    (NP (CD 2007)))))))
+          (S
+            (VP (TO to)
+              (VP (VB play)
+                (PP (IN under)
+                  (NP (NNP Tony) (NNP Hand)))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (PP (IN On)
+      (NP
+        (NP (CD 7))
+        (NP (NNP May) (CD 2009))))
+    (NP (PRP he))
+    (VP
+      (VP (VBD left)
+        (NP (NNP Hockey) (NNP Club) (NNP Pustertal-Val) (NNP Pusteria)))
+      (CC and)
+      (VP (VBD signed)
+        (NP (DT a) (NN contract))
+        (PP (IN with)
+          (NP (NNP HC) (NNP Eppan) (NNPS Pirats) (NNP Internorm)))))
+    (. .)))
+
+(ROOT
+  (S
+    (PP (IN In)
+      (NP (NNP April) (CD 2008)))
+    (NP (PRP it))
+    (VP (VBD was)
+      (VP (VBN announced)
+        (SBAR (IN that)
+          (S
+            (NP (NNP Tallari))
+            (VP (MD would)
+              (VP (VB leave)
+                (S
+                  (NP (NNP Manchester))
+                  (VP (TO to)
+                    (VP (VB sign)
+                      (PP (IN for)
+                        (NP (DT the) (NNP Hockey) (NNP Club) (NNP Pustertal-Val) (NNP Pusteria)))
+                      (S
+                        (VP (TO to)
+                          (VP (VB try)
+                            (S
+                              (VP (TO to)
+                                (VP (VB qualify)
+                                  (PP (IN for)
+                                    (NP (DT the) (JJ Italian) (JJ national) (NN team))))))))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (PRP He))
+    (VP (VBD stayed)
+      (PP (IN for)
+        (NP (RB just) (CD one) (NN season)))
+      (PP (IN before)
+        (S
+          (VP (VBG moving)
+            (PP (TO to)
+              (NP
+                (NP (DT the) (NNP Johnstown) (NNPS Chiefs))
+                (PP (IN of)
+                  (NP (DT the) (NNP ECHL)))
+                (, ,)
+                (SBAR
+                  (WHADVP (WRB where))
+                  (S
+                    (NP (PRP he))
+                    (VP (VBD topped)
+                      (NP (DT the)
+                        (ADJP (CD 50) (NN point))
+                        (NN margin)))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (PP (IN Over)
+      (NP (DT the) (JJ following) (CD three) (NNS seasons)))
+    (, ,)
+    (NP (NNP Tallari))
+    (VP (VBD switched)
+      (PP (IN between)
+        (NP (NNS teams)))
+      (PP (IN in)
+        (NP
+          (NP (DT the) (NNP ECHL))
+          (CC and)
+          (NP (DT the) (NNP AHL))))
+      (, ,)
+      (PP (IN with)
+        (NP
+          (NP
+            (NP (NNS stints))
+            (PP (IN at)
+              (NP (DT the) (NNP Cleveland) (NNPS Barons))))
+          (, ,)
+          (NP
+            (NP (DT the) (NNP Bridgeport) (NNP Sound) (NNP Tigers))
+            (PRN (-LRB- -LRB-)
+              (PP (IN on)
+                (NP (CD two) (NNS occasions)))
+              (-RRB- -RRB-)))
+          (CC and)
+          (NP (DT the) (NNP Las) (NNP Vegas) (NNP Wranglers)))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (NNP Tallari))
+    (VP (VBD had)
+      (NP
+        (NP (DT an) (JJ outstanding) (NN season))
+        (PP (IN in)
+          (NP (NNP Manchester))))
+      (, ,)
+      (S
+        (VP (VBG finishing)
+          (PP (IN as)
+            (NP
+              (NP
+                (NP (DT the) (NNP EIHL) (POS 's))
+                (JJ second) (JJS highest) (NN goal) (NN scorer))
+              (, ,)
+              (VP (VBG managing)
+                (NP
+                  (NP (CD 55) (NNS goals))
+                  (CC and)
+                  (NP
+                    (NP (CD 38) (NNS assists))
+                    (PP (IN in)
+                      (NP (CD 59) (NNS games)))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (PP (IN For)
+      (NP (NN example)))
+    (, ,)
+    (NP (NNP A0))
+    (VP (VBZ denotes)
+      (SBAR
+        (S
+          (NP
+            (NP (DT the) (JJS hottest) (NNS stars))
+            (PP (IN in)
+              (NP (DT the)
+                (NP (DT A) (NN class))
+                (CC and)
+                (NP (NNP A9)))))
+          (VP (VBZ denotes)
+            (NP (DT the) (JJ coolest) (NNS ones))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (DT The) (NNP Sun))
+    (VP (VBZ is)
+      (VP (VBN classified)
+        (PP (IN as)
+          (NP (NN G2)))))
+    (. .)))
+
+(ROOT
+  (NP
+    (NP (NNS Notes))
+    (: :)
+    (NP
+      (NP (DT The) (JJ spectral) (NNS classes))
+      (SBAR
+        (S
+          (NP
+            (NP (NNP O))
+            (PP (IN through)
+              (NP (NNP Y))))
+          (VP (VBP are)
+            (VP (VBN subdivided)
+              (PP (IN by)
+                (NP
+                  (NP
+                    (NP (JJ Arabic) (NNS numerals))
+                    (PRN (-LRB- -LRB-)
+                      (NP (CD 0-9))
+                      (-RRB- -RRB-)))
+                  (, ,)
+                  (SBAR
+                    (WHNP (WDT which))
+                    (S
+                      (VP (MD can)
+                        (VP (VB be)
+                          (VP
+                            (ADVP (RBR further))
+                            (VBN divided)
+                            (PP (IN into)
+                              (NP (NNS half-subtypes)))))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (DT This))
+    (VP (VBZ is)
+      (ADVP (RB essentially))
+      (NP
+        (NP (DT the) (JJ modern) (NN form))
+        (PP (IN of)
+          (NP (DT the) (NNP Harvard) (NN classification) (NN system)))))
+    (. .)))
+
+(ROOT
+  (S
+    (S
+      (NP (JJ Main-sequence) (NNS stars))
+      (VP (VBP vary)
+        (PP (IN in)
+          (NP
+            (NP (NN surface) (NN temperature))
+            (PP (IN from)
+              (NP
+                (QP (RB approximately) (CD 2,000) (TO to) (CD 50,000))
+                (NN K)))))
+        (, ,)
+        (SBAR (IN whereas)
+          (S
+            (NP (JJ more-evolved) (NNS stars))
+            (VP (MD can)
+              (VP (VB have)
+                (NP
+                  (NP (NNS temperatures))
+                  (PP (IN above)
+                    (NP (NNP 100,000) (NNP K.) (NNP Physically))))))))))
+    (, ,)
+    (NP (DT the) (NNS classes))
+    (VP
+      (VP (VBP indicate)
+        (NP
+          (NP (DT the) (NN temperature))
+          (PP (IN of)
+            (NP
+              (NP (DT the) (NN star) (POS 's))
+              (NN atmosphere)))))
+      (CC and)
+      (VP (VBP are)
+        (ADVP (RB normally))
+        (VP (VBN listed)
+          (PP (IN from)
+            (NP
+              (NP (JJS hottest))
+              (PP (TO to)
+                (NP
+                  (NP (JJS coldest))
+                  (, ,)
+                  (SBAR (IN as)
+                    (S
+                      (VP (VBZ is)
+                        (VP (VBN done)
+                          (PP (IN in)
+                            (NP (DT the) (JJ following) (NN table))))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (NNP Class) (NNP K) (NNS stars))
+    (VP (VBP are)
+      (NP
+        (NP (JJ orangish) (NNS stars))
+        (SBAR
+          (WHNP (WDT that))
+          (S
+            (VP (VBP are)
+              (ADJP (RB slightly) (JJ cooler)
+                (PP (IN than)
+                  (NP (DT the) (NNP Sun)))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (SBAR (IN If)
+      (S
+        (NP (PRP you))
+        (VP (VBP are)
+          (ADVP (RB here))
+          (SBAR (IN because)
+            (S
+              (NP (DT this))
+              (VP (VBD happened)
+                (PP (TO to)
+                  (NP (PRP you)))))))))
+    (, ,)
+    (NP (EX there))
+    (VP (VBP are)
+      (NP (CD two) (NNS possibilities)))
+    (. .)))
+
+(ROOT
+  (S
+    (SBAR (IN While)
+      (S
+        (NP (DT some) (NNS users))
+        (VP (MD can)
+          (VP (VB use)
+            (S
+              (NP (PRP them))
+              (VP (TO to)
+                (VP (VB circumvent)
+                  (NP (NN censorship)
+                    (CC or)
+                    (NNS filters)))))))))
+    (, ,)
+    (NP (PRP they))
+    (VP (VBP have)
+      (VP (VBN been)
+        (VP (VBN used)
+          (ADVP (RB far) (RB too))
+          (NP (JJ many) (NNS times))
+          (PP (IN by)
+            (NP
+              (NP
+                (ADJP (RB far) (RB too) (JJ many))
+                (VBN blocked) (NNS vandals))
+              (PP (IN for)
+                (NP (NNP Wikipedians)))))
+          (S
+            (VP (TO to)
+              (VP (VB assume)
+                (NP (JJ good) (NN faith))
+                (PP (IN on)
+                  (NP (PRP$ their) (NN part)))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (SBAR (IN While)
+      (S
+        (NP (PRP it))
+        (VP (VBZ is)
+          (ADJP (JJ possible)
+            (S
+              (VP (TO to)
+                (VP (VB request)
+                  (NP
+                    (NP (DT a) (NN change))
+                    (PP (IN in)
+                      (NP (NN username)))))))))))
+    (, ,)
+    (NP (DT this))
+    (VP
+      (VP (VBZ takes)
+        (ADVP
+          (NP (DT a) (RB little))
+          (RBR longer)))
+      (CC and)
+      (VP (VBZ requires)
+        (SBAR (IN that)
+          (S
+            (NP
+              (NP (DT a) (NN user))
+              (PP (IN with)
+                (NP (NN bureaucrat) (NN access))))
+            (VP (VBP do)
+              (ADVP (RB so)))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (DT These) (NNS messages))
+    (VP (MD should)
+      (VP (VB include)
+        (NP
+          (NP
+            (NP (DT the) (NNS names)
+              (CC or)
+              (NNS abbreviations))
+            (PP (IN of)
+              (NP
+                (NP (DT those))
+                (PP (IN of)
+                  (NP (PRP$ our) (NN site) (NNS rules))))))
+          (PRN (-LRB- -LRB-)
+            (NP (DT the)
+              (ADJP (`` ``) (JJ policies)
+                (CC and)
+                (JJ guidelines) ('' '')))
+            (-RRB- -RRB-))
+          (SBAR (IN that)
+            (S
+              (NP (DT the) (JJ blocking) (NN administrator))
+              (VP (VBZ believes)
+                (SBAR
+                  (S
+                    (NP (PRP you))
+                    (VP (VBP have)
+                      (VP (VBN violated)))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (JJ Whichever) (NN method))
+      (SBAR
+        (S
+          (NP (PRP you))
+          (VP (VBP choose)))))
+    (, ,)
+    (NP (PRP it))
+    (VP (VBZ is)
+      (NP (DT a) (JJ good) (NN idea)
+        (S
+          (VP (TO to)
+            (VP (VB have)
+              (NP
+                (NP (DT some) (NN review))
+                (PP (IN of)
+                  (NP (DT the) (JJ proposed) (JJ new) (NN username))))
+              (ADVP (RB first))))))
+      (, ,)
+      (S
+        (VP (TO to)
+          (VP (VB avoid)
+            (S
+              (VP (VBG ending)
+                (PRT (RP up))
+                (PP (IN in)
+                  (NP (DT the) (JJ same) (NN quandary)))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (DT This))
+    (VP (VBZ includes)
+      (NP (NNP Tor) (NNS nodes)))
+    (. .)))
+
+(ROOT
+  (S
+    (SBAR (IN If)
+      (S
+        (NP (PRP you))
+        (VP (VBP are)
+          (ADVP (RB improperly))
+          (VP (VBN blocked)
+            (PP (IN for)
+              (NP (NN sockpuppetry)))))))
+    (, ,)
+    (NP (PRP you))
+    (VP (MD should)
+      (VP (VB realize)
+        (SBAR (IN that)
+          (S
+            (NP (PRP it))
+            (VP (MD may) (RB not)
+              (ADVP (RB always))
+              (VP (VB be)
+                (ADJP
+                  (ADJP (JJ easy))
+                  (CC or)
+                  (ADJP (RB even) (JJ possible)
+                    (S
+                      (VP (TO to)
+                        (VP (VB correct)
+                          (NP (DT the) (NN situation)))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (NNS Users))
+      (VP (VBN confirmed)
+        (CC or)
+        (VBN believed)
+        (S
+          (VP (TO to)
+            (VP (VB have)
+              (VP (VBN engaged)
+                (PP (IN in)
+                  (NP (DT the) (NN practice)))))))))
+    (VP (MD must)
+      (VP (VB request)
+        (VP (VB unblock)
+          (PP (IN at)
+            (NP (PRP$ their) (JJ main) (NN account))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (JJS Most) (NNS administrators))
+    (VP
+      (VP (VBP consider)
+        (NP (PDT such) (DT an) (JJ unblock) (NN request))
+        (PP
+          (NP (DT a) (JJ sure) (NN sign))
+          (PP (IN of)
+            (NP (DT a) (NN sock) (NN account)))
+          (PRN (-LRB- -LRB-)
+            (ADVP (RB particularly)
+              (NP (CD one))
+              (PP (IN with)
+                (NP
+                  (ADJP (RB very) (JJ few))
+                  (NNS edits))
+                (ADVP (RB otherwise))))
+            (-RRB- -RRB-))))
+      (CC and)
+      (VP (MD will)
+        (VP (VB decline)
+          (PP (IN on)
+            (NP (DT that) (NN basis))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (JJS Most) (JJ such) (NNS accounts))
+    (VP (VBP are)
+      (ADJP (JJ soft-blocked))
+      (, ,)
+      (S
+        (VP (VBG meaning)
+          (SBAR
+            (S
+              (NP (DT a) (JJ new) (NN account))
+              (VP (MD may)
+                (VP (VB be)
+                  (VP (VBN created)
+                    (SBAR (IN while)
+                      (S
+                        (NP (DT the) (JJ old) (NN one))
+                        (VP (VBZ is)
+                          (VP (VBN blocked)))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (PRP It))
+    (VP (MD may)
+      (VP (VB help)
+        (PP (IN with)
+          (NP (PRP$ your) (JJ unblock) (NN request)))
+        (SBAR
+          (SBAR (IN if)
+            (S
+              (NP (PRP you))
+              (VP (VBP understand)
+                (SBAR
+                  (WHADVP (WRB how))
+                  (S
+                    (NP (PRP they))
+                    (VP (VBP are)
+                      (VP (VBN reviewed))))))))
+          (, ,)
+          (CC and)
+          (FRAG
+            (WHPP (IN by)
+              (WHNP (WP whom)))))))
+    (. .)))
+
+(ROOT
+  (S
+    (ADVP (RB First))
+    (, ,)
+    (NP (DT the) (JJ blocking) (NN administrator))
+    (VP (VBZ provides)
+      (NP (DT a) (JJ brief) (NN reason))
+      (SBAR (IN that)
+        (S
+          (NP (PRP you))
+          (VP (MD will)
+            (VP (VB see)
+              (SBAR
+                (WHADVP (WRB when))
+                (S
+                  (NP (PRP you))
+                  (VP (VBP try)
+                    (S
+                      (VP (TO to)
+                        (VP (VB make)
+                          (NP (DT an) (NN edit)))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (ADVP (LS Second))
+    (, ,)
+    (NP (DT the) (NN administrator))
+    (VP (MD may)
+      (VP (VB leave)
+        (NP
+          (NP (DT a) (NN message))
+          (VP (VBG explaining)
+            (NP (PRP$ your) (NN block))
+            (PP (IN on)
+              (NP (PRP$ your) (NN user) (NN talk) (NN page)))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (NNS Accusations))
+      (PP (IN of)
+        (NP
+          (NP
+            (NP (JJ sockpuppetry) (NN result))
+            (PP (IN in)
+              (NP (JJ many) (NNS blocks))))
+          (CC and)
+          (NP
+            (NP
+              (QP (RB almost) (RB as) (JJ many))
+              (JJ unblock) (NNS requests))
+            (, ,)
+            (PP (IN as)
+              (NP (NNP Wikipedia) (NN policy)))))))
+    (VP (VBZ calls)
+      (PP (IN for)
+        (NP
+          (NP (DT the) (JJ sockpuppet) (NN account)
+            (S
+              (VP (TO to)
+                (VP (VB be)
+                  (VP (VBN blocked)
+                    (ADVP (RB indefinitely)))))))
+          (CC and)
+          (NP (DT the) (NN sockpuppeteer)
+            (S
+              (VP (TO to)
+                (VP (VB be)
+                  (VP (VBN blocked)
+                    (PP (IN for)
+                      (NP
+                        (NP (DT some) (NN length))
+                        (PP (IN of)
+                          (NP (NN time)))))
+                    (PRN (-LRB- -LRB-)
+                      (ADVP (RB possibly))
+                      (ADJP
+                        (ADVP (RB also))
+                        (JJ indefinitely))
+                      (-RRB- -RRB-))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (DT This))
+    (VP (VBZ is)
+      (VP (VBN done)
+        (SBAR (IN because)
+          (S
+            (NP (PRP it))
+            (VP (VBZ is)
+              (NP (DT the) (NN account) (NN name))
+              (, ,) (RB not)
+              (NP
+                (NP (DT the) (NN behavior))
+                (PP (IN of)
+                  (NP
+                    (NP (DT the) (NN person))
+                    (PP (IN behind)
+                      (NP (PRP it)))
+                    (, ,)
+                    (SBAR
+                      (WHNP (WDT which))
+                      (S
+                        (VP (VBZ is)
+                          (NP (DT the) (NN problem)))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (PRP You))
+    (VP (MD should)
+      (ADVP (RB also))
+      (VP (VB review)
+        (NP (DT the) (JJ blocking) (NN policy))))
+    (. .)))
+
+(ROOT
+  (S
+    (SBAR (IN Before)
+      (S
+        (NP (PRP you))
+        (VP (VBP make)
+          (NP (DT an) (JJ unblock) (NN request)))))
+    (, ,)
+    (NP (PRP you))
+    (VP (MD should)
+      (ADVP (RB attentively))
+      (VP (VB read)
+        (NP
+          (NP (DT the) (NNS policies)
+            (CC and)
+            (NNS guidelines))
+          (VP (VBN named)
+            (PP (IN in)
+              (NP (PRP$ your) (NN block) (NN reason)))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (DT An) (NN account))
+      (PP (IN with)
+        (NP
+          (NP (DT a) (NN username))
+          (SBAR
+            (WHNP (WDT that))
+            (S
+              (VP
+                (VP (VBZ uses)
+                  (NP (JJ hateful)
+                    (CC or)
+                    (JJ obscene) (NN language)))
+                (CC or)
+                (VP
+                  (ADVP (RB otherwise))
+                  (VBZ indicates)
+                  (NP
+                    (ADJP (JJ disruptive)
+                      (CC or)
+                      (JJ provocative))
+                    (NN intent)))))))))
+    (VP (MD will)
+      (VP (VB be)
+        (VP
+          (ADVP (RB hard))
+          (VBN blocked) (, ,)
+          (S
+            (VP (VBG meaning)
+              (SBAR (IN that)
+                (S
+                  (NP (DT an) (JJ unblock) (NN request))
+                  (VP (MD will)
+                    (VP (VB be)
+                      (VP (VBN required)))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (S
+      (SBAR (IN If)
+        (S
+          (NP (PRP$ your) (NN server))
+          (VP (VBZ has)
+            (VP (VBN been)
+              (VP (VBN blocked)
+                (PP (IN as)
+                  (NP (DT an) (JJ open) (NN proxy))))))))
+      (, ,)
+      (NP (PRP you))
+      (VP (MD will)
+        (ADVP (RB probably))
+        (VP (VB need)
+          (S
+            (VP (TO to)
+              (VP (VB edit)
+                (PP (IN via)
+                  (NP (DT another) (NN connection)))))))))
+    (: :)
+    (S
+      (PP (IN in)
+        (NP (JJS most) (NNS cases)))
+      (, ,)
+      (NP (NNS proxies))
+      (VP (VBP are)
+        (NP
+          (NP (`` ``) (JJ hard) (NN blocked) ('' ''))
+          (, ,)
+          (SBAR
+            (WHNP (WDT which))
+            (S
+              (VP (VBZ prevents)
+                (NP (RB even) (JJ logged-in) (NNS users))
+                (PP (IN from)
+                  (S
+                    (VP (VBG using)
+                      (NP (DT the) (NN connection)
+                        (S
+                          (VP (TO to)
+                            (VP (VB edit))))))))))))))
+    (. .)))
+
