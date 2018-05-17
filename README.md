@@ -4,11 +4,16 @@
 * Wikipedia Korpus http://www.cs.pomona.edu/~dkauchak/simplification/
 * Deep Voice https://arxiv.org/abs/1710.07654
 * Other papers: http://www.thespermwhale.com/jaseweston/papers/unified_nlp.pdf \\ https://arxiv.org/pdf/1404.2188.pdf
+* ABCNN: https://arxiv.org/pdf/1512.05193.pdf
+* Recursive Autoencoder for Paraphrase Detection https://papers.nips.cc/paper/4204-dynamic-pooling-and-unfolding-recursive-autoencoders-for-paraphrase-detection.pdf
 
 
 #### feasible NN implementations we could use
 
 *CNN implementation:*
+
+* _Attention-based CNN for modeling sentence pairs_
+-> [github](https://github.com/galsang/ABCNN)
 
 * Generalization of CNNs by using graph signal processing applied on any graph structure. Definition of convolutional filters on graphs. 
 -> [github](https://github.com/mdeff/cnn_graph)
