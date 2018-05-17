@@ -7,21 +7,24 @@
 
 
 #### feasible NN implementations we could use
-Generalization of CNNs by using graph signal processing applied on any graph structure. Definition of convolutional filters on graphs. 
-[GITHUB: Convolutional Neural Networks on Graphs with Fast Localized Spectral Filtering](https://github.com/mdeff/cnn_graph)
 
-ByteNet implementation:
+*CNN implementation:*
 
-Tensor2Tensor library of deep learning models with bytenet partly maintained by google -> [github](https://github.com/tensorflow/tensor2tensor) 
+* Generalization of CNNs by using graph signal processing applied on any graph structure. Definition of convolutional filters on graphs. 
+-> [github](https://github.com/mdeff/cnn_graph)
 
-bytenet without target network + training framework missing -> [github](https://github.com/NickShahML/bytenet_tensorflow)
+*ByteNet implementation:*
 
-bytenet trained on eng-fr corpus. Relies on TF v1 -> [github](https://github.com/buriburisuri/ByteNet)
+* Tensor2Tensor library of deep learning models with bytenet partly maintained by google -> [github](https://github.com/tensorflow/tensor2tensor) 
 
-generation trained on shakespeare and translation on ger-en -> [github](https://github.com/paarthneekhara/byteNet-tensorflow)
+* bytenet without target network + training framework missing -> [github](https://github.com/NickShahML/bytenet_tensorflow)
 
-Recursive Neural Nets
-Recursive Neural Networks with tree structure in Tensorflow -> [github](https://github.com/erickrf/treernn)
+* bytenet trained on eng-fr corpus. Relies on TF v1 -> [github](https://github.com/buriburisuri/ByteNet)
+
+* generation trained on shakespeare and translation on ger-en -> [github](https://github.com/paarthneekhara/byteNet-tensorflow)
+
+*Recursive Neural Nets:*
+* Recursive Neural Networks with tree structure in Tensorflow -> [github](https://github.com/erickrf/treernn)
 
 #### Project Organisation
 
