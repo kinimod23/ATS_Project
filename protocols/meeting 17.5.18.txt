@@ -1,0 +1,32 @@
+Data:
+
+NEWSELA CORPUS:
+-article based with 5 complexity levels
+-good: we can align documents or paragraphs and thus include coreference resolution
+
+- no response from newsela corpus, simon writes an email to stede/scheffler and asks whether he has the corpus
+
+WikiCorpus from Hwang (mannheim):
+-the cleaned corpus contains only contains aligned sentences, therefore we have to ignore coreferences
+-partly sentences remain the same in simple english
+
+TODO:
+-analyse corpus: How many sentences are the same? How do the simplified sentences differ from complex ones?
+1. Remove copies
+2. Remove sentences which stay the same( only for siamese network)
+3. create word embeddings (note: reconstruction from embeddings is not bijective)
+
+Contrast: 
+-Take only random sentences from the corpus or also take external sentences?
+
+architecture ideas:
+
+-siamese encoder a la ABCNN with a decoder which is trained to produce simple sentences
+-siamese encoders need disciminator function/loss function to differentiate between aligned and other sentences
+
+-end to end: encoder and decoder a la ABCNN 
+-input: simple and complex sentence sequentially and as gold standard the simple sentence, such that simple and complex sentences are mapped to simple ones (end to end)
+
+syntax tree:
+-besser nicht, weil parsing zu fehleranfällig und representation als input schwierig
+--> daher auch keine recursive trees 
