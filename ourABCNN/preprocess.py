@@ -1,6 +1,9 @@
 import numpy as np
 import nltk
+from nltk.tokenize import word_tokenize
 import gensim
+import random 
+import codecs
 
 
 class Word2Vec():
@@ -18,9 +21,11 @@ class Word2Vec():
 
 
 class Data():
-    def __init__(self, word2vec, max_len=0):
+    # word2vec,
+    # word2vec self.word2vec = 0
+    def __init__(self,  max_len=0):
         self.s1s, self.s2s, self.labels, self.features = [], [], [], []
-        self.index, self.max_len, self.word2vec = 0, max_len, word2vec
+        self.index, self.max_len = 0, max_len 
 
     def open_file(self):
         pass
@@ -145,3 +150,114 @@ class WikiQA(Data):
             self.features[i].append(wgt_word_cnt)
 
         self.num_features = len(self.features[0])
+
+class ComplexSimple(Data):
+    @staticmethod
+    def diff(arr1, arr2):
+        arr1 = set(arr1)
+        if len([item for item in arr2 if item not in arr1]) > 3:
+            return False
+        return True 
+
+    def open_file(self, mode, method): # mode = test, train etc only for file name
+        with codecs.open("../corpus/test_complex_" + mode + ".txt", 'r', encoding="utf-8") as c, \
+        codecs.open("../corpus/test_simple_" + mode + ".txt", 'r', encoding="utf-8") as s:   
+            for(complex_sen, simple_sen) in zip(c.readlines(), s.readlines()):
+                s1 = word_tokenize(complex_sen.strip().lower())
+                s2 = word_tokenize(simple_sen.strip().lower())
+                self.s1s.append(s1)
+                self.s2s.append(s2)
+                if method == "labeled":
+                    self.labels.append(1)
+                word_cnt = len([word for word in s1 if word in s2])
+                self.features.append([len(s1), len(s2), word_cnt])
+                
+                local_max_len = max(len(s1), len(s2))
+                if local_max_len > self.max_len:
+                    self.max_len = local_max_len
+
+            if method == "labeled":
+                # create sentences that don't match, label them as 0 
+                complex_sen = []
+                simple_sen =  []
+                for line in c.readlines():
+                    complex_sen.append(word_tokenize(line.strip().lower()))
+                for line in s.readlines():
+                    simple_sen.append(word_tokenize(line.strip().lower()))
+                
+                wrong_per_sen = 0
+                while wrong_per_sen < 5:
+                    rands = []
+                    for i in range(len(complex_sen)):
+                        rands.append(random.randint(0,len(complex_sen)))
+                    for (num, comp) in zip(rands, complex_sen):
+                        if num != complex_sen.index(comp):
+                            self.s1s.append(comp)
+                            self.s2s.append(simple_sen[num])
+                            self.labels.append(0)
+                        else:
+                            while True:
+                                randi = random.randint(0, len(complex_sen))
+                                if randi != complex_sen.index(comp):
+                                    self.s1s.append(comp)
+                                    self.s2s.append(simple_sen[num])
+                                    self.labels.append(0)
+                                    break
+                    i += 1
+
+            elif method == "unlabeled":
+                # no labels needed, simple sentence in label 
+                # to compare output and "label" with BLEU
+                simple_sen =  []
+                for line in s.readlines():
+                    simple_sen.append(word_tokenize(line.strip().lower()))
+                self.labels = simple_sen
+            else: 
+                raise NameError(method)
+
+            self.data_size = len(self.s1s)
+            flatten = lambda l: [item for sublist in l for item in sublist]
+            q_vocab = list(set(flatten(self.s1s)))
+            idf = {}
+            for w in q_vocab:
+                idf[w] = np.log(self.data_size / len([1 for s1 in self.s1s if w in s1]))
+
+            for i in range(self.data_size):
+                wgt_word_cnt = sum([idf[word] for word in self.s1s[i] if (word in self.s2s[i])])
+                self.features[i].append(wgt_word_cnt)
+
+            self.num_features = len(self.features[0])
+
+if __name__ == '__main__':
+    #word2veci = Word2Vec()
+    #max_len = 50
+    try_data = ComplexSimple()
+    try_data.reset_index()
+    try_data.open_file(mode="50", method="unlaxsaxsbeled")
+    #try_data.reset_index()
+
+
+# füe jeden complex sentence gitb es 5 inputs, 4 falsch, 
+# die falschen sollen möglich verschieden sein, also bag of words vergleichen (lemmatized) 
+# min und max similarity 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
