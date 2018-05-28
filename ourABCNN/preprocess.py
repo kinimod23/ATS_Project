@@ -4,6 +4,7 @@ from nltk.tokenize import word_tokenize
 import gensim
 import random 
 import codecs
+import copy
 
 
 class Word2Vec():
@@ -153,11 +154,37 @@ class WikiQA(Data):
 
 class ComplexSimple(Data):
     @staticmethod
-    def diff(arr1, arr2):
-        arr1 = set(arr1)
-        if len([item for item in arr2 if item not in arr1]) > 3:
-            return False
-        return True 
+    def diff(comp, sim):
+        threshold = len(comp) / 3 # one third of the complex sen, as that should be longer
+        comp = set(comp)
+        in_common = len([item for item in sim if item in comp])
+        if in_common <= threshold:
+            return True
+        return False 
+
+    def process_labeled(self):
+        complex_sen = copy.copy(self.s1s)
+        simple_sen =  copy.copy(self.s2s)
+
+        wrong_per_sen = 0
+        while wrong_per_sen < 4:
+            rands = []
+            for i in range(len(complex_sen)):
+                rands.append(random.randint(0,len(complex_sen) - 1))
+            for (num, comp) in zip(rands, complex_sen):
+                if self.diff(simple_sen[num], comp):
+                    self.s1s.append(comp)
+                    self.s2s.append(simple_sen[num])
+                    self.labels.append(0)
+                else:
+                    while True:
+                        randi = random.randint(0, len(complex_sen) - 1)
+                        if self.diff(simple_sen[randi], comp):
+                            self.s1s.append(comp)
+                            self.s2s.append(simple_sen[num])
+                            self.labels.append(0)
+                            break
+            wrong_per_sen += 1
 
     def open_file(self, mode, method): # mode = test, train etc only for file name
         with codecs.open("../corpus/test_complex_" + mode + ".txt", 'r', encoding="utf-8") as c, \
@@ -169,41 +196,10 @@ class ComplexSimple(Data):
                 self.s2s.append(s2)
                 if method == "labeled":
                     self.labels.append(1)
-                word_cnt = len([word for word in s1 if word in s2])
-                self.features.append([len(s1), len(s2), word_cnt])
-                
-                local_max_len = max(len(s1), len(s2))
-                if local_max_len > self.max_len:
-                    self.max_len = local_max_len
 
             if method == "labeled":
                 # create sentences that don't match, label them as 0 
-                complex_sen = []
-                simple_sen =  []
-                for line in c.readlines():
-                    complex_sen.append(word_tokenize(line.strip().lower()))
-                for line in s.readlines():
-                    simple_sen.append(word_tokenize(line.strip().lower()))
-                
-                wrong_per_sen = 0
-                while wrong_per_sen < 5:
-                    rands = []
-                    for i in range(len(complex_sen)):
-                        rands.append(random.randint(0,len(complex_sen)))
-                    for (num, comp) in zip(rands, complex_sen):
-                        if num != complex_sen.index(comp):
-                            self.s1s.append(comp)
-                            self.s2s.append(simple_sen[num])
-                            self.labels.append(0)
-                        else:
-                            while True:
-                                randi = random.randint(0, len(complex_sen))
-                                if randi != complex_sen.index(comp):
-                                    self.s1s.append(comp)
-                                    self.s2s.append(simple_sen[num])
-                                    self.labels.append(0)
-                                    break
-                    i += 1
+                self.process_labeled()
 
             elif method == "unlabeled":
                 # no labels needed, simple sentence in label 
@@ -214,6 +210,14 @@ class ComplexSimple(Data):
                 self.labels = simple_sen
             else: 
                 raise NameError(method)
+
+            # create features
+            for (s1, s2) in zip(self.s1s, self.s2s):
+                word_cnt = len([word for word in s1 if word in s2])
+                self.features.append([len(s1), len(s2), word_cnt])
+                local_max_len = max(len(s1), len(s2))
+                if local_max_len > self.max_len:
+                    self.max_len = local_max_len
 
             self.data_size = len(self.s1s)
             flatten = lambda l: [item for sublist in l for item in sublist]
@@ -227,37 +231,3 @@ class ComplexSimple(Data):
                 self.features[i].append(wgt_word_cnt)
 
             self.num_features = len(self.features[0])
-
-if __name__ == '__main__':
-    #word2veci = Word2Vec()
-    #max_len = 50
-    try_data = ComplexSimple()
-    try_data.reset_index()
-    try_data.open_file(mode="50", method="unlaxsaxsbeled")
-    #try_data.reset_index()
-
-
-# füe jeden complex sentence gitb es 5 inputs, 4 falsch, 
-# die falschen sollen möglich verschieden sein, also bag of words vergleichen (lemmatized) 
-# min und max similarity 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
