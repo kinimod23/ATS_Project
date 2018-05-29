@@ -22,12 +22,15 @@ class Word2Vec():
 
 
 class Data():
-    # word2vec,
-    # word2vec self.word2vec = 0
-    def __init__(self,  max_len=0):
+    
+    def __init__(self, word2vec, max_len=0):
         self.s1s, self.s2s, self.labels, self.features = [], [], [], []
-        self.index, self.max_len = 0, max_len 
-
+        self.index, self.max_len, self.word2vec = 0, max_len, word2vec
+    """
+    def __init__(self, word2vec, max_len=0):
+        self.s1s, self.s2s, self.labels, self.features = [], [], [], []
+        self.index, self.max_len = 0, max_len
+    """
     def open_file(self):
         pass
 
@@ -187,8 +190,8 @@ class ComplexSimple(Data):
             wrong_per_sen += 1
 
     def open_file(self, mode, method): # mode = test, train etc only for file name
-        with codecs.open("../corpus/test_complex_" + mode + ".txt", 'r', encoding="utf-8") as c, \
-        codecs.open("../corpus/test_simple_" + mode + ".txt", 'r', encoding="utf-8") as s:   
+        with codecs.open("../corpus/wiki_complex_" + mode + ".txt", 'r', encoding="utf-8") as c, \
+        codecs.open("../corpus/wiki_simple_" + mode + ".txt", 'r', encoding="utf-8") as s:   
             for(complex_sen, simple_sen) in zip(c.readlines(), s.readlines()):
                 s1 = word_tokenize(complex_sen.strip().lower())
                 s2 = word_tokenize(simple_sen.strip().lower())
@@ -231,3 +234,5 @@ class ComplexSimple(Data):
                 self.features[i].append(wgt_word_cnt)
 
             self.num_features = len(self.features[0])
+
+
