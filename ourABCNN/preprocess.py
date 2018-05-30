@@ -5,6 +5,7 @@ import gensim
 import random 
 import codecs
 import copy
+import time
 
 
 class Word2Vec():
@@ -22,15 +23,15 @@ class Word2Vec():
 
 
 class Data():
-    
+    """
     def __init__(self, word2vec, max_len=0):
         self.s1s, self.s2s, self.labels, self.features = [], [], [], []
         self.index, self.max_len, self.word2vec = 0, max_len, word2vec
     """
-    def __init__(self, word2vec, max_len=0):
+    def __init__(self, max_len=0):
         self.s1s, self.s2s, self.labels, self.features = [], [], [], []
         self.index, self.max_len = 0, max_len
-    """
+    
     def open_file(self):
         pass
 
@@ -170,7 +171,9 @@ class ComplexSimple(Data):
         simple_sen =  copy.copy(self.s2s)
 
         wrong_per_sen = 0
+        begin = time.time()
         while wrong_per_sen < 4:
+            print("iter: {}".format(wrong_per_sen))
             rands = []
             for i in range(len(complex_sen)):
                 rands.append(random.randint(0,len(complex_sen) - 1))
@@ -188,7 +191,8 @@ class ComplexSimple(Data):
                             self.labels.append(0)
                             break
             wrong_per_sen += 1
-
+        took = time.time() - begin
+        print("Took: {}".format(took))
     def open_file(self, mode, method): # mode = test, train etc only for file name
         with codecs.open("../corpus/wiki_complex_" + mode + ".txt", 'r', encoding="utf-8") as c, \
         codecs.open("../corpus/wiki_simple_" + mode + ".txt", 'r', encoding="utf-8") as s:   
@@ -199,6 +203,26 @@ class ComplexSimple(Data):
                 self.s2s.append(s2)
                 if method == "labeled":
                     self.labels.append(1)
+            print("Data was read")
+
+            
+            self.data_size = len(self.s1s)
+            
+            flatten_begin = time.time()
+            flatten = lambda l: [item for sublist in l for item in sublist]
+            q_vocab = list(set(flatten(self.s1s)))
+            print("flatten took: {}".format(time.time() - flatten_begin))
+            idf = {}
+            idf_begin = time.time()
+            for w in q_vocab:
+                count = 0
+                for s1 in self.s1s:
+                    if w in s1:
+                        count += 1
+                idf[w] = np.log(self.data_size / float(count))
+            #idf[w] = np.log(self.data_size / len([1 for set(s1) in self.s1s if w in s1]))
+            #idf = {w:np.log(self.data_size / len([1 for s1 in self.s1s if w in s1]))for w in q_vocab}
+            print("Idf dict creation took: {}".format(time.time() - idf_begin))
 
             if method == "labeled":
                 # create sentences that don't match, label them as 0 
@@ -215,6 +239,7 @@ class ComplexSimple(Data):
                 raise NameError(method)
 
             # create features
+            feature_begin = time.time()
             for (s1, s2) in zip(self.s1s, self.s2s):
                 word_cnt = len([word for word in s1 if word in s2])
                 self.features.append([len(s1), len(s2), word_cnt])
@@ -223,16 +248,16 @@ class ComplexSimple(Data):
                     self.max_len = local_max_len
 
             self.data_size = len(self.s1s)
-            flatten = lambda l: [item for sublist in l for item in sublist]
-            q_vocab = list(set(flatten(self.s1s)))
-            idf = {}
-            for w in q_vocab:
-                idf[w] = np.log(self.data_size / len([1 for s1 in self.s1s if w in s1]))
 
+            idf_feature_begin = time.time()
             for i in range(self.data_size):
                 wgt_word_cnt = sum([idf[word] for word in self.s1s[i] if (word in self.s2s[i])])
                 self.features[i].append(wgt_word_cnt)
-
+            print("idf feature creation took: {}".format(time.time() - idf_feature_begin))
             self.num_features = len(self.features[0])
+            feature_took = time.time() - feature_begin
+            print("features took: {}".format(feature_took))
 
-
+if __name__ == '__main__':
+    train_data = ComplexSimple()
+    train_data.open_file(mode="1000", method="labeled")
