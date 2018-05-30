@@ -194,8 +194,8 @@ class ComplexSimple(Data):
         took = time.time() - begin
         print("Took: {}".format(took))
     def open_file(self, mode, method): # mode = test, train etc only for file name
-        with codecs.open("../corpus/wiki_complex_" + mode + ".txt", 'r', encoding="utf-8") as c, \
-        codecs.open("../corpus/wiki_simple_" + mode + ".txt", 'r', encoding="utf-8") as s:   
+        with codecs.open("../corpus/complex_" + mode + ".txt", 'r', encoding="utf-8") as c, \
+        codecs.open("../corpus/simple_" + mode + ".txt", 'r', encoding="utf-8") as s:   
             for(complex_sen, simple_sen) in zip(c.readlines(), s.readlines()):
                 s1 = word_tokenize(complex_sen.strip().lower())
                 s2 = word_tokenize(simple_sen.strip().lower())
@@ -213,10 +213,15 @@ class ComplexSimple(Data):
             q_vocab = list(set(flatten(self.s1s)))
             print("flatten took: {}".format(time.time() - flatten_begin))
             idf = {}
+            set_begin = time.time()
+            set_s1 = []
+            for s1 in self.s1s:
+                set_s1.append(set(s1))
+            print("set creation took {}s".format(time.time() - set_begin))
             idf_begin = time.time()
             for w in q_vocab:
                 count = 0
-                for s1 in self.s1s:
+                for s1 in set_s1:
                     if w in s1:
                         count += 1
                 idf[w] = np.log(self.data_size / float(count))
@@ -260,4 +265,4 @@ class ComplexSimple(Data):
 
 if __name__ == '__main__':
     train_data = ComplexSimple()
-    train_data.open_file(mode="1000", method="labeled")
+    train_data.open_file(mode="train", method="labeled")
