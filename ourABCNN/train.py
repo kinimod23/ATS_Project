@@ -2,20 +2,23 @@ import tensorflow as tf
 import numpy as np
 import sys
 
-from preprocess import Word2Vec, MSRP, WikiQA
+from preprocess import Word2Vec, MSRP, WikiQA, ComplexSimple
 from ABCNN import ABCNN
 from utils import build_path
 from sklearn import linear_model, svm
 from sklearn.externals import joblib
 
 
-def train(lr, w, l2_reg, epoch, batch_size, num_layers, data_type, word2vec, num_classes=2):
+def train(lr, w, l2_reg, epoch, batch_size, num_layers, data_type, method, word2vec, num_classes=2):
     if data_type == "WikiQA":
         train_data = WikiQA(word2vec=word2vec)
-    else:
+        train_data.open_file(mode="train")
+    elif data_type == 'Paraphrase':
         train_data = MSRP(word2vec=word2vec)
-
-    train_data.open_file(mode="train")
+        train_data.open_file(mode="train")
+    elif data_type == 'Complex2Simple':
+        train_data = ComplexSimple(word2vec=word2vec)
+        train_data.open_file(mode="train", method=method)
 
     print("=" * 50)
     print("training data size:", train_data.data_size)
@@ -58,7 +61,7 @@ def train(lr, w, l2_reg, epoch, batch_size, num_layers, data_type, word2vec, num
 
                 batch_x1, batch_x2, batch_y, batch_features = train_data.next_batch(batch_size=batch_size)
 
-                merged, _, c, features = sess.run([model.merged, optimizer, model.cost, model.output_features],
+                merged, _, c, features, pred, att = sess.run([model.merged, optimizer, model.cost, model.output_features, model.L1, model.att],
                                                   feed_dict={model.x1: batch_x1,
                                                              model.x2: batch_x2,
                                                              model.y: batch_y,
@@ -66,8 +69,9 @@ def train(lr, w, l2_reg, epoch, batch_size, num_layers, data_type, word2vec, num
 
                 clf_features.append(features)
 
-                if i % 100 == 0:
+                if i % 10 == 0:
                     print("[batch " + str(i) + "] cost:", c)
+                    #print('att ', pred[0])
                 train_summary_writer.add_summary(merged, i)
 
             save_path = saver.save(sess, build_path("./models/", data_type, 'ABCNN3', num_layers), global_step=e)
@@ -109,7 +113,8 @@ if __name__ == "__main__":
         "epoch": 50,
         "batch_size": 64,
         "num_layers": 2,
-        "data_type": "WikiQA",
+        "data_type": "Complex2Simple",
+        "method": "labeled",
         "word2vec": Word2Vec()
     }
 
@@ -126,4 +131,4 @@ if __name__ == "__main__":
 
     train(lr=float(params["lr"]), w=int(params["ws"]), l2_reg=float(params["l2_reg"]), epoch=int(params["epoch"]),
           batch_size=int(params["batch_size"]), num_layers=int(params["num_layers"]),
-          data_type=params["data_type"], word2vec=params["word2vec"])
+          data_type=params["data_type"], method=params["method"], word2vec=params["word2vec"])

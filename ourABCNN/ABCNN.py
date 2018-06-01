@@ -123,6 +123,7 @@ class ABCNN():
                                          regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg))
                     # [batch, s, s]
                     att_mat = make_attention_mat(x1, x2)
+
                     # [batch, s, s] * [s,d] => [batch, s, d]
                     # matrix transpose => [batch, d, s]
                     # expand dims => [batch, d, s, 1]
@@ -138,9 +139,10 @@ class ABCNN():
 
                 # [batch, s+w-1, s+w-1]
                 att_mat = make_attention_mat(left_conv, right_conv)
+
                 # [batch, s+w-1], [batch, s+w-1]
                 left_attention, right_attention = tf.reduce_sum(att_mat, axis=2), tf.reduce_sum(att_mat, axis=1)
-
+                self.att = right_attention
                 left_wp = w_pool(variable_scope="left", x=left_conv, attention=left_attention)
                 left_ap = all_pool(variable_scope="left", x=left_conv)
                 right_wp = w_pool(variable_scope="right", x=right_conv, attention=right_attention)
@@ -155,16 +157,15 @@ class ABCNN():
         RO_0 = all_pool(variable_scope="input-right", x=x2_expanded)
 
         LI_1, LO_1, RI_1, RO_1 = CNN_layer(variable_scope="CNN-1", x1=x1_expanded, x2=x2_expanded, d=d0)
+
         sims = [cos_sim(LO_0, RO_0), cos_sim(LO_1, RO_1)]
         LAYERS = [LI_1, RI_1]
-
+        self.L1 = RI_1
         if num_layers > 1:
             for i in range(2, num_layers+1):
                 LI, LO, RI, RO = CNN_layer(variable_scope="CNN-"+str(i), x1=LAYERS[2*i-4], x2=LAYERS[2*i-3], d=di)
                 LAYERS.append(LI)
                 LAYERS.append(RI)
-                self.test = LO
-                self.test2 = RO
                 sims.append(cos_sim(LO, RO))
 
         with tf.variable_scope("output-layer"):
@@ -181,7 +182,7 @@ class ABCNN():
             )
 
         self.prediction = tf.contrib.layers.softmax(self.estimation)[:, 1]
-
+        self.sims = sims
         self.cost = tf.add(
             tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.estimation, labels=self.y)),
             tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)),
