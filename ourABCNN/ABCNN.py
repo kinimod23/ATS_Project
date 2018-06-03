@@ -28,11 +28,12 @@ class ABCNN():
             return tf.pad(x, np.array([[0, 0], [0, 0], [w - 1, w - 1], [0, 0]]), "CONSTANT", name="pad_wide_conv")
 
         def cos_sim(v1, v2):
-            norm1 = tf.sqrt(tf.reduce_sum(tf.square(v1), axis=1))
-            norm2 = tf.sqrt(tf.reduce_sum(tf.square(v2), axis=1))
-            dot_products = tf.reduce_sum(v1 * v2, axis=1, name="cos_sim")
-
-            return dot_products / (norm1 * norm2)
+            with tf.variable_scope("cos_sim"):
+                norm1 = tf.sqrt(tf.reduce_sum(tf.square(v1), axis=1))
+                norm2 = tf.sqrt(tf.reduce_sum(tf.square(v2), axis=1))
+                dot_products = tf.reduce_sum(v1 * v2, axis=1, name="cos_sim")
+                res = dot_products / (norm1 * norm2)
+            return res
 
         def euclidean_score(v1, v2):
             euclidean = tf.sqrt(tf.reduce_sum(tf.square(v1 - v2), axis=1))
@@ -42,8 +43,10 @@ class ABCNN():
             # x1, x2 = [batch, height, width, 1] = [batch, d, s, 1]
             # x2 => [batch, height, 1, width]
             # [batch, width, wdith] = [batch, s, s]
-            euclidean = tf.sqrt(tf.reduce_sum(tf.square(x1 - tf.matrix_transpose(x2)), axis=1))
-            return 1 / (1 + euclidean)
+            with tf.variable_scope("att_matt"):
+                euclidean = tf.sqrt(tf.reduce_sum(tf.square(x1 - tf.matrix_transpose(x2)), axis=1))
+                res = 1 / (1 + euclidean)
+            return res
 
         def convolution(name_scope, x, d, reuse):
             with tf.name_scope(name_scope + "-conv"):
@@ -56,12 +59,18 @@ class ABCNN():
                         padding="VALID",
                         activation_fn=tf.nn.tanh,
                         weights_initializer=tf.contrib.layers.xavier_initializer_conv2d(),
-                        weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
-                        biases_initializer=tf.constant_initializer(1e-04),
+                        #weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
+                        biases_initializer=tf.contrib.layers.xavier_initializer_conv2d(),
                         reuse=reuse,
                         trainable=True,
                         scope=scope
                     )
+                    tf.get_variable_scope().reuse_variables()
+                    weights = tf.get_variable('weights')
+                    tf.summary.histogram('weights', weights)
+                    biases = tf.get_variable('biases')
+                    tf.summary.histogram('biases', biases)
+
                     # Weight: [filter_height, filter_width, in_channels, out_channels]
                     # output: [batch, 1, input_width+filter_Width-1, out_channels] == [batch, 1, s+w-1, di]
 
@@ -119,10 +128,12 @@ class ABCNN():
                 with tf.name_scope("att_mat"):
                     aW = tf.get_variable(name="aW",
                                          shape=(s, d),
-                                         initializer=tf.contrib.layers.xavier_initializer(),
-                                         regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg))
+                                         initializer=tf.contrib.layers.xavier_initializer())
                     # [batch, s, s]
                     att_mat = make_attention_mat(x1, x2)
+
+                    tf.get_variable_scope().reuse_variables()
+                    tf.summary.histogram('att_mat-1', att_mat)
 
                     # [batch, s, s] * [s,d] => [batch, s, d]
                     # matrix transpose => [batch, d, s]
@@ -134,15 +145,20 @@ class ABCNN():
                     x1 = tf.concat([x1, x1_a], axis=3)
                     x2 = tf.concat([x2, x2_a], axis=3)
 
-                left_conv = convolution(name_scope="left", x=pad_for_wide_conv(x1), d=d, reuse=False)
-                right_conv = convolution(name_scope="right", x=pad_for_wide_conv(x2), d=d, reuse=True)
+                left_conv = convolution(name_scope="left", x=pad_for_wide_conv(x1), d=d, reuse=tf.AUTO_REUSE)
+                right_conv = convolution(name_scope="right", x=pad_for_wide_conv(x2), d=d, reuse=tf.AUTO_REUSE)
+
+
 
                 # [batch, s+w-1, s+w-1]
                 att_mat = make_attention_mat(left_conv, right_conv)
 
+                tf.get_variable_scope().reuse_variables()
+                tf.summary.histogram('att_mat-2', att_mat)
+
                 # [batch, s+w-1], [batch, s+w-1]
                 left_attention, right_attention = tf.reduce_sum(att_mat, axis=2), tf.reduce_sum(att_mat, axis=1)
-                self.att = right_attention
+
                 left_wp = w_pool(variable_scope="left", x=left_conv, attention=left_attention)
                 left_ap = all_pool(variable_scope="left", x=left_conv)
                 right_wp = w_pool(variable_scope="right", x=right_conv, attention=right_attention)
@@ -160,13 +176,15 @@ class ABCNN():
 
         sims = [cos_sim(LO_0, RO_0), cos_sim(LO_1, RO_1)]
         LAYERS = [LI_1, RI_1]
-        self.L1 = RI_1
+        self.L1 = LI_1
         if num_layers > 1:
             for i in range(2, num_layers+1):
                 LI, LO, RI, RO = CNN_layer(variable_scope="CNN-"+str(i), x1=LAYERS[2*i-4], x2=LAYERS[2*i-3], d=di)
                 LAYERS.append(LI)
                 LAYERS.append(RI)
                 sims.append(cos_sim(LO, RO))
+                self.L2 = LI
+
 
         with tf.variable_scope("output-layer"):
             self.output_features = tf.concat([self.features, tf.stack(sims, axis=1)], axis=1, name="output_features")
@@ -176,19 +194,22 @@ class ABCNN():
                 num_outputs=num_classes,
                 activation_fn=None,
                 weights_initializer=tf.contrib.layers.xavier_initializer(),
-                weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
-                biases_initializer=tf.constant_initializer(1e-04),
+                #weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
+                biases_initializer=tf.contrib.layers.xavier_initializer_conv2d(),
                 scope="FC"
             )
 
         self.prediction = tf.contrib.layers.softmax(self.estimation)[:, 1]
-        self.sims = sims
-        self.cost = tf.add(
-            tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.estimation, labels=self.y)),
-            tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)),
-            name="cost")
+        self.cost = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.estimation, labels=self.y), name='cost')
+        #tf.add(
+
+            #tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)),
+            #name="cost")
 
         tf.summary.scalar("cost", self.cost)
+        tf.summary.scalar("L1", tf.reduce_max(self.L1))
+        if num_layers > 1:
+            tf.summary.scalar("L2", tf.reduce_max(self.L2))
         self.merged = tf.summary.merge_all()
 
         print("=" * 50)
