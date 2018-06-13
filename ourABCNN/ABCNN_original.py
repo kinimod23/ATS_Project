@@ -191,17 +191,15 @@ class ABCNN():
 
         sims = [cos_sim(LO_0, RO_0), cos_sim(LO_1, RO_1)]
 
-        if num_layers == 2:
-            _, LO_2, _, RO_2 = CNN_layer(variable_scope="CNN-2", x1=LI_1, x2=RI_1, d=di)
-            self.test = LO_2
-            self.test2 = RO_2
-            sims.append(cos_sim(LO_2, RO_2))
-
-        if num_layers == 3:
-            _, LO_3, _, RO_3 = CNN_layer(variable_scope="CNN-3", x1=LI_2, x2=RI_2, d=di)
-            self.test = LO_3
-            self.test2 = RO_3
-            sims.append(cos_sim(LO_3, RO_3))
+        LAYERS = [LI_1, RI_1]
+        self.L1 = LI_1
+        if num_layers > 1:
+            for i in range(2, num_layers+1):
+                LI, LO, RI, RO = CNN_layer(variable_scope="CNN-"+str(i), x1=LAYERS[2*i-4], x2=LAYERS[2*i-3], d=di)
+                LAYERS.append(LI)
+                LAYERS.append(RI)
+                sims.append(cos_sim(LO, RO))
+                self.L2 = LI
 
         with tf.variable_scope("output-layer"):
             self.output_features = tf.concat([self.features, tf.stack(sims, axis=1)], axis=1, name="output_features")

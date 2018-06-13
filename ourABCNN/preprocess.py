@@ -193,11 +193,11 @@ class ComplexSimple(Data):
         took = time.time() - begin
         print("Took: {}".format(took))
     def open_file(self, mode, method): # mode = test, train etc only for file name
-        with codecs.open("../corpus/wiki_complex_" + mode + "_small.txt", 'r', encoding="utf-8") as c, \
-        codecs.open("../corpus/wiki_simple_" + mode + "_small.txt", 'r', encoding="utf-8") as s:
+        with codecs.open("../corpus/wiki_complex_" + mode + ".txt", 'r', encoding="utf-8") as c, \
+        codecs.open("../corpus/wiki_simple_" + mode + ".txt", 'r', encoding="utf-8") as s:
             for(complex_sen, simple_sen) in zip(c.readlines(), s.readlines()):
-                s1 = word_tokenize(complex_sen.strip().lower())[:20]
-                s2 = word_tokenize(simple_sen.strip().lower())[:20]
+                s1 = word_tokenize(complex_sen.strip().lower())[:80]
+                s2 = word_tokenize(simple_sen.strip().lower())[:80]
                 self.s1s.append(s1)
                 self.s2s.append(s2)
                 if method == "labeled":

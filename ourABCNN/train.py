@@ -4,12 +4,15 @@ import sys
 
 from preprocess import Word2Vec, MSRP, WikiQA, ComplexSimple
 from ABCNN import ABCNN
+from ABCNN_original import ABCNN as ABCNN_original
 from utils import build_path
 from sklearn import linear_model, svm
 from sklearn.externals import joblib
+import os
+import pickle
 
 
-def train(lr, w, l2_reg, epoch, batch_size, num_layers, data_type, method, word2vec, num_classes=2):
+def train(lr, w, l2_reg, epoch, batch_size, num_layers, data_type, method, word2vec, dumped_data, num_classes=2):
     if data_type == "WikiQA":
         train_data = WikiQA(word2vec=word2vec)
         train_data.open_file(mode="train")
@@ -17,16 +20,27 @@ def train(lr, w, l2_reg, epoch, batch_size, num_layers, data_type, method, word2
         train_data = MSRP(word2vec=word2vec)
         train_data.open_file(mode="train")
     elif data_type == 'Complex2Simple':
-        train_data = ComplexSimple(word2vec=word2vec)
-        train_data.open_file(mode="train", method=method)
+        if not os.path.exists(dumped_data):
+            print("Dumped data not found! Data will be preprocessed")
+            train_data = ComplexSimple(word2vec=word2vec)
+            train_data.open_file(mode="train", method=method)
+        else:
+            print("found pickled state, loading..")
+            with open(dumped_data) as f:
+                train_data = pickle.load(f)
+            print("done!")
 
     print("=" * 50)
     print("training data size:", train_data.data_size)
     print("training max len:", train_data.max_len)
     print("=" * 50)
 
-    model = ABCNN(s=train_data.max_len, w=w, l2_reg=l2_reg,
+    #model = ABCNN(s=train_data.max_len, w=w, l2_reg=l2_reg,
+    #              num_features=train_data.num_features, num_classes=num_classes, num_layers=num_layers)
+
+    model = ABCNN_original(s=train_data.max_len, w=w, l2_reg=l2_reg, model_type='',
                   num_features=train_data.num_features, num_classes=num_classes, num_layers=num_layers)
+
 
     optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(model.cost)
 
@@ -51,6 +65,8 @@ def train(lr, w, l2_reg, epoch, batch_size, num_layers, data_type, method, word2
 
             train_data.reset_index()
             i = 0
+            MeanCost = 0
+
 
             LR = linear_model.LogisticRegression()
             SVM = svm.LinearSVC()
@@ -61,33 +77,37 @@ def train(lr, w, l2_reg, epoch, batch_size, num_layers, data_type, method, word2
 
                 batch_x1, batch_x2, batch_y, batch_features = train_data.next_batch(batch_size=batch_size)
 
-                merged, _, c, features, pred, att = sess.run([model.merged, optimizer, model.cost, model.output_features, model.L1, model.att],
+                merged, _, c, features = sess.run([model.merged, optimizer, model.cost, model.output_features],
                                                   feed_dict={model.x1: batch_x1,
                                                              model.x2: batch_x2,
                                                              model.y: batch_y,
                                                              model.features: batch_features})
+                MeanCost += c
 
                 clf_features.append(features)
 
-                if i % 10 == 0:
+                if i % 200 == 0:
                     print("[batch " + str(i) + "] cost:", c)
                     #print('att ', pred[0])
                 train_summary_writer.add_summary(merged, i)
+            print('Mean Cost: ', MeanCost/i)
 
-            save_path = saver.save(sess, build_path("./models/", data_type, 'ABCNN3', num_layers), global_step=e)
-            print("model saved as", save_path)
+            if e % 100 == 0:
+                save_path = saver.save(sess, build_path("./models/", data_type, 'ABCNN3', num_layers), global_step=e)
+                print("model saved as", save_path)
 
             clf_features = np.concatenate(clf_features)
             LR.fit(clf_features, train_data.labels)
             SVM.fit(clf_features, train_data.labels)
 
-            LR_path = build_path("./models/", data_type, 'ABCNN3', num_layers, "-" + str(e) + "-LR.pkl")
-            SVM_path = build_path("./models/", data_type, 'ABCNN3', num_layers, "-" + str(e) + "-SVM.pkl")
-            joblib.dump(LR, LR_path)
-            joblib.dump(SVM, SVM_path)
+            if e % 100 == 0:
+                LR_path = build_path("./models/", data_type, 'ABCNN3', num_layers, "-" + str(e) + "-LR.pkl")
+                SVM_path = build_path("./models/", data_type, 'ABCNN3', num_layers, "-" + str(e) + "-SVM.pkl")
+                joblib.dump(LR, LR_path)
+                joblib.dump(SVM, SVM_path)
 
-            print("LR saved as", LR_path)
-            print("SVM saved as", SVM_path)
+                print("LR saved as", LR_path)
+                print("SVM saved as", SVM_path)
 
         print("training finished!")
         print("=" * 50)
@@ -114,6 +134,7 @@ if __name__ == "__main__":
         "batch_size": 64,
         "num_layers": 2,
         "data_type": "Complex2Simple",
+        "dumped_data": "preprocessed.pkl",
         "method": "labeled",
         "word2vec": Word2Vec()
     }
@@ -131,4 +152,4 @@ if __name__ == "__main__":
 
     train(lr=float(params["lr"]), w=int(params["ws"]), l2_reg=float(params["l2_reg"]), epoch=int(params["epoch"]),
           batch_size=int(params["batch_size"]), num_layers=int(params["num_layers"]),
-          data_type=params["data_type"], method=params["method"], word2vec=params["word2vec"])
+          data_type=params["data_type"], method=params["method"], word2vec=params["word2vec"], dumped_data=params["dumped_data"])
