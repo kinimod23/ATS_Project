@@ -2,13 +2,13 @@ import numpy as np
 import nltk
 from nltk.tokenize import word_tokenize
 import gensim
-import random 
+import random
 import codecs
 import copy
 import time
 import os
 from tqdm import tqdm
-import cPickle as pickle
+import pickle
 
 PICKLED_STATE = "preprocessed.p"
 
@@ -27,7 +27,7 @@ class Word2Vec():
 
 
 class Data():
-    """
+
     def __init__(self, word2vec, max_len=0):
         self.s1s, self.s2s, self.labels, self.features = [], [], [], []
         self.index, self.max_len, self.word2vec = 0, max_len, word2vec
@@ -35,7 +35,7 @@ class Data():
     def __init__(self, max_len=0):
         self.s1s, self.s2s, self.labels, self.features = [], [], [], []
         self.index, self.max_len = 0, max_len
-    
+    """
     def open_file(self):
         pass
 
@@ -168,7 +168,7 @@ class ComplexSimple(Data):
         in_common = len([item for item in sim if item in comp])
         if in_common <= threshold:
             return True
-        return False 
+        return False
 
     def process_labeled(self):
         complex_sen = copy.copy(self.s1s)
@@ -200,19 +200,19 @@ class ComplexSimple(Data):
     def open_file(self, mode, method): # mode = test, train etc only for file name
         print("reading data...")
         with codecs.open("../corpus/wiki_complex_" + mode + ".txt", 'r', encoding="utf-8") as c, \
-        codecs.open("../corpus/wiki_simple_" + mode + ".txt", 'r', encoding="utf-8") as s:   
+        codecs.open("../corpus/wiki_simple_" + mode + ".txt", 'r', encoding="utf-8") as s:
             for(complex_sen, simple_sen) in tqdm(zip(c.readlines(), s.readlines())):
-                s1 = word_tokenize(complex_sen.strip().lower())
-                s2 = word_tokenize(simple_sen.strip().lower())
+                s1 = word_tokenize(complex_sen.strip().lower())[:40]
+                s2 = word_tokenize(simple_sen.strip().lower())[:40]
                 self.s1s.append(s1)
                 self.s2s.append(s2)
                 if method == "labeled":
                     self.labels.append(1)
             print("Data was read")
 
-            
+
             self.data_size = len(self.s1s)
-            
+
             flatten_begin = time.time()
             flatten = lambda l: [item for sublist in l for item in sublist]
             q_vocab = list(set(flatten(self.s1s)))
@@ -235,17 +235,17 @@ class ComplexSimple(Data):
             print("Idf dict creation took: {}".format(time.time() - idf_begin))
 
             if method == "labeled":
-                # create sentences that don't match, label them as 0 
+                # create sentences that don't match, label them as 0
                 self.process_labeled()
 
             elif method == "unlabeled":
-                # no labels needed, simple sentence in label 
+                # no labels needed, simple sentence in label
                 # to compare output and "label" with BLEU
                 simple_sen =  []
                 for line in s.readlines():
                     simple_sen.append(word_tokenize(line.strip().lower()))
                 self.labels = simple_sen
-            else: 
+            else:
                 raise NameError(method)
 
             # create features
@@ -272,8 +272,8 @@ class ComplexSimple(Data):
 
 if __name__ == '__main__':
     if not os.path.exists(PICKLED_STATE):
-        train_data = ComplexSimple()
-        train_data.open_file(mode="1000", method="labeled")
+        train_data = ComplexSimple(Word2Vec())
+        train_data.open_file(mode="train", method="labeled")
     else:
         print("found pickled state, loading..")
         with open(PICKLED_STATE) as f:
