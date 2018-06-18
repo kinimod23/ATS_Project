@@ -8,9 +8,9 @@ import copy
 import time
 import os
 from tqdm import tqdm
-import cPickle as pickle
+import _pickle as pickle
 
-PICKLED_STATE = "preprocessed.p"
+PICKLED_STATE = "preprocessed.pkl"
 
 class Word2Vec():
     def __init__(self):
@@ -27,7 +27,6 @@ class Word2Vec():
 
 
 class Data():
-    """
     def __init__(self, word2vec, max_len=0):
         self.s1s, self.s2s, self.labels, self.features = [], [], [], []
         self.index, self.max_len, self.word2vec = 0, max_len, word2vec
@@ -35,7 +34,7 @@ class Data():
     def __init__(self, max_len=0):
         self.s1s, self.s2s, self.labels, self.features = [], [], [], []
         self.index, self.max_len = 0, max_len
-    
+    """
     def open_file(self):
         pass
 
@@ -267,15 +266,24 @@ class ComplexSimple(Data):
             self.num_features = len(self.features[0])
             feature_took = time.time() - feature_begin
             print("features took: {}".format(feature_took))
+            pickle_blacklist = [ "word2vec" ] 
             with open(PICKLED_STATE, "wb") as f:
-                pickle.dump(self, f)
+                dump_dict = dict()
+                for k, v in self.__dict__.items():
+                    if k not in pickle_blacklist:
+                        dump_dict[k] = v
+                pickle.dump(dump_dict, f)
 
 if __name__ == '__main__':
     if not os.path.exists(PICKLED_STATE):
-        train_data = ComplexSimple()
-        train_data.open_file(mode="1000", method="labeled")
+        train_data = ComplexSimple(Word2Vec())
+        train_data.open_file(mode="train", method="labeled")
     else:
         print("found pickled state, loading..")
-        with open(PICKLED_STATE) as f:
-            train_data = pickle.load(f)
+        train_data = ComplexSimple(Word2Vec())
+        with open(PICKLED_STATE, "rb") as f:
+            dump_dict = pickle.load(f)
+            for k, v in dump_dict.items():
+                setattr(train_data, k, v)
+
     print("done!")

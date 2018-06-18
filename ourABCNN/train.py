@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 import sys
 
-from preprocess import Word2Vec, MSRP, WikiQA, ComplexSimple
+from preprocess_dump import Word2Vec, MSRP, WikiQA, ComplexSimple
 from ABCNN import ABCNN
 from ABCNN_original import ABCNN as ABCNN_original
 from utils import build_path
@@ -26,8 +26,11 @@ def train(lr, w, l2_reg, epoch, batch_size, num_layers, data_type, method, word2
             train_data.open_file(mode="train", method=method)
         else:
             print("found pickled state, loading..")
-            with open(dumped_data) as f:
-                train_data = pickle.load(f)
+            train_data = ComplexSimple(word2vec=word2vec)
+            with open(dumped_data, 'rb') as f:
+                dump_dict = pickle.load(f)
+                for k, v in dump_dict.items():
+                    setattr(train_data, k, v)
             print("done!")
 
     print("=" * 50)
@@ -37,25 +40,26 @@ def train(lr, w, l2_reg, epoch, batch_size, num_layers, data_type, method, word2
 
     #model = ABCNN(s=train_data.max_len, w=w, l2_reg=l2_reg,
     #              num_features=train_data.num_features, num_classes=num_classes, num_layers=num_layers)
-
-    model = ABCNN_original(s=train_data.max_len, w=w, l2_reg=l2_reg, model_type='',
+    tfconfig = tf.ConfigProto(allow_soft_placement = True)
+    with tf.device("/gpu:0"):
+        model = ABCNN_original(s=train_data.max_len, w=w, l2_reg=l2_reg, model_type='',
                   num_features=train_data.num_features, num_classes=num_classes, num_layers=num_layers)
 
 
-    optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(model.cost)
+        optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(model.cost)
 
-    # Due to GTX 970 memory issues
-    #gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.7)
+        # Due to GTX 970 memory issues
+        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.7)
 
-    # Initialize all variables
-    init = tf.global_variables_initializer()
+        # Initialize all variables
+        init = tf.global_variables_initializer()
 
-    # model(parameters) saver
-    saver = tf.train.Saver(max_to_keep=100)
+        # model(parameters) saver
+        saver = tf.train.Saver(max_to_keep=100)
 
     #with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
-    with tf.Session() as sess:
-        train_summary_writer = tf.summary.FileWriter("C:/tf_logs/train2", sess.graph)
+    with tf.Session(config=tfconfig) as sess:
+        train_summary_writer = tf.summary.FileWriter("../tf_logs/train2", sess.graph)
 
         sess.run(init)
 
