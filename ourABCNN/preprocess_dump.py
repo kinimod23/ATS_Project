@@ -10,7 +10,7 @@ import os
 from tqdm import tqdm
 import _pickle as pickle
 
-PICKLED_STATE = "preprocessed.pkl"
+STATE_FN_SCHEME = "preprocessed_%s.pkl"
 
 class Word2Vec():
     def __init__(self):
@@ -24,6 +24,16 @@ class Word2Vec():
             return self.unknowns
         else:
             return self.model.word_vec(word)
+
+    def cntUnknowns(self, sentence, threshold):
+        cnt = 0
+        threshold_amount = len(sentence) * threshold
+        for word in sentence:
+            if word not in self.model.vocab:
+                cnt += 1
+        if cnt < threshold_amount:
+            return True
+        return False
 
 
 class Data():
@@ -197,16 +207,26 @@ class ComplexSimple(Data):
         took = time.time() - begin
         print("Took: {}".format(took))
     def open_file(self, mode, method): # mode = test, train etc only for file name
+        state_fn = STATE_FN_SCHEME % mode
         print("reading data...")
         with codecs.open("../corpus/wiki_complex_" + mode + ".txt", 'r', encoding="utf-8") as c, \
         codecs.open("../corpus/wiki_simple_" + mode + ".txt", 'r', encoding="utf-8") as s:
             for(complex_sen, simple_sen) in tqdm(zip(c.readlines(), s.readlines())):
-                s1 = word_tokenize(complex_sen.strip().lower())[:40]
-                s2 = word_tokenize(simple_sen.strip().lower())[:40]
-                self.s1s.append(s1)
-                self.s2s.append(s2)
-                if method == "labeled":
-                    self.labels.append(1)
+                s1 = word_tokenize(complex_sen.strip().lower())
+                s2 = word_tokenize(simple_sen.strip().lower())
+                if  not len(s1) > 50 and not len(s1) > 50:
+                    if self.word2vec.cntUnknowns(s1, 0.5) and self.word2vec.cntUnknowns(s2, 0.5):
+                        self.s1s.append(s1)
+                        self.s2s.append(s2)
+                        if method == "labeled":
+                            self.labels.append(1)
+                    else:
+                        print("Sentences have too many unknowns:\n")
+                        print(s1)
+                        print(s2)
+                else:
+                    print("Sentence too long: {}".format(len(s1)))
+                    print("Sentence too long: {}".format(len(s2)))
             print("Data was read")
 
 
@@ -267,7 +287,7 @@ class ComplexSimple(Data):
             feature_took = time.time() - feature_begin
             print("features took: {}".format(feature_took))
             pickle_blacklist = [ "word2vec" ]
-            with open(PICKLED_STATE, "wb") as f:
+            with open(state_fn, "wb") as f:
                 dump_dict = dict()
                 for k, v in self.__dict__.items():
                     if k not in pickle_blacklist:
@@ -275,13 +295,14 @@ class ComplexSimple(Data):
                 pickle.dump(dump_dict, f)
 
 if __name__ == '__main__':
-    if not os.path.exists(PICKLED_STATE):
+    mode = "50"
+    if not os.path.exists(STATE_FN_SCHEME%mode):
         train_data = ComplexSimple(Word2Vec())
-        train_data.open_file(mode="train", method="labeled")
+        train_data.open_file(mode=mode, method="labeled")
     else:
         print("found pickled state, loading..")
         train_data = ComplexSimple(Word2Vec())
-        with open(PICKLED_STATE, "rb") as f:
+        with open(STATE_FN_SCHEME%mode, "rb") as f:
             dump_dict = pickle.load(f)
             for k, v in dump_dict.items():
                 setattr(train_data, k, v)
