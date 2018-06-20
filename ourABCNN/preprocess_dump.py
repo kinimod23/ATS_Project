@@ -214,7 +214,7 @@ class ComplexSimple(Data):
             for(complex_sen, simple_sen) in tqdm(zip(c.readlines(), s.readlines())):
                 s1 = word_tokenize(complex_sen.strip().lower())
                 s2 = word_tokenize(simple_sen.strip().lower())
-                if  not len(s1) > 50 and not len(s1) > 50:
+                if  not len(s1) > 50 and not len(s2) > 50:
                     if self.word2vec.cntUnknowns(s1, 0.5) and self.word2vec.cntUnknowns(s2, 0.5):
                         self.s1s.append(s1)
                         self.s2s.append(s2)
