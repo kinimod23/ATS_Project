@@ -2,19 +2,34 @@ import tensorflow as tf
 import sys
 import numpy as np
 
-from preprocess import Word2Vec, MSRP, WikiQA
+from preprocess import Word2Vec, MSRP, WikiQA, ComplexSimple
 from ABCNN import ABCNN
 from utils import build_path
 from sklearn.externals import joblib
+import pickle
+import os
 
 
-def test(w, l2_reg, epoch, max_len, num_layers, data_type, classifier, word2vec, num_classes=2):
+def test(w, l2_reg, epoch, max_len, num_layers, data_type, classifier, method, word2vec, dumped_data, num_classes=2):
     if data_type == "WikiQA":
         test_data = WikiQA(word2vec=word2vec, max_len=max_len)
-    else:
+        test_data.open_file(mode="test")
+    elif data_type == "MSRP":
         test_data = MSRP(word2vec=word2vec, max_len=max_len)
-
-    test_data.open_file(mode="test")
+        test_data.open_file(mode="test")
+    elif data_type == 'ComplexSimple':
+        if not os.path.exists(dumped_data):
+            print("Dumped data not found! Data will be preprocessed")
+            test_data = ComplexSimple(word2vec=word2vec)
+            test_data.open_file(mode="test", method="labeled")
+        else:
+            print("found pickled state, loading..")
+            test_data = ComplexSimple(word2vec=word2vec)
+            with open(dumped_data, 'rb') as f:
+                dump_dict = pickle.load(f)
+                for k, v in dump_dict.items():
+                    setattr(test_data, k, v)
+            print("done!")
 
     model = ABCNN(s=max_len, w=w, l2_reg=l2_reg,
                   num_features=test_data.num_features, num_classes=num_classes, num_layers=num_layers)
@@ -127,8 +142,10 @@ if __name__ == "__main__":
         "epoch": 50,
         "max_len": 40,
         "num_layers": 2,
-        "data_type": "WikiQA",
+        "data_type": "ComplexSimple",
+        "dumped_data": "preprocessed_test.pkl",
         "classifier": "LR",
+        "method": "labeled",
         "word2vec": Word2Vec()
     }
 
@@ -141,4 +158,5 @@ if __name__ == "__main__":
     test(w=int(params["ws"]), l2_reg=float(params["l2_reg"]), epoch=int(params["epoch"]),
          max_len=int(params["max_len"]),
          num_layers=int(params["num_layers"]), data_type=params["data_type"],
-         classifier=params["classifier"], word2vec=params["word2vec"])
+         classifier=params["classifier"], method=params["method"], word2vec=params["word2vec"], dumped_data=params["dumped_data"])
+
