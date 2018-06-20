@@ -221,12 +221,14 @@ class ComplexSimple(Data):
                         if method == "labeled":
                             self.labels.append(1)
                     else:
-                        print("Sentences have too many unknowns:\n")
-                        print(s1)
-                        print(s2)
+                        #print("Sentences have too many unknowns:\n")
+                        #print(s1)
+                        #print(s2)
+                        pass
                 else:
-                    print("Sentence too long: {}".format(len(s1)))
-                    print("Sentence too long: {}".format(len(s2)))
+                    #print("Sentence too long: {}".format(len(s1)))
+                    #print("Sentence too long: {}".format(len(s2)))
+                    pass
             print("Data was read")
 
 
