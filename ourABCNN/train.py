@@ -96,7 +96,7 @@ def train(lr, w, l2_reg, epoch, batch_size, num_layers, data_type, method, word2
                 train_summary_writer.add_summary(merged, i)
             print('Mean Cost: ', MeanCost/i)
 
-            if e % 100 == 0:
+            if e % 50 == 0:
                 save_path = saver.save(sess, build_path("./models/", data_type, 'ABCNN3', num_layers), global_step=e)
                 print("model saved as", save_path)
 
@@ -104,7 +104,7 @@ def train(lr, w, l2_reg, epoch, batch_size, num_layers, data_type, method, word2
             LR.fit(clf_features, train_data.labels)
             SVM.fit(clf_features, train_data.labels)
 
-            if e % 100 == 0:
+            if e % 50 == 0:
                 LR_path = build_path("./models/", data_type, 'ABCNN3', num_layers, "-" + str(e) + "-LR.pkl")
                 SVM_path = build_path("./models/", data_type, 'ABCNN3', num_layers, "-" + str(e) + "-SVM.pkl")
                 joblib.dump(LR, LR_path)
