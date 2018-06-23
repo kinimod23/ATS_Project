@@ -20,6 +20,7 @@ class ABCNN():
 
         self.x1 = tf.placeholder(tf.float32, shape=[None, d0, s], name="x1")
         self.x2 = tf.placeholder(tf.float32, shape=[None, d0, s], name="x2")
+        self.x3 = tf.placeholder(tf.float32, shape=[None, d0, s], name="x3")
         self.y = tf.placeholder(tf.int32, shape=[None], name="y")
         self.features = tf.placeholder(tf.float32, shape=[None, num_features], name="features")
 
@@ -34,7 +35,7 @@ class ABCNN():
 
             return dot_products / (norm1 * norm2)
 
-        def w_pool(variable_scope, x, attention):
+        def w_pool(variable_scope, x):
             # x: [batch, di, s+w-1, 1]
             # attention: [batch, s+w-1]
             with tf.variable_scope(variable_scope + "-w_pool"):
@@ -111,11 +112,9 @@ class ABCNN():
                 left_conv = convolution(name_scope="left", x=pad_for_wide_conv(x1), d=d, reuse=tf.AUTO_REUSE)
                 right_conv = convolution(name_scope="right", x=pad_for_wide_conv(x2), d=d, reuse=tf.AUTO_REUSE)
 
-                left_attention, right_attention = None, None
-
-                left_wp = w_pool(variable_scope="left", x=left_conv, attention=left_attention)
+                left_wp = w_pool(variable_scope="left", x=left_conv)
                 left_ap = all_pool(variable_scope="left", x=left_conv)
-                right_wp = w_pool(variable_scope="right", x=right_conv, attention=right_attention)
+                right_wp = w_pool(variable_scope="right", x=right_conv)
                 right_ap = all_pool(variable_scope="right", x=right_conv)
 
                 return left_wp, left_ap, right_wp, right_ap
@@ -191,49 +190,57 @@ class ABCNN():
             with tf.variable_scope(variable_scope):
 
 
-        x1_expanded = tf.expand_dims(self.x1, -1)
-        x2_expanded = tf.expand_dims(self.x2, -1)
+        with tf.variable_scope("Encoder"):
+            x1_expanded = tf.expand_dims(self.x1, -1)
+            x2_expanded = tf.expand_dims(self.x2, -1)
 
-        LO_0 = all_pool(variable_scope="input-left", x=x1_expanded)
-        RO_0 = all_pool(variable_scope="input-right", x=x2_expanded)
+            LO_0 = all_pool(variable_scope="input-left", x=x1_expanded)
+            RO_0 = all_pool(variable_scope="input-right", x=x2_expanded)
 
-        LI_1, LO_1, RI_1, RO_1 = CNN_layer(variable_scope="CNN-1", x1=x1_expanded, x2=x2_expanded, d=d0)
+            LI_1, LO_1, RI_1, RO_1 = CNN_layer(variable_scope="CNN-1", x1=x1_expanded, x2=x2_expanded, d=d0)
 
-        sims = [cos_sim(LO_0, RO_0), cos_sim(LO_1, RO_1)]
+            sims = [cos_sim(LO_0, RO_0), cos_sim(LO_1, RO_1)]
+            CNNs = [(LI_1, RI_1)]
 
-        LAYERS = [LI_1, RI_1]
-        self.L1 = LI_1
-        if num_layers > 1:
-            for i in range(2, num_layers+1):
-                LI, LO, RI, RO = CNN_layer(variable_scope="CNN-"+str(i), x1=LAYERS[2*i-4], x2=LAYERS[2*i-3], d=di)
-                LAYERS.append(LI)
-                LAYERS.append(RI)
-                sims.append(cos_sim(LO, RO))
-                self.L2 = LI
+            if num_layers > 1:
+                for i in range(0, num_layers-1):
+                    LI, LO, RI, RO = CNN_layer(variable_scope="CNN-"+str(i), x1=CNNs[i][0], x2=CNNs[i][1], d=di)
+                    CNNs.append((LI, RI))
+                    sims.append(cos_sim(LO, RO))
 
-        with tf.variable_scope("output-layer"):
-            self.output_features = tf.concat([self.features, tf.stack(sims, axis=1)], axis=1, name="output_features")
+            with tf.variable_scope("output-layer"):
+                self.output_features = tf.concat([self.features, tf.stack(sims, axis=1)], axis=1, name="output_features")
 
-            self.estimation = tf.contrib.layers.fully_connected(
-                inputs=self.output_features,
-                num_outputs=num_classes,
-                activation_fn=None,
-                weights_initializer=tf.contrib.layers.xavier_initializer(),
-                weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
-                biases_initializer=tf.constant_initializer(1e-04),
-                scope="FC"
-            )
+                self.estimation = tf.contrib.layers.fully_connected(
+                    inputs=self.output_features,
+                    num_outputs=num_classes,
+                    activation_fn=None,
+                    weights_initializer=tf.contrib.layers.xavier_initializer(),
+                    weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
+                    biases_initializer=tf.constant_initializer(1e-04),
+                    scope="FC"
+                )
 
-        self.prediction = tf.contrib.layers.softmax(self.estimation)[:, 1]
+            self.prediction = tf.contrib.layers.softmax(self.estimation)[:, 1]
 
-        self.cost = tf.add(
+            self.cost = tf.add(
             tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.estimation, labels=self.y)),
             tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)),
             name="cost")
 
-        tf.summary.scalar("cost", self.cost)
-        self.merged = tf.summary.merge_all()
+            tf.summary.scalar("cost", self.cost)
 
+
+        with tf.variable_scope("Decoder"):
+            DI, DO = DNN_layer(variable_scope='DNN-1', x1=CNNs[-2], d=di)
+            DNNs = [DI]
+
+            if num_layers > 1:
+                for i in range(0, num_layers-1):
+                    DI, DO = DNN_layer(variable_scope="CNN-"+str(i), x1=DNNs[i] d=di)
+                    DNNs.append(DI)
+
+        self.merged = tf.summary.merge_all()
 
         print("=" * 50)
         print("List of Variables:")
