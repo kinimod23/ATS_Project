@@ -217,7 +217,7 @@ class ABCNN():
 
             if num_layers > 1:
                 for i in range(0, num_layers-1):
-                    LI, LO, RI, RO = CNN_layer(variable_scope="CNN-"+str(i), x1=CNNs[i][0], x2=CNNs[i][1], d=di)
+                    LI, LO, RI, RO = CNN_layer(variable_scope="CNN-"+str(i+2), x1=CNNs[i][0], x2=CNNs[i][1], d=di)
                     print('LI Shape: ', LI.shape)
                     CNNs.append((LI, RI))
                     sims.append(cos_sim(LO, RO))
