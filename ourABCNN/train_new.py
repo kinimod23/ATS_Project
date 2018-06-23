@@ -3,8 +3,7 @@ import numpy as np
 import sys
 
 from preprocess_dump import Word2Vec, MSRP, WikiQA, ComplexSimple
-from ABCNN import ABCNN
-from ABCNN_original import ABCNN as ABCNN_original
+from ABCNN_reduced import ABCNN
 from utils import build_path
 from sklearn import linear_model, svm
 from sklearn.externals import joblib
@@ -12,7 +11,7 @@ import os
 import pickle
 
 
-def train(lr, w, l2_reg, epoch, batch_size, num_layers, data_type, method, word2vec, dumped_data, num_classes=2):
+def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, method, word2vec, dumped_data, num_classes=2):
     if data_type == "WikiQA":
         train_data = WikiQA(word2vec=word2vec)
         train_data.open_file(mode="train")
@@ -38,24 +37,29 @@ def train(lr, w, l2_reg, epoch, batch_size, num_layers, data_type, method, word2
     print("training max len:", train_data.max_len)
     print("=" * 50)
 
-    #model = ABCNN(s=train_data.max_len, w=w, l2_reg=l2_reg,
-    #              num_features=train_data.num_features, num_classes=num_classes, num_layers=num_layers)
     tfconfig = tf.ConfigProto(allow_soft_placement = True)
     with tf.device("/gpu:0"):
-        model = ABCNN_original(s=train_data.max_len, w=w, l2_reg=l2_reg, model_type='',
+        if model_type == 'convolution':
+            model = ABCNN(s=train_data.max_len, w=w, l2_reg=l2_reg, model_type='convolution',
                   num_features=train_data.num_features, num_classes=num_classes, num_layers=num_layers)
-
+        elif model_type == 'deconvolution':
+            model = ABCNN(s=train_data.max_len, w=w, l2_reg=l2_reg, model_type='deconvolution',
+                  num_features=train_data.num_features, num_classes=num_classes, num_layers=num_layers)
+        else:
+            model = ABCNN(s=train_data.max_len, w=w, l2_reg=l2_reg, model_type='End2End',
+                  num_features=train_data.num_features, num_classes=num_classes, num_layers=num_layers)
 
         optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(model.cost)
 
         # Due to GTX 970 memory issues
-        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.7)
+        #gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.7)
 
         # Initialize all variables
         init = tf.global_variables_initializer()
 
         # model(parameters) saver
         saver = tf.train.Saver(max_to_keep=100)
+        model_path = build_path("./models/", data_type, 'ABCNN3', num_layers)
 
     #with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
     with tf.Session(config=tfconfig) as sess:
@@ -71,6 +75,9 @@ def train(lr, w, l2_reg, epoch, batch_size, num_layers, data_type, method, word2
             i = 0
             MeanCost = 0
 
+            if model_type == 'deconvolution':
+                saver.restore(sess, model_path + "-" + str(100))
+                print(model_path + "-" + str(100), "restored.")
 
             LR = linear_model.LogisticRegression()
             SVM = svm.LinearSVC()
