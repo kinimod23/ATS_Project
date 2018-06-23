@@ -83,7 +83,7 @@ class ABCNN():
                 return all_ap_reshaped
 
         def convolution(name_scope, x, d, reuse, trainable):
-            print(x.shape)
+            print('Input Shape: ', x.shape)
             with tf.name_scope(name_scope + "-conv"):
                 with tf.variable_scope("conv") as scope:
                     conv = tf.contrib.layers.conv2d(
@@ -217,6 +217,7 @@ class ABCNN():
             if num_layers > 1:
                 for i in range(0, num_layers-1):
                     LI, LO, RI, RO = CNN_layer(variable_scope="CNN-"+str(i), x1=CNNs[i][0], x2=CNNs[i][1], d=di)
+                    print('LI Shape: ', LI.shape)
                     CNNs.append((LI, RI))
                     sims.append(cos_sim(LO, RO))
 
