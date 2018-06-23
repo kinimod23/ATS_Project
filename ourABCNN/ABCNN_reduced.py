@@ -28,6 +28,10 @@ class ABCNN():
         def pad_for_wide_conv(x):
             return tf.pad(x, np.array([[0, 0], [0, 0], [w - 1, w - 1], [0, 0]]), "CONSTANT", name="pad_wide_conv")
 
+        def euclidean_score(v1, v2):
+            euclidean = tf.sqrt(tf.reduce_sum(tf.square(v1 - v2), axis=1))
+            return 1 / (1 + euclidean)
+
         def cos_sim(v1, v2):
             norm1 = tf.sqrt(tf.reduce_sum(tf.square(v1), axis=1))
             norm2 = tf.sqrt(tf.reduce_sum(tf.square(v2), axis=1))
@@ -75,7 +79,7 @@ class ABCNN():
 
                 return all_ap_reshaped
 
-        def convolution(name_scope, x, d, reuse):
+        def convolution(name_scope, x, d, reuse, trainable):
             with tf.name_scope(name_scope + "-conv"):
                 with tf.variable_scope("conv") as scope:
                     conv = tf.contrib.layers.conv2d(
@@ -89,7 +93,7 @@ class ABCNN():
                         weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
                         biases_initializer=tf.constant_initializer(1e-04),
                         reuse=reuse,
-                        trainable=True,
+                        trainable=trainable,
                         scope=scope
                     )
                     tf.get_variable_scope().reuse_variables()
@@ -109,8 +113,12 @@ class ABCNN():
             # x1, x2 = [batch, d, s, 1]
             with tf.variable_scope(variable_scope):
 
-                left_conv = convolution(name_scope="left", x=pad_for_wide_conv(x1), d=d, reuse=tf.AUTO_REUSE)
-                right_conv = convolution(name_scope="right", x=pad_for_wide_conv(x2), d=d, reuse=tf.AUTO_REUSE)
+                if model_type == 'convolution' or model_type == 'End2End':
+                    left_conv = convolution(name_scope="left", x=pad_for_wide_conv(x1), d=d, reuse=tf.AUTO_REUSE, trainable=True)
+                    right_conv = convolution(name_scope="right", x=pad_for_wide_conv(x2), d=d, reuse=tf.AUTO_REUSE, trainable=True)
+                else:
+                    left_conv = convolution(name_scope="left", x=pad_for_wide_conv(x1), d=d, reuse=tf.AUTO_REUSE, trainable=False)
+                    right_conv = convolution(name_scope="right", x=pad_for_wide_conv(x2), d=d, reuse=tf.AUTO_REUSE, trainable=False)
 
                 left_wp = w_pool(variable_scope="left", x=left_conv)
                 left_ap = all_pool(variable_scope="left", x=left_conv)
@@ -188,7 +196,7 @@ class ABCNN():
         def DNN_layer(variable_scope, x1, x2, d):
             # x1, x2 = [batch, d, s, 1]
             with tf.variable_scope(variable_scope):
-
+                deconvolution(name_scope="left", x=pad_for_wide_conv(x1), d=d, reuse=tf.AUTO_REUSE, trainable=True)
 
         with tf.variable_scope("Encoder"):
             x1_expanded = tf.expand_dims(self.x1, -1)
@@ -208,37 +216,43 @@ class ABCNN():
                     CNNs.append((LI, RI))
                     sims.append(cos_sim(LO, RO))
 
-            with tf.variable_scope("output-layer"):
-                self.output_features = tf.concat([self.features, tf.stack(sims, axis=1)], axis=1, name="output_features")
+            if model_type == 'convolution':
+                with tf.variable_scope("output-layer"):
+                    self.output_features = tf.concat([self.features, tf.stack(sims, axis=1)], axis=1, name="output_features")
 
-                self.estimation = tf.contrib.layers.fully_connected(
-                    inputs=self.output_features,
-                    num_outputs=num_classes,
-                    activation_fn=None,
-                    weights_initializer=tf.contrib.layers.xavier_initializer(),
-                    weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
-                    biases_initializer=tf.constant_initializer(1e-04),
-                    scope="FC"
-                )
+                    self.estimation = tf.contrib.layers.fully_connected(
+                        inputs=self.output_features,
+                        num_outputs=num_classes,
+                        activation_fn=None,
+                        weights_initializer=tf.contrib.layers.xavier_initializer(),
+                        weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
+                        biases_initializer=tf.constant_initializer(1e-04),
+                        scope="FC"
+                    )
 
-            self.prediction = tf.contrib.layers.softmax(self.estimation)[:, 1]
+                self.prediction = tf.contrib.layers.softmax(self.estimation)[:, 1]
 
-            self.cost = tf.add(
-            tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.estimation, labels=self.y)),
-            tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)),
-            name="cost")
+                self.cost = tf.add(
+                tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.estimation, labels=self.y)),
+                tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)),
+                name="cost")
 
-            tf.summary.scalar("cost", self.cost)
+                tf.summary.scalar("cost", self.cost)
 
 
-        with tf.variable_scope("Decoder"):
-            DI, DO = DNN_layer(variable_scope='DNN-1', x1=CNNs[-2], d=di)
-            DNNs = [DI]
+        if model_type != 'convolution':
+            with tf.variable_scope("Decoder"):
+                DI, DO = DNN_layer(variable_scope='DNN-1', x1=CNNs[-2], d=di)
+                DNNs = [DI]
 
-            if num_layers > 1:
-                for i in range(0, num_layers-1):
-                    DI, DO = DNN_layer(variable_scope="CNN-"+str(i), x1=DNNs[i] d=di)
-                    DNNs.append(DI)
+                if num_layers > 1:
+                    for i in range(0, num_layers-1):
+                        DI, DO = DNN_layer(variable_scope="CNN-"+str(i), x1=DNNs[i] d=di)
+                        DNNs.append(DI)
+
+                with tf.variable_scope('Cost'):
+                    self.cost = euclidian_score(DNNs[-1], x3)
+                    tf.summary.scalar("cost", self.cost)
 
         self.merged = tf.summary.merge_all()
 
