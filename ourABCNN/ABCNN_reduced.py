@@ -145,10 +145,10 @@ class ABCNN():
                     )
 
                     tf.get_variable_scope().reuse_variables()
-                    weights = tf.get_variable('weights')
-                    tf.summary.histogram('weights', weights)
-                    biases = tf.get_variable('biases')
-                    tf.summary.histogram('biases', biases)
+                    weights2 = tf.get_variable('weights')
+                    tf.summary.histogram('weights', weights2)
+                    biases2 = tf.get_variable('biases')
+                    tf.summary.histogram('biases', biases2)
 
                     return deconv
 
@@ -210,6 +210,7 @@ class ABCNN():
             RO_0 = all_pool(variable_scope="input-right", x=x2_expanded)
 
             LI_1, LO_1, RI_1, RO_1 = CNN_layer(variable_scope="CNN-1", x1=x1_expanded, x2=x2_expanded, d=d0)
+            print('LI Shape: ', LI_1.shape)
 
             sims = [cos_sim(LO_0, RO_0), cos_sim(LO_1, RO_1)]
             CNNs = [(LI_1, RI_1)]
