@@ -20,9 +20,12 @@ class ABCNN():
 
         self.x1 = tf.placeholder(tf.float32, shape=[None, d0, s], name="x1")
         self.x2 = tf.placeholder(tf.float32, shape=[None, d0, s], name="x2")
-        self.x3 = tf.placeholder(tf.float32, shape=[None, d0, s], name="x3")
-        self.y = tf.placeholder(tf.int32, shape=[None], name="y")
-        self.features = tf.placeholder(tf.float32, shape=[None, num_features], name="features")
+        if model_type == 'convolution':
+            self.y = tf.placeholder(tf.int32, shape=[None], name="y")
+            self.features = tf.placeholder(tf.float32, shape=[None, num_features], name="features")
+        else:
+            self.y = tf.placeholder(tf.float32, shape=[None, d0, s], name="y")
+
 
         # zero padding to inputs for wide convolution
         def pad_for_wide_conv(x):
@@ -80,6 +83,7 @@ class ABCNN():
                 return all_ap_reshaped
 
         def convolution(name_scope, x, d, reuse, trainable):
+            print(x.shape)
             with tf.name_scope(name_scope + "-conv"):
                 with tf.variable_scope("conv") as scope:
                     conv = tf.contrib.layers.conv2d(
@@ -247,11 +251,11 @@ class ABCNN():
 
                 if num_layers > 1:
                     for i in range(0, num_layers-1):
-                        DI, DO = DNN_layer(variable_scope="CNN-"+str(i), x1=DNNs[i] d=di)
+                        DI, DO = DNN_layer(variable_scope="CNN-"+str(i), x1=DNNs[i], d=di)
                         DNNs.append(DI)
 
                 with tf.variable_scope('Cost'):
-                    self.cost = euclidian_score(DNNs[-1], x3)
+                    self.cost = euclidian_score(DNNs[-1], self.y)
                     tf.summary.scalar("cost", self.cost)
 
         self.merged = tf.summary.merge_all()
