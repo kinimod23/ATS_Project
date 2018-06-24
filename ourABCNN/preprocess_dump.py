@@ -185,7 +185,7 @@ class ComplexSimple(Data):
 
         wrong_per_sen = 0
         begin = time.time()
-        while wrong_per_sen < 4:
+        while wrong_per_sen < 1:
             print("iter: {}".format(wrong_per_sen))
             rands = []
             for i in range(len(complex_sen)):
@@ -215,7 +215,7 @@ class ComplexSimple(Data):
                 s1 = word_tokenize(complex_sen.strip().lower())
                 s2 = word_tokenize(simple_sen.strip().lower())
                 if  not len(s1) > 50 and not len(s2) > 50:
-                    if self.word2vec.cntUnknowns(s1, 0.5) and self.word2vec.cntUnknowns(s2, 0.5):
+                    if self.word2vec.cntUnknowns(s1, 0.3) and self.word2vec.cntUnknowns(s2, 0.3):
                         self.s1s.append(s1)
                         self.s2s.append(s2)
                         if method == "labeled":
