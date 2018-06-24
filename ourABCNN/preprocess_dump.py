@@ -220,15 +220,6 @@ class ComplexSimple(Data):
                         self.s2s.append(s2)
                         if method == "labeled":
                             self.labels.append(1)
-                    else:
-                        #print("Sentences have too many unknowns:\n")
-                        #print(s1)
-                        #print(s2)
-                        pass
-                else:
-                    #print("Sentence too long: {}".format(len(s1)))
-                    #print("Sentence too long: {}".format(len(s2)))
-                    pass
             print("Data was read")
 
 
@@ -251,8 +242,8 @@ class ComplexSimple(Data):
                     if w in s1:
                         count += 1
                 idf[w] = np.log(self.data_size / float(count))
-            #idf[w] = np.log(self.data_size / len([1 for set(s1) in self.s1s if w in s1]))
-            #idf = {w:np.log(self.data_size / len([1 for s1 in self.s1s if w in s1]))for w in q_vocab}
+
+
             print("Idf dict creation took: {}".format(time.time() - idf_begin))
 
             if method == "labeled":
@@ -262,10 +253,7 @@ class ComplexSimple(Data):
             elif method == "unlabeled":
                 # no labels needed, simple sentence in label
                 # to compare output and "label" with BLEU
-                simple_sen =  []
-                for line in s.readlines():
-                    simple_sen.append(word_tokenize(line.strip().lower()))
-                self.labels = simple_sen
+                self.labels = self.s2s
             else:
                 raise NameError(method)
 
@@ -300,7 +288,7 @@ if __name__ == '__main__':
     mode = "50"
     if not os.path.exists(STATE_FN_SCHEME%mode):
         train_data = ComplexSimple(Word2Vec())
-        train_data.open_file(mode=mode, method="labeled")
+        train_data.open_file(mode=mode, method="unlabeled")
     else:
         print("found pickled state, loading..")
         train_data = ComplexSimple(Word2Vec())
