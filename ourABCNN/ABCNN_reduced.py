@@ -131,18 +131,30 @@ class ABCNN():
 
                 return left_wp, left_ap, right_wp, right_ap
 
-        def deconvolution(name_scope, x, d, reuse):
-            with tf.name_scope(name_scope + "-deconv"):
+        def deconvolution( x, d,reuse,trainable):
+            with tf.name_scope("deconv"):
                 with tf.variable_scope("deconv") as scope:
-                    deconv = tf.nn.conv2d_transpose(
-                        value,
-                        filter,
-                        output_shape,
-                        strides,
-                        padding='SAME',
-                        data_format='NHWC',
-                        name=None
+                    deconv = tf.contrib.layers.conv2d_transpose(
+                    inputs= x, #[batch, height, width, in_channels]
+                    num_outputs=di,
+                    kernel_size=(d,w),
+                    stride=1,
+                    padding='SAME',
+                    data_format="NHWC",
+                    activation_fn=tf.nn.relu,
+                    normalizer_fn=None,
+                    normalizer_params=None,
+                    weights_initializer=tf.contrib.layers.xavier_initializer_conv2d(),
+                    weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
+                    biases_initializer=tf.constant_initializer(1e-04),
+                    biases_regularizer=None,
+                    reuse=reuse,
+                    variables_collections=None,
+                    outputs_collections=None,
+                    trainable=trainable,
+                    scope=scope
                     )
+
 
                     tf.get_variable_scope().reuse_variables()
                     weights2 = tf.get_variable('weights')
@@ -197,10 +209,13 @@ class ABCNN():
                                  shape=weights.shape)
             return bilinear_weights
 
-        def DNN_layer(variable_scope, x1, x2, d):
+        def DNN_layer(variable_scope, x, d):
             # x1, x2 = [batch, d, s, 1]
             with tf.variable_scope(variable_scope):
-                deconvolution(name_scope="left", x=pad_for_wide_conv(x1), d=d, reuse=tf.AUTO_REUSE, trainable=True)
+                deconvolution(x=x, d=d, reuse=tf.AUTO_REUSE, trainable=True)
+
+
+
 
         with tf.variable_scope("Encoder"):
             x1_expanded = tf.expand_dims(self.x1, -1)
@@ -248,7 +263,7 @@ class ABCNN():
 
         if model_type != 'convolution':
             with tf.variable_scope("Decoder"):
-                DI, DO = DNN_layer(variable_scope='DNN-1', x1=CNNs[-2], d=di)
+                DI, DO = DNN_layer(variable_scope='DNN-1', x=CNNs[-2], d=di)
                 DNNs = [DI]
 
                 if num_layers > 1:
