@@ -9,6 +9,7 @@ from sklearn import linear_model, svm
 from sklearn.externals import joblib
 import os
 import pickle
+from time import time
 
 
 def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, method, word2vec, dumped_data, num_classes=2):
@@ -74,6 +75,9 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
             train_data.reset_index()
             i = 0
             MeanCost = 0
+            batchTime = 0
+            modelTime = 0
+
 
             if model_type == 'deconvolution':
                 saver.restore(sess, model_path + "-" + str(100))
@@ -85,14 +89,17 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
 
             while train_data.is_available():
                 i += 1
-
+                startBatch = time()
                 batch_x1, batch_x2, batch_y, batch_features = train_data.next_batch(batch_size=batch_size)
+                batchTime += time()-startBatch
 
+                startModel = time()
                 merged, _, c, features = sess.run([model.merged, optimizer, model.cost, model.output_features],
                                                   feed_dict={model.x1: batch_x1,
                                                              model.x2: batch_x2,
                                                              model.y: batch_y,
                                                              model.features: batch_features})
+                modelTime += time()-startModel
                 MeanCost += c
 
                 clf_features.append(features)
@@ -102,6 +109,7 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
                     #print('att ', pred[0])
                 train_summary_writer.add_summary(merged, i)
             print('Mean Cost: ', MeanCost/i)
+            print('Batch time: ', batchTime, '   Model time: ', modelTime)
 
             if e % 50 == 0:
                 save_path = saver.save(sess, build_path("./models/", data_type, 'ABCNN3', num_layers), global_step=e)
@@ -151,16 +159,16 @@ if __name__ == "__main__":
         "word2vec": Word2Vec()
     }
 
-    print("=" * 50)
-    print("Parameters:")
-    for k in sorted(params.keys()):
-        print(k, ":", params[k])
-
     if len(sys.argv) > 1:
         for arg in sys.argv[1:]:
             k = arg.split("=")[0][2:]
             v = arg.split("=")[1]
             params[k] = v
+
+    print("=" * 50)
+    print("Parameters:")
+    for k in sorted(params.keys()):
+        print(k, ":", params[k])
 
     train(lr=float(params["lr"]), w=int(params["ws"]), l2_reg=float(params["l2_reg"]), epoch=int(params["epoch"]),
           model_type=params["model_type"], batch_size=int(params["batch_size"]), num_layers=int(params["num_layers"]),

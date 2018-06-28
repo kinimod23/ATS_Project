@@ -83,7 +83,6 @@ class ABCNN():
                 return all_ap_reshaped
 
         def convolution(name_scope, x, d, reuse, trainable):
-            print('Input Shape: ', x.shape)
             with tf.name_scope(name_scope + "-conv"):
                 with tf.variable_scope("conv") as scope:
                     conv = tf.contrib.layers.conv2d(
@@ -197,10 +196,11 @@ class ABCNN():
                                  shape=weights.shape)
             return bilinear_weights
 
-        def DNN_layer(variable_scope, x1, x2, d):
+        def DNN_layer(variable_scope, x1, d):
             # x1, x2 = [batch, d, s, 1]
             with tf.variable_scope(variable_scope):
-                deconvolution(name_scope="left", x=pad_for_wide_conv(x1), d=d, reuse=tf.AUTO_REUSE, trainable=True)
+                deconvolution(name_scope="jippi", x=x1, d=d, reuse=tf.AUTO_REUSE)
+            return None, None
 
         with tf.variable_scope("Encoder"):
             x1_expanded = tf.expand_dims(self.x1, -1)
@@ -210,7 +210,6 @@ class ABCNN():
             RO_0 = all_pool(variable_scope="input-right", x=x2_expanded)
 
             LI_1, LO_1, RI_1, RO_1 = CNN_layer(variable_scope="CNN-1", x1=x1_expanded, x2=x2_expanded, d=d0)
-            print('LI Shape: ', LI_1.shape)
 
             sims = [cos_sim(LO_0, RO_0), cos_sim(LO_1, RO_1)]
             CNNs = [(LI_1, RI_1)]
@@ -218,7 +217,6 @@ class ABCNN():
             if num_layers > 1:
                 for i in range(0, num_layers-1):
                     LI, LO, RI, RO = CNN_layer(variable_scope="CNN-"+str(i+2), x1=CNNs[i][0], x2=CNNs[i][1], d=di)
-                    print('LI Shape: ', LI.shape)
                     CNNs.append((LI, RI))
                     sims.append(cos_sim(LO, RO))
 
@@ -253,7 +251,7 @@ class ABCNN():
 
                 if num_layers > 1:
                     for i in range(0, num_layers-1):
-                        DI, DO = DNN_layer(variable_scope="CNN-"+str(i), x1=DNNs[i], d=di)
+                        DI, DO = DNN_layer(variable_scope="DNN-"+str(i), x1=DNNs[i], d=di)
                         DNNs.append(DI)
 
                 with tf.variable_scope('Cost'):
@@ -265,5 +263,5 @@ class ABCNN():
         print("=" * 50)
         print("List of Variables:")
         for v in tf.trainable_variables():
-            print(v.name)
+            print(v.name, v.shape)
         print("=" * 50)
