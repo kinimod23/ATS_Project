@@ -154,7 +154,7 @@ if __name__ == "__main__":
         "batch_size": 64,
         "num_layers": 2,
         "data_type": "Complex2Simple",
-        "dumped_data": "preprocessed.pkl",
+        "dumped_data": "preprocessed_train.pkl",
         "method": "labeled",
         "word2vec": Word2Vec()
     }
