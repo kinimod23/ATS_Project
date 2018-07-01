@@ -90,7 +90,7 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
             while train_data.is_available():
                 i += 1
                 startBatch = time()
-                batch_x1, batch_x2, batch_y, batch_features = train_data.next_batch(batch_size=batch_size)
+                batch_x1, batch_x2, batch_y, batch_features = train_data.next_batch(batch_size=batch_size, model_type=model_type)
                 batchTime += time()-startBatch
 
                 startModel = time()
@@ -151,11 +151,11 @@ if __name__ == "__main__":
         "l2_reg": 0.0004,
         "epoch": 50,
         "model_type": "End2End",
-        "batch_size": 64,
+        "batch_size": 128,
         "num_layers": 2,
         "data_type": "Complex2Simple",
         "dumped_data": "preprocessed_train.pkl",
-        "method": "labeled",
+        "method": "unlabeled",
         "word2vec": Word2Vec()
     }
 
