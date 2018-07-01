@@ -3,7 +3,7 @@ import numpy as np
 
 
 class ABCNN():
-    def __init__(self, s, w, l2_reg, model_type, num_features, d0=300, di=50, num_classes=2, num_layers=2):
+    def __init__(self, s, w, l2_reg, model_type, num_features, d0=300, di=52, num_classes=2, num_layers=2):
         """
         Implmenentaion of ABCNNs
         (https://arxiv.org/pdf/1512.05193.pdf)
@@ -22,10 +22,9 @@ class ABCNN():
         self.x2 = tf.placeholder(tf.float32, shape=[None, d0, s], name="x2")
         if model_type == 'convolution':
             self.y = tf.placeholder(tf.int32, shape=[None], name="y")
-            self.features = tf.placeholder(tf.float32, shape=[None, num_features], name="features")
         else:
             self.y = tf.placeholder(tf.float32, shape=[None, d0, s], name="y")
-
+        self.features = tf.placeholder(tf.float32, shape=[None, num_features], name="features")
 
         # zero padding to inputs for wide convolution
         def pad_for_wide_conv(x):
@@ -104,12 +103,13 @@ class ABCNN():
                     tf.summary.histogram('weights', weights)
                     biases = tf.get_variable('biases')
                     tf.summary.histogram('biases', biases)
-
+                    print('Conv Dimensions: ', x.shape)
                     # Weight: [filter_height, filter_width, in_channels, out_channels]
                     # output: [batch, 1, input_width+filter_Width-1, out_channels] == [batch, 1, s+w-1, di]
 
                     # [batch, di, s+w-1, 1]
                     conv_trans = tf.transpose(conv, [0, 3, 2, 1], name="conv_trans")
+                    print('Conv Dimensions: ', conv_trans.shape)
                     return conv_trans
 
         def CNN_layer(variable_scope, x1, x2, d):
@@ -131,35 +131,36 @@ class ABCNN():
                 return left_wp, left_ap, right_wp, right_ap
 
         def deconvolution( x, d,reuse,trainable):
+            # x = [batch, di, s, 1]
             with tf.name_scope("deconv"):
                 with tf.variable_scope("deconv") as scope:
                     deconv = tf.contrib.layers.conv2d_transpose(
                     inputs= x, #[batch, height, width, in_channels]
-                    num_outputs=di,
-                    kernel_size=(d,w),
+                    num_outputs=1,
+                    kernel_size=(di,w),
                     stride=1,
                     padding='SAME',
                     data_format="NHWC",
-                    activation_fn=tf.nn.relu,
-                    normalizer_fn=None,
-                    normalizer_params=None,
+                    activation_fn=tf.nn.tanh,
                     weights_initializer=tf.contrib.layers.xavier_initializer_conv2d(),
                     weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
                     biases_initializer=tf.constant_initializer(1e-04),
-                    biases_regularizer=None,
                     reuse=reuse,
-                    variables_collections=None,
-                    outputs_collections=None,
                     trainable=trainable,
                     scope=scope
                     )
 
-
+                    print('Deconv Dimensions: ', deconv.shape)
                     tf.get_variable_scope().reuse_variables()
                     weights2 = tf.get_variable('weights')
                     tf.summary.histogram('weights', weights2)
                     biases2 = tf.get_variable('biases')
                     tf.summary.histogram('biases', biases2)
+                    # Weight: [filter_height, filter_width, in_channels, out_channels]
+                    # output: [batch, in_channels, input_width, out_channels] == [batch, di, s, d]
+
+                    #deconv_trans = tf.transpose(deconv, [0, 3, 2, 1], name="deconv_trans")
+                    #print('Deconv Shape: ', deconv_trans.shape)
 
                     return deconv
 
@@ -211,7 +212,9 @@ class ABCNN():
         def DNN_layer(variable_scope, x, d):
             # x1, x2 = [batch, d, s, 1]
             with tf.variable_scope(variable_scope):
-                deconvolution(x=x, d=d, reuse=tf.AUTO_REUSE, trainable=True)
+                x_upsampled = tf.image.resize_images(x, size=(d,s), method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
+                DI = deconvolution(x=x_upsampled, d=d, reuse=tf.AUTO_REUSE, trainable=True)
+                return DI
 
         with tf.variable_scope("Encoder"):
             x1_expanded = tf.expand_dims(self.x1, -1)
@@ -254,20 +257,41 @@ class ABCNN():
 
                 tf.summary.scalar("cost", self.cost)
 
-
+        print('CNN Dim: ', CNNs[-1][0].shape, CNNs[-1][1].shape)
         if model_type != 'convolution':
             with tf.variable_scope("Decoder"):
-                DI, DO = DNN_layer(variable_scope='DNN-1', x=CNNs[-2], d=di)
-                DNNs = [DI]
-
                 if num_layers > 1:
-                    for i in range(0, num_layers-1):
-                        DI, DO = DNN_layer(variable_scope="DNN-"+str(i), x1=DNNs[i], d=di)
-                        DNNs.append(DI)
+                    DI = DNN_layer(variable_scope='DNN-1', x=CNNs[-1][0], d=di)
+                    DNNs = [DI]
 
-                with tf.variable_scope('Cost'):
-                    self.cost = euclidian_score(DNNs[-1], self.y)
-                    tf.summary.scalar("cost", self.cost)
+                    if num_layers > 2:
+                        for i in range(0, num_layers-2):
+                            DI = DNN_layer(variable_scope="DNN-"+str(i), x=DNNs[i], d=di)
+                            DNNs.append(DI)
+
+                    DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=DNNs[-1], d=d0)
+                    DNNs.append(DO)
+                else:
+                    DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=CNNs[-1][0], d=d0)
+                    DNNs.append(DO)
+
+               #with tf.variable_scope("FullyConnected"):
+
+               #    self.estimation = tf.contrib.layers.fully_connected(
+               #        inputs=DNNs[-1],
+               #        num_outputs=15000,
+               #        activation_fn=tf.nn.tanh,
+               #        weights_initializer=tf.contrib.layers.xavier_initializer(),
+               #        weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
+               #        biases_initializer=tf.constant_initializer(1e-04),
+               #        scope="FC"
+               #    )
+
+
+            with tf.variable_scope('Cost'):
+                self.cost = euclidean_score(tf.squeeze(DNNs[-1]), self.y)
+                tf.summary.scalar("cost", self.cost)
+            self.output_features = self.features
 
         self.merged = tf.summary.merge_all()
 
