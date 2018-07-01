@@ -31,7 +31,7 @@ class ABCNN():
             return tf.pad(x, np.array([[0, 0], [0, 0], [w - 1, w - 1], [0, 0]]), "CONSTANT", name="pad_wide_conv")
 
         def euclidean_score(v1, v2):
-            euclidean = tf.sqrt(tf.reduce_sum(tf.square(v1 - v2), axis=1))
+            euclidean = tf.sqrt(tf.reduce_sum(tf.square(v1 - v2)))
             return 1 / (1 + euclidean)
 
         def cos_sim(v1, v2):
@@ -289,7 +289,10 @@ class ABCNN():
 
 
             with tf.variable_scope('Cost'):
-                self.cost = euclidean_score(tf.squeeze(DNNs[-1]), self.y)
+                self.cost = euclidean_score(tf.squeeze(DNNs[-1], axis=3), self.y)
+                print('Shape of squeeze: ', tf.squeeze(DNNs[-1], axis=3).shape)
+                print('Shape of y: ', self.y.shape)
+                print('Shape of cost: ', self.cost.shape)
                 tf.summary.scalar("cost", self.cost)
             self.output_features = self.features
 
