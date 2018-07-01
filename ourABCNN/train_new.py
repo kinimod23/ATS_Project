@@ -115,18 +115,19 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
                 save_path = saver.save(sess, build_path("./models/", data_type, 'ABCNN3', num_layers), global_step=e)
                 print("model saved as", save_path)
 
-            clf_features = np.concatenate(clf_features)
-            LR.fit(clf_features, train_data.labels)
-            SVM.fit(clf_features, train_data.labels)
+            if model_type == 'convolution':
+                clf_features = np.concatenate(clf_features)
+                LR.fit(clf_features, train_data.labels)
+                SVM.fit(clf_features, train_data.labels)
 
-            if e % 50 == 0:
-                LR_path = build_path("./models/", data_type, 'ABCNN3', num_layers, "-" + str(e) + "-LR.pkl")
-                SVM_path = build_path("./models/", data_type, 'ABCNN3', num_layers, "-" + str(e) + "-SVM.pkl")
-                joblib.dump(LR, LR_path)
-                joblib.dump(SVM, SVM_path)
+                if e % 50 == 0:
+                    LR_path = build_path("./models/", data_type, 'ABCNN3', num_layers, "-" + str(e) + "-LR.pkl")
+                    SVM_path = build_path("./models/", data_type, 'ABCNN3', num_layers, "-" + str(e) + "-SVM.pkl")
+                    joblib.dump(LR, LR_path)
+                    joblib.dump(SVM, SVM_path)
 
-                print("LR saved as", LR_path)
-                print("SVM saved as", SVM_path)
+                    print("LR saved as", LR_path)
+                    print("SVM saved as", SVM_path)
 
         print("training finished!")
         print("=" * 50)
