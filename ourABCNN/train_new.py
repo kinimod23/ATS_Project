@@ -2,7 +2,9 @@ import tensorflow as tf
 import numpy as np
 import sys
 
-from preprocess_dump import Word2Vec, MSRP, WikiQA, ComplexSimple
+
+from preprocess_dump import MSRP, WikiQA
+from preprocess_dump2 import Word2Vec, ComplexSimple
 from ABCNN_reduced import ABCNN
 from utils import build_path
 from sklearn import linear_model, svm
@@ -22,8 +24,8 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
     elif data_type == 'Complex2Simple':
         if not os.path.exists(dumped_data):
             print("Dumped data not found! Data will be preprocessed")
-            train_data = ComplexSimple(word2vec=word2vec)
-            train_data.open_file(mode="train", method=method)
+            train_data = ComplexSimple(word2vec=word2vec, max_len=50)
+            train_data.open_file(mode="train", method=method, model_type=model_type)
         else:
             print("found pickled state, loading..")
             train_data = ComplexSimple(word2vec=word2vec)
@@ -153,7 +155,7 @@ if __name__ == "__main__":
         "epoch": 50,
         "model_type": "End2End",
         "batch_size": 128,
-        "num_layers": 2,
+        "num_layers": 4,
         "data_type": "Complex2Simple",
         "dumped_data": "preprocessed_train.pkl",
         "method": "unlabeled",
