@@ -19,6 +19,7 @@
     * reverse word2vec -> vec2word
 * train word2vec on wikipedia data
   * here are links for wiki corpora [word2vec](https://code.google.com/archive/p/word2vec/)
+  * some othter pretrained things [github](https://github.com/3Top/word2vec-api#where-to-get-a-pretrained-models)
 * think about other ideas for loss functions 
   * (currently L2-Norm)
   * maybe better another matrix similarity measure
