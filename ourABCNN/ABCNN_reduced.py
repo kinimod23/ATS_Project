@@ -103,13 +103,11 @@ class ABCNN():
                     tf.summary.histogram('weights', weights)
                     biases = tf.get_variable('biases')
                     tf.summary.histogram('biases', biases)
-                    print('Conv Dimensions: ', x.shape)
                     # Weight: [filter_height, filter_width, in_channels, out_channels]
                     # output: [batch, 1, input_width+filter_Width-1, out_channels] == [batch, 1, s+w-1, di]
 
                     # [batch, di, s+w-1, 1]
                     conv_trans = tf.transpose(conv, [0, 3, 2, 1], name="conv_trans")
-                    print('Conv Dimensions: ', conv_trans.shape)
                     return conv_trans
 
         def CNN_layer(variable_scope, x1, x2, d):
@@ -150,17 +148,11 @@ class ABCNN():
                     scope=scope
                     )
 
-                    print('Deconv Dimensions: ', deconv.shape)
                     tf.get_variable_scope().reuse_variables()
                     weights2 = tf.get_variable('weights')
                     tf.summary.histogram('weights', weights2)
                     biases2 = tf.get_variable('biases')
                     tf.summary.histogram('biases', biases2)
-                    # Weight: [filter_height, filter_width, in_channels, out_channels]
-                    # output: [batch, in_channels, input_width, out_channels] == [batch, di, s, d]
-
-                    #deconv_trans = tf.transpose(deconv, [0, 3, 2, 1], name="deconv_trans")
-                    #print('Deconv Shape: ', deconv_trans.shape)
 
                     return deconv
 
@@ -249,15 +241,17 @@ class ABCNN():
                     )
 
                 self.prediction = tf.contrib.layers.softmax(self.estimation)[:, 1]
+                with tf.variable_scope('Cost'):
 
-                self.cost = tf.add(
-                tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.estimation, labels=self.y)),
-                tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)),
-                name="cost")
+                    self.cost = tf.add(
+                    tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.estimation, labels=self.y)),
+                    tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)),
+                    name="cost")
+                    self.cost2 = self.cost
 
                 tf.summary.scalar("cost", self.cost)
+                tf.summary.scalar("cost2", self.cost2)
 
-        print('CNN Dim: ', CNNs[-1][0].shape, CNNs[-1][1].shape)
         if model_type != 'convolution':
             with tf.variable_scope("Decoder"):
                 if num_layers > 1:
@@ -275,26 +269,15 @@ class ABCNN():
                     DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=CNNs[-1][0], d=d0)
                     DNNs.append(DO)
 
-               #with tf.variable_scope("FullyConnected"):
-
-               #    self.estimation = tf.contrib.layers.fully_connected(
-               #        inputs=DNNs[-1],
-               #        num_outputs=15000,
-               #        activation_fn=tf.nn.tanh,
-               #        weights_initializer=tf.contrib.layers.xavier_initializer(),
-               #        weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
-               #        biases_initializer=tf.constant_initializer(1e-04),
-               #        scope="FC"
-               #    )
-
 
             with tf.variable_scope('Cost'):
-                self.cost = euclidean_score(tf.squeeze(DNNs[-1], axis=3), self.y)
-                print('Shape of squeeze: ', tf.squeeze(DNNs[-1], axis=3).shape)
-                print('Shape of y: ', self.y.shape)
-                print('Shape of cost: ', self.cost.shape)
+                self.cost = 1/euclidean_score(tf.squeeze(DNNs[-1], axis=3), self.y)
+                self.cost2 = cos_sim(tf.squeeze(DNNs[-1], axis=3), self.y)
                 tf.summary.scalar("cost", self.cost)
+                tf.summary.scalar("cost2", self.cost2)
             self.output_features = self.features
+
+            self.prediction = DNNs[-1]
 
         self.merged = tf.summary.merge_all()
 

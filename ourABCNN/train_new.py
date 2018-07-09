@@ -2,7 +2,6 @@ import tensorflow as tf
 import numpy as np
 import sys
 
-
 from preprocess_dump import MSRP, WikiQA
 from preprocess_dump2 import Word2Vec, ComplexSimple
 from ABCNN_reduced import ABCNN
@@ -13,7 +12,6 @@ import os
 import pickle
 from time import time
 
-
 def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, method, word2vec, dumped_data, num_classes=2):
     if data_type == "WikiQA":
         train_data = WikiQA(word2vec=word2vec)
@@ -22,14 +20,15 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
         train_data = MSRP(word2vec=word2vec)
         train_data.open_file(mode="train")
     elif data_type == 'Complex2Simple':
-        if not os.path.exists(dumped_data):
+        dumped = dumped_data+'_train_'+method+'.pkl'
+        if not os.path.exists(dumped):
             print("Dumped data not found! Data will be preprocessed")
-            train_data = ComplexSimple(word2vec=word2vec, max_len=50)
-            train_data.open_file(mode="train", method=method, model_type=model_type)
+            train_data = ComplexSimple(word2vec=word2vec)
+            train_data.open_file(mode="train", method=method)
         else:
             print("found pickled state, loading..")
             train_data = ComplexSimple(word2vec=word2vec)
-            with open(dumped_data, 'rb') as f:
+            with open(dumped, 'rb') as f:
                 dump_dict = pickle.load(f)
                 for k, v in dump_dict.items():
                     setattr(train_data, k, v)
@@ -42,14 +41,7 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
 
     tfconfig = tf.ConfigProto(allow_soft_placement = True)
     with tf.device("/gpu:0"):
-        if model_type == 'convolution':
-            model = ABCNN(s=train_data.max_len, w=w, l2_reg=l2_reg, model_type='convolution',
-                  num_features=train_data.num_features, num_classes=num_classes, num_layers=num_layers)
-        elif model_type == 'deconvolution':
-            model = ABCNN(s=train_data.max_len, w=w, l2_reg=l2_reg, model_type='deconvolution',
-                  num_features=train_data.num_features, num_classes=num_classes, num_layers=num_layers)
-        else:
-            model = ABCNN(s=train_data.max_len, w=w, l2_reg=l2_reg, model_type='End2End',
+        model = ABCNN(s=train_data.max_len, w=w, l2_reg=l2_reg, model_type=model_type,
                   num_features=train_data.num_features, num_classes=num_classes, num_layers=num_layers)
 
         optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(model.cost)
@@ -62,7 +54,7 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
 
         # model(parameters) saver
         saver = tf.train.Saver(max_to_keep=100)
-        model_path = build_path("./models/", data_type, 'ABCNN3', num_layers)
+        model_path = build_path("./models/", data_type, 'BCNN', num_layers)
 
     #with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
     with tf.Session(config=tfconfig) as sess:
@@ -77,9 +69,9 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
             train_data.reset_index()
             i = 0
             MeanCost = 0
+            MeanCost2 = 0
             batchTime = 0
             modelTime = 0
-
 
             if model_type == 'deconvolution':
                 saver.restore(sess, model_path + "-" + str(100))
@@ -96,26 +88,28 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
                 batchTime += time()-startBatch
 
                 startModel = time()
-                merged, _, c, features = sess.run([model.merged, optimizer, model.cost, model.output_features],
+                merged, _, c, c2, features = sess.run([model.merged, optimizer, model.cost, model.cost2, model.output_features],
                                                   feed_dict={model.x1: batch_x1,
                                                              model.x2: batch_x2,
                                                              model.y: batch_y,
                                                              model.features: batch_features})
                 modelTime += time()-startModel
                 MeanCost += c
+                MeanCost2 += c2
 
                 clf_features.append(features)
 
                 if i % 200 == 0:
-                    print("[batch " + str(i) + "] cost:", c)
-                    #print('att ', pred[0])
+                    print('[batch {}]  cost: {}  cost2: {}'.format(i, c, c2))
                 train_summary_writer.add_summary(merged, i)
-            print('Mean Cost: ', MeanCost/i)
+            print('Mean Cost 1: {}  Mean Cost 2: {} '.format(MeanCost/i, MeanCost2/i))
             print('Batch time: ', batchTime, '   Model time: ', modelTime)
 
             if e % 50 == 0:
-                save_path = saver.save(sess, build_path("./models/", data_type, 'ABCNN3', num_layers), global_step=e)
+                save_path = saver.save(sess, build_path("./models/", data_type, 'BCNN', num_layers), global_step=e)
                 print("model saved as", save_path)
+
+            print('features: {}   labels: {}'.format(len(clf_features), len(train_data.labels)))
 
             if model_type == 'convolution':
                 clf_features = np.concatenate(clf_features)
@@ -123,8 +117,8 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
                 SVM.fit(clf_features, train_data.labels)
 
                 if e % 50 == 0:
-                    LR_path = build_path("./models/", data_type, 'ABCNN3', num_layers, "-" + str(e) + "-LR.pkl")
-                    SVM_path = build_path("./models/", data_type, 'ABCNN3', num_layers, "-" + str(e) + "-SVM.pkl")
+                    LR_path = build_path("./models/", data_type, 'BCNN', num_layers, "-" + str(e) + "-LR.pkl")
+                    SVM_path = build_path("./models/", data_type, 'BCNN', num_layers, "-" + str(e) + "-SVM.pkl")
                     joblib.dump(LR, LR_path)
                     joblib.dump(SVM, SVM_path)
 

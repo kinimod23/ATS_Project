@@ -10,7 +10,7 @@ import os
 from tqdm import tqdm
 import _pickle as pickle
 
-STATE_FN_SCHEME = "preprocessed_%s.pkl"
+STATE_FN_SCHEME = "preprocessed_{}_{}.pkl"
 
 class Word2Vec():
     def __init__(self):
@@ -79,7 +79,7 @@ class Data():
         if model_type != 'convolution':
             batch_labels = batch_s2s
         else:
-            batch_labels = self.labels_mats[self.index:self.index + batch_size]
+            batch_labels = self.labels[self.index:self.index + batch_size]
         batch_features = self.features[self.index:self.index + batch_size]
 
         self.index += batch_size
@@ -126,16 +126,16 @@ class ComplexSimple(Data):
         print("Took: {}".format(took))
 
 
-    def open_file(self, mode, method, model_type): # mode = test, train etc only for file name
-        state_fn = STATE_FN_SCHEME % mode
+    def open_file(self, mode, method): # mode = test, train etc only for file name
+        state_fn = STATE_FN_SCHEME.format(mode, method)
         print("reading data...")
         with codecs.open("../corpus/wiki_complex_" + mode + ".txt", 'r', encoding="utf-8") as c, \
         codecs.open("../corpus/wiki_simple_" + mode + ".txt", 'r', encoding="utf-8") as s:
             for(complex_sen, simple_sen) in tqdm(zip(c.readlines(), s.readlines())):
                 s1 = word_tokenize(complex_sen.strip().lower())
                 s2 = word_tokenize(simple_sen.strip().lower())
-                if  not len(s1) > 50 and not len(s2) > 50:
-                    if self.word2vec.cntUnknowns(s1, 0.1) and self.word2vec.cntUnknowns(s2, 0.1):
+                if  not len(s1) > 40 and not len(s2) > 40:
+                    if self.word2vec.cntUnknowns(s1, 0.25) and self.word2vec.cntUnknowns(s2, 0.25):
                         self.s1s.append(s1)
                         self.s2s.append(s2)
                         if method == "labeled":
@@ -196,8 +196,9 @@ class ComplexSimple(Data):
             print("features took: {}".format(feature_took))
 
 
-            self.s1_mats, self.s2_mats, self.label_mats = [], [], []
+            self.s1_mats, self.s2_mats, self.labels_mats = [], [], []
 
+            word2vec_begin = time.time()
             for i in range(len(self.s1s)):
                 self.s1_mats.append(np.expand_dims(np.pad(np.column_stack([self.word2vec.get(w) for w in self.s1s[i]]),
                                                  [[0, 0], [0, self.max_len - len(self.s1s[i])]],
@@ -206,14 +207,17 @@ class ComplexSimple(Data):
                 self.s2_mats.append(np.expand_dims(np.pad(np.column_stack([self.word2vec.get(w) for w in self.s2s[i]]),
                                                  [[0, 0], [0, self.max_len - len(self.s2s[i])]],
                                                  "constant"), axis=0))
+            print("word2vec took: {}".format(time.time()-word2vec_begin))
 
+            p = pickle.Pickler(open(state_fn,"wb"))
+            p.fast = True
             pickle_blacklist = [ "word2vec" ]
-            with open(state_fn, "wb") as f:
-                dump_dict = dict()
-                for k, v in self.__dict__.items():
-                    if k not in pickle_blacklist:
-                        dump_dict[k] = v
-                pickle.dump(dump_dict, f)
+            dump_dict = dict()
+            for k, v in self.__dict__.items():
+                if k not in pickle_blacklist:
+                    dump_dict[k] = v
+            p.fast = True
+            p.dump(dump_dict)
 
 
 if __name__ == '__main__':
