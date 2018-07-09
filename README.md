@@ -8,6 +8,18 @@
 * Recursive Autoencoder for Paraphrase Detection https://papers.nips.cc/paper/4204-dynamic-pooling-and-unfolding-recursive-autoencoders-for-paraphrase-detection.pdf
 
 
+## ToDo
+* statistics about data
+  * how long are sentences (how many are lost if we cut at 50 words)
+  * how many sentences have 30%, 40%, 50% of words unknown to word2vec
+* change test.py 
+  * to evaluate the encoder
+  * to evaluate End2End
+  * to create some output maybe? or write an inference file which creates output
+* think about other ideas for loss functions 
+  * (currently L2-Norm)
+  * maybe better another matrix similarity measure
+  
 #### feasible NN implementations we could use
 
 *CNN implementation:*
