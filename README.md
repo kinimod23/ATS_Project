@@ -7,7 +7,7 @@
 * ABCNN: https://arxiv.org/pdf/1512.05193.pdf
 * Recursive Autoencoder for Paraphrase Detection https://papers.nips.cc/paper/4204-dynamic-pooling-and-unfolding-recursive-autoencoders-for-paraphrase-detection.pdf
 
-
+----------------------------------------------------------------------------------------
 ## ToDo
 * statistics about data
   * how long are sentences (how many are lost if we cut at 50 words)
@@ -19,7 +19,8 @@
 * think about other ideas for loss functions 
   * (currently L2-Norm)
   * maybe better another matrix similarity measure
-  
+----------------------------------------------------------------------------------------
+
 #### feasible NN implementations we could use
 
 *CNN implementation:*
