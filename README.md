@@ -16,9 +16,11 @@
   * to evaluate the encoder
   * to evaluate End2End
   * to create some output maybe? or write an inference file which creates output
+    * reverse word2vec -> vec2word
 * think about other ideas for loss functions 
   * (currently L2-Norm)
   * maybe better another matrix similarity measure
+
 ----------------------------------------------------------------------------------------
 
 #### feasible NN implementations we could use
