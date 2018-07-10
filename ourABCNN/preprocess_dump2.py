@@ -200,6 +200,15 @@ class ComplexSimple(Data):
 
             self.s1_mats, self.s2_mats, self.labels_mats = [], [], []
 
+            random.seed(4)
+            self.s1s = random.shuffle(self.s1s)
+            random.seed(4)
+            self.s2s = random.shuffle(self.s2s)
+            random.seed(4)
+            self.labels = random.shuffle(self.labels)
+            random.seed(4)
+            self.features = random.shuffle(self.features)
+
             word2vec_begin = time.time()
             for i in range(len(self.s1s)):
                 self.s1_mats.append(np.expand_dims(np.pad(np.column_stack([self.word2vec.get(w) for w in self.s1s[i]]),
