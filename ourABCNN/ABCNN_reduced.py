@@ -41,6 +41,13 @@ class ABCNN():
 
             return dot_products / (norm1 * norm2)
 
+        def cos_sim2(v1, v2):
+            norm1 = tf.sqrt(tf.reduce_sum(tf.square(v1)))
+            norm2 = tf.sqrt(tf.reduce_sum(tf.square(v2)))
+            dot_products = tf.reduce_sum(v1 * v2, name="cos_sim2")
+
+            return dot_products / (norm1 * norm2)
+
         def w_pool(variable_scope, x):
             # x: [batch, di, s+w-1, 1]
             # attention: [batch, s+w-1]
@@ -269,10 +276,9 @@ class ABCNN():
                     DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=CNNs[-1][0], d=d0)
                     DNNs.append(DO)
 
-
             with tf.variable_scope('Cost'):
-                self.cost = 1/euclidean_score(tf.squeeze(DNNs[-1], axis=3), self.y)
-                self.cost2 = cos_sim(tf.squeeze(DNNs[-1], axis=3), self.y)
+                self.cost2 = 1/euclidean_score(tf.squeeze(DNNs[-1], axis=3), self.y)
+                self.cost = 1/(cos_sim2(tf.squeeze(DNNs[-1], axis=3), self.y))
                 tf.summary.scalar("cost", self.cost)
                 tf.summary.scalar("cost2", self.cost2)
             self.output_features = self.features
