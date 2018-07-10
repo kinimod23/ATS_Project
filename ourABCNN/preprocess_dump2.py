@@ -135,13 +135,12 @@ class ComplexSimple(Data):
                 s1 = word_tokenize(complex_sen.strip().lower())
                 s2 = word_tokenize(simple_sen.strip().lower())
                 if  not len(s1) > 40 and not len(s2) > 40:
-                    if self.word2vec.cntUnknowns(s1, 0.25) and self.word2vec.cntUnknowns(s2, 0.25):
+                    if self.word2vec.cntUnknowns(s1, 0.15) and self.word2vec.cntUnknowns(s2, 0.15):
                         self.s1s.append(s1)
                         self.s2s.append(s2)
                         if method == "labeled":
                             self.labels.append(1)
             print("Data was read")
-
 
             self.data_size = len(self.s1s)
 
@@ -177,6 +176,7 @@ class ComplexSimple(Data):
             else:
                 raise NameError(method)
 
+
             # create features
             feature_begin = time.time()
             for (s1, s2) in zip(self.s1s, self.s2s):
@@ -185,6 +185,8 @@ class ComplexSimple(Data):
                 local_max_len = max(len(s1), len(s2))
                 if local_max_len > self.max_len:
                     self.max_len = local_max_len
+
+            self.data_size = len(self.s1s)
 
             idf_feature_begin = time.time()
             for i in range(self.data_size):
