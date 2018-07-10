@@ -54,7 +54,7 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
 
         # model(parameters) saver
         saver = tf.train.Saver(max_to_keep=100)
-        model_path = build_path("./models/", data_type, 'BCNN', num_layers)
+        model_path = build_path("./models/", 'BCNN', num_layers, model_type)
 
     #with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
     with tf.Session(config=tfconfig) as sess:
@@ -102,8 +102,8 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
                 train_summary_writer.add_summary(merged, i)
             print('Mean Cost: {}'.format(MeanCost/i))
 
-            if e % 50 == 0:
-                save_path = saver.save(sess, build_path("./models/", data_type, 'BCNN', num_layers), global_step=e)
+            if e % 100 == 0:
+                save_path = saver.save(sess, build_path("./models/", 'BCNN', num_layers, model_type), global_step=e)
                 print("model saved as", save_path)
 
 
