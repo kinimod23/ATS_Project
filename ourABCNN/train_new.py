@@ -69,7 +69,6 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
             train_data.reset_index()
             i = 0
             MeanCost = 0
-            MeanCost2 = 0
             batchTime = 0
             modelTime = 0
 
@@ -77,9 +76,9 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
                 saver.restore(sess, model_path + "-" + str(100))
                 print(model_path + "-" + str(100), "restored.")
 
-            LR = linear_model.LogisticRegression()
-            SVM = svm.LinearSVC()
-            clf_features = []
+            #LR = linear_model.LogisticRegression()
+            #SVM = svm.LinearSVC()
+            #clf_features = []
 
             while train_data.is_available():
                 i += 1
@@ -88,42 +87,40 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
                 batchTime += time()-startBatch
 
                 startModel = time()
-                merged, _, c, c2, features = sess.run([model.merged, optimizer, model.cost, model.cost2, model.output_features],
+                merged, _, c, features = sess.run([model.merged, optimizer, model.cost, model.output_features],
                                                   feed_dict={model.x1: batch_x1,
                                                              model.x2: batch_x2,
                                                              model.y: batch_y,
                                                              model.features: batch_features})
                 modelTime += time()-startModel
                 MeanCost += c
-                MeanCost2 += c2
 
-                clf_features.append(features)
+                #clf_features.append(features)
 
-                if i % 200 == 0:
-                    print('[batch {}]  cost: {}  cost2: {}'.format(i, c, c2))
+                if i % 100 == 0:
+                    print('[batch {}]  cost: {}'.format(i, c, ))
                 train_summary_writer.add_summary(merged, i)
-            print('Mean Cost 1: {}  Mean Cost 2: {} '.format(MeanCost/i, MeanCost2/i))
-            print('Batch time: ', batchTime, '   Model time: ', modelTime)
+            print('Mean Cost: {}'.format(MeanCost/i))
 
             if e % 50 == 0:
                 save_path = saver.save(sess, build_path("./models/", data_type, 'BCNN', num_layers), global_step=e)
                 print("model saved as", save_path)
 
-            print('features: {}   labels: {}'.format(len(clf_features), len(train_data.labels)))
 
-            if model_type == 'convolution':
-                clf_features = np.concatenate(clf_features)
-                LR.fit(clf_features, train_data.labels)
-                SVM.fit(clf_features, train_data.labels)
 
-                if e % 50 == 0:
-                    LR_path = build_path("./models/", data_type, 'BCNN', num_layers, "-" + str(e) + "-LR.pkl")
-                    SVM_path = build_path("./models/", data_type, 'BCNN', num_layers, "-" + str(e) + "-SVM.pkl")
-                    joblib.dump(LR, LR_path)
-                    joblib.dump(SVM, SVM_path)
-
-                    print("LR saved as", LR_path)
-                    print("SVM saved as", SVM_path)
+            #if model_type == 'convolution':
+            #    clf_features = np.concatenate(clf_features)
+            #    LR.fit(clf_features, train_data.labels)
+            #    SVM.fit(clf_features, train_data.labels)
+#
+            #    if e % 50 == 0:
+            #        LR_path = build_path("./models/", data_type, 'BCNN', num_layers, "-" + str(e) + "-LR.pkl")
+            #        SVM_path = build_path("./models/", data_type, 'BCNN', num_layers, "-" + str(e) + "-SVM.pkl")
+            #        joblib.dump(LR, LR_path)
+            #        joblib.dump(SVM, SVM_path)
+#
+            #        print("LR saved as", LR_path)
+            #        print("SVM saved as", SVM_path)
 
         print("training finished!")
         print("=" * 50)

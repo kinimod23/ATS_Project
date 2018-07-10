@@ -215,7 +215,7 @@ class ABCNN():
                 DI = deconvolution(x=x_upsampled, d=d, reuse=tf.AUTO_REUSE, trainable=True)
                 return DI
 
-        with tf.variable_scope("Encoder"):
+        with tf.variable_scope('Encoder'):
             x1_expanded = tf.expand_dims(self.x1, -1)
             x2_expanded = tf.expand_dims(self.x2, -1)
 
@@ -249,11 +249,14 @@ class ABCNN():
 
                 self.prediction = tf.contrib.layers.softmax(self.estimation)[:, 1]
                 with tf.variable_scope('Cost'):
+                    print('Shape y: {}  shape sims: {}'.format(self.y, sims[-1]))
 
-                    self.cost = tf.add(
-                    tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.estimation, labels=self.y)),
-                    tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)),
-                    name="cost")
+                    self.cost = tf.reduce_sum(tf.square(tf.to_float(self.y) - sims[-1]))
+
+                    #self.cost = tf.add(
+                    #tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.estimation, labels=self.y)),
+                    #tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)),
+                    #name="cost")
                     self.cost2 = self.cost
 
                 tf.summary.scalar("cost", self.cost)
@@ -276,14 +279,14 @@ class ABCNN():
                     DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=CNNs[-1][0], d=d0)
                     DNNs.append(DO)
 
-            with tf.variable_scope('Cost'):
-                self.cost2 = 1/euclidean_score(tf.squeeze(DNNs[-1], axis=3), self.y)
-                self.cost = 1/(cos_sim2(tf.squeeze(DNNs[-1], axis=3), self.y))
-                tf.summary.scalar("cost", self.cost)
-                tf.summary.scalar("cost2", self.cost2)
-            self.output_features = self.features
+                with tf.variable_scope('Cost'):
+                    self.cost2 = 1/euclidean_score(tf.squeeze(DNNs[-1], axis=3), self.y)
+                    self.cost = 1/(cos_sim2(tf.squeeze(DNNs[-1], axis=3), self.y))
+                    tf.summary.scalar("cost", self.cost)
+                    tf.summary.scalar("cost2", self.cost2)
+                self.output_features = self.features
 
-            self.prediction = DNNs[-1]
+                self.prediction = DNNs[-1]
 
         self.merged = tf.summary.merge_all()
 
