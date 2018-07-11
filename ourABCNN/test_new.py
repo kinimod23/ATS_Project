@@ -107,6 +107,5 @@ if __name__ == "__main__":
 
     test(w=int(params["ws"]), l2_reg=float(params["l2_reg"]), epoch=int(params["epoch"]),
          max_len=int(params["max_len"]), model_type=params["model_type"],
-         num_layers=int(params["num_layers"]), data_type=params["data_type"],
-         method=params["method"], word2vec=params["word2vec"], dumped_data=params["dumped_data"])
+         num_layers=int(params["num_layers"]))
 

@@ -33,7 +33,6 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, num_classes=
             for k, v in dump_dict.items():
                 setattr(train_data, k, v)
         print("done!")
-############################################################################
     print("=" * 50)
     print("training data size:", train_data.data_size)
     print("training max len:", train_data.max_len)
@@ -107,10 +106,7 @@ if __name__ == "__main__":
         "epoch": 50,
         "model_type": "End2End",
         "batch_size": 128,
-        "num_layers": 4,
-        "data_type": "Complex2Simple",
-        "method": "unlabeled",
-        "word2vec": Word2Vec()
+        "num_layers": 4
     }
 
     if len(sys.argv) > 1:
@@ -125,5 +121,4 @@ if __name__ == "__main__":
         print(k, ":", params[k])
 
     train(lr=float(params["lr"]), w=int(params["ws"]), l2_reg=float(params["l2_reg"]), epoch=int(params["epoch"]),
-          model_type=params["model_type"], batch_size=int(params["batch_size"]), num_layers=int(params["num_layers"]),
-          data_type=params["data_type"], method=params["method"], word2vec=params["word2vec"])
+          model_type=params["model_type"], batch_size=int(params["batch_size"]), num_layers=int(params["num_layers"]))
