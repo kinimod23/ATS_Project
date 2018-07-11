@@ -30,104 +30,58 @@ class ABCNN():
         def pad_for_wide_conv(x):
             return tf.pad(x, np.array([[0, 0], [0, 0], [w - 1, w - 1], [0, 0]]), "CONSTANT", name="pad_wide_conv")
 
-        def euclidean_score(v1, v2):
-            euclidean = tf.sqrt(tf.reduce_sum(tf.square(v1 - v2)))
-            return 1 / (1 + euclidean)
-
-        def cos_sim(v1, v2):
-            norm1 = tf.sqrt(tf.reduce_sum(tf.square(v1), axis=1))
-            norm2 = tf.sqrt(tf.reduce_sum(tf.square(v2), axis=1))
-            dot_products = tf.reduce_sum(v1 * v2, axis=1, name="cos_sim")
-
-            return dot_products / (norm1 * norm2)
-
-        def cos_sim2(v1, v2):
-            norm1 = tf.sqrt(tf.reduce_sum(tf.square(v1)))
-            norm2 = tf.sqrt(tf.reduce_sum(tf.square(v2)))
-            dot_products = tf.reduce_sum(v1 * v2, name="cos_sim2")
+        def cos_sim(v1, v2, axis=None):
+            norm1 = tf.sqrt(tf.reduce_sum(tf.square(v1), axis=axis))
+            norm2 = tf.sqrt(tf.reduce_sum(tf.square(v2), axis=axis))
+            dot_products = tf.reduce_sum(v1 * v2, axis=axis, name="cos_sim")
 
             return dot_products / (norm1 * norm2)
 
         def w_pool(variable_scope, x):
-            # x: [batch, di, s+w-1, 1]
-            # attention: [batch, s+w-1]
             with tf.variable_scope(variable_scope + "-w_pool"):
                 w_ap = tf.layers.average_pooling2d(
-                    inputs=x,
-                    # (pool_height, pool_width)
-                    pool_size=(1, w),
-                    strides=1,
-                    padding="VALID",
-                    name="w_ap"
-                )
-                # [batch, di, s, 1]
+                    inputs=x, pool_size=(1, w),
+                    strides=1, padding="VALID", name="w_ap")
                 return w_ap
 
         def all_pool(variable_scope, x):
             with tf.variable_scope(variable_scope + "-all_pool"):
                 if variable_scope.startswith("input"):
-                    pool_width = s
-                    d = d0
-                else:
-                    pool_width = s + w - 1
-                    d = di
-
+                    pool_width, d = s, d0
+                else: pool_width, d = s + w - 1, di
                 all_ap = tf.layers.average_pooling2d(
-                    inputs=x,
-                    # (pool_height, pool_width)
-                    pool_size=(1, pool_width),
-                    strides=1,
-                    padding="VALID",
-                    name="all_ap"
-                )
-                # [batch, di, 1, 1]
-
-                # [batch, di]
+                    inputs=x, pool_size=(1, pool_width),
+                    strides=1, padding="VALID", name="all_ap")
                 all_ap_reshaped = tf.reshape(all_ap, [-1, d])
-                #all_ap_reshaped = tf.squeeze(all_ap, [2, 3])
-
                 return all_ap_reshaped
 
         def convolution(name_scope, x, d, reuse, trainable):
             with tf.name_scope(name_scope + "-conv"):
                 with tf.variable_scope("conv") as scope:
                     conv = tf.contrib.layers.conv2d(
-                        inputs=x,
-                        num_outputs=di,
-                        kernel_size=(d, w),
-                        stride=1,
-                        padding="VALID",
+                        inputs=x, num_outputs=di,
+                        kernel_size=(d, w), stride=1, padding="VALID",
                         activation_fn=tf.nn.tanh,
                         weights_initializer=tf.contrib.layers.xavier_initializer_conv2d(),
                         weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
                         biases_initializer=tf.constant_initializer(1e-04),
-                        reuse=reuse,
-                        trainable=trainable,
-                        scope=scope
-                    )
+                        reuse=reuse, trainable=trainable, scope=scope )
                     tf.get_variable_scope().reuse_variables()
                     weights = tf.get_variable('weights')
                     tf.summary.histogram('weights', weights)
                     biases = tf.get_variable('biases')
                     tf.summary.histogram('biases', biases)
-                    # Weight: [filter_height, filter_width, in_channels, out_channels]
-                    # output: [batch, 1, input_width+filter_Width-1, out_channels] == [batch, 1, s+w-1, di]
-
-                    # [batch, di, s+w-1, 1]
                     conv_trans = tf.transpose(conv, [0, 3, 2, 1], name="conv_trans")
                     return conv_trans
 
         def CNN_layer(variable_scope, x1, x2, d):
-            # x1, x2 = [batch, d, s, 1]
             with tf.variable_scope(variable_scope):
-
                 if model_type == 'convolution' or model_type == 'End2End':
                     left_conv = convolution(name_scope="left", x=pad_for_wide_conv(x1), d=d, reuse=tf.AUTO_REUSE, trainable=True)
                     right_conv = convolution(name_scope="right", x=pad_for_wide_conv(x2), d=d, reuse=tf.AUTO_REUSE, trainable=True)
                 else:
                     left_conv = convolution(name_scope="left", x=pad_for_wide_conv(x1), d=d, reuse=tf.AUTO_REUSE, trainable=False)
                     right_conv = convolution(name_scope="right", x=pad_for_wide_conv(x2), d=d, reuse=tf.AUTO_REUSE, trainable=False)
-
                 left_wp = w_pool(variable_scope="left", x=left_conv)
                 left_ap = all_pool(variable_scope="left", x=left_conv)
                 right_wp = w_pool(variable_scope="right", x=right_conv)
@@ -140,73 +94,18 @@ class ABCNN():
             with tf.name_scope("deconv"):
                 with tf.variable_scope("deconv") as scope:
                     deconv = tf.contrib.layers.conv2d_transpose(
-                    inputs= x, #[batch, height, width, in_channels]
-                    num_outputs=1,
-                    kernel_size=(di,w),
-                    stride=1,
-                    padding='SAME',
-                    data_format="NHWC",
-                    activation_fn=tf.nn.tanh,
+                    inputs= x,  num_outputs=1, kernel_size=(di,w), stride=1,
+                    padding='SAME', data_format="NHWC", activation_fn=tf.nn.tanh,
                     weights_initializer=tf.contrib.layers.xavier_initializer_conv2d(),
                     weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
                     biases_initializer=tf.constant_initializer(1e-04),
-                    reuse=reuse,
-                    trainable=trainable,
-                    scope=scope
-                    )
-
+                    reuse=reuse, trainable=trainable, scope=scope )
                     tf.get_variable_scope().reuse_variables()
                     weights2 = tf.get_variable('weights')
                     tf.summary.histogram('weights', weights2)
                     biases2 = tf.get_variable('biases')
                     tf.summary.histogram('biases', biases2)
-
                     return deconv
-
-        def upsample_layer(bottom, n_channels, name, upscale_factor):
-            kernel_size = 2*upscale_factor - upscale_factor%2
-            stride = upscale_factor
-            strides = [1, stride, stride, 1]
-            with tf.variable_scope(name):
-                # Shape of the bottom tensor
-                in_shape = tf.shape(bottom)
-
-                h = ((in_shape[1] - 1) * stride) + 1
-                w = ((in_shape[2] - 1) * stride) + 1
-                new_shape = [in_shape[0], h, w, n_channels]
-                output_shape = tf.stack(new_shape)
-
-                filter_shape = [kernel_size, kernel_size, n_channels, n_channels]
-
-                weights = get_bilinear_filter(filter_shape,upscale_factor)
-                deconv = tf.nn.conv2d_transpose(bottom, weights, output_shape,
-                                                strides=strides, padding='SAME')
-            return deconv
-
-        def get_bilinear_filter(filter_shape, upscale_factor):
-            ##filter_shape is [width, height, num_in_channels, num_out_channels]
-            kernel_size = filter_shape[1]
-            ### Centre location of the filter for which value is calculated
-            if kernel_size % 2 == 1:
-             centre_location = upscale_factor - 1
-            else:
-              centre_location = upscale_factor - 0.5
-
-            bilinear = np.zeros([filter_shape[0], filter_shape[1]])
-            for x in range(filter_shape[0]):
-                for y in range(filter_shape[1]):
-                   ##Interpolation Calculation
-                   value = (1 - abs((x - centre_location)/ upscale_factor)) * (1 - abs((y - centre_location)/ upscale_factor))
-                   bilinear[x, y] = value
-            weights = np.zeros(filter_shape)
-            for i in range(filter_shape[2]):
-                weights[:, :, i, i] = bilinear
-            init = tf.constant_initializer(value=weights,
-                                            dtype=tf.float32)
-
-            bilinear_weights = tf.get_variable(name="decon_bilinear_filter", initializer=init,
-                                 shape=weights.shape)
-            return bilinear_weights
 
         def DNN_layer(variable_scope, x, d):
             # x1, x2 = [batch, d, s, 1]
@@ -224,43 +123,22 @@ class ABCNN():
 
             LI_1, LO_1, RI_1, RO_1 = CNN_layer(variable_scope="CNN-1", x1=x1_expanded, x2=x2_expanded, d=d0)
 
-            sims = [cos_sim(LO_0, RO_0), cos_sim(LO_1, RO_1)]
+            sims = [cos_sim(LO_0, RO_0, axis=1), cos_sim(LO_1, RO_1, axis=1)]
             CNNs = [(LI_1, RI_1)]
 
             if num_layers > 1:
                 for i in range(0, num_layers-1):
                     LI, LO, RI, RO = CNN_layer(variable_scope="CNN-"+str(i+2), x1=CNNs[i][0], x2=CNNs[i][1], d=di)
                     CNNs.append((LI, RI))
-                    sims.append(cos_sim(LO, RO))
+                    sims.append(cos_sim(LO, RO, axis=1))
 
             if model_type == 'convolution':
-                with tf.variable_scope("output-layer"):
-                    self.output_features = tf.concat([self.features, tf.stack(sims, axis=1)], axis=1, name="output_features")
-
-                    self.estimation = tf.contrib.layers.fully_connected(
-                        inputs=self.output_features,
-                        num_outputs=num_classes,
-                        activation_fn=None,
-                        weights_initializer=tf.contrib.layers.xavier_initializer(),
-                        weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
-                        biases_initializer=tf.constant_initializer(1e-04),
-                        scope="FC"
-                    )
-
-                self.prediction = tf.contrib.layers.softmax(self.estimation)[:, 1]
                 with tf.variable_scope('Cost'):
-                    print('Shape y: {}  shape sims: {}'.format(self.y, sims[-1]))
 
-                    self.cost = tf.reduce_sum(tf.square(tf.to_float(self.y) - sims[-1]))
-
-                    #self.cost = tf.add(
-                    #tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.estimation, labels=self.y)),
-                    #tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)),
-                    #name="cost")
-                    self.cost2 = self.cost
+                    self.cost = tf.reduce_mean(tf.square(tf.to_float(self.y) - sims[-1]))
+                    self.acc = 1-self.cost
 
                 tf.summary.scalar("cost", self.cost)
-                tf.summary.scalar("cost2", self.cost2)
 
         if model_type != 'convolution':
             with tf.variable_scope("Decoder"):
@@ -280,10 +158,9 @@ class ABCNN():
                     DNNs.append(DO)
 
                 with tf.variable_scope('Cost'):
-                    self.cost2 = 1/euclidean_score(tf.squeeze(DNNs[-1], axis=3), self.y)
-                    self.cost = 1/(cos_sim2(tf.squeeze(DNNs[-1], axis=3), self.y))
+                    self.acc = (cos_sim(tf.squeeze(DNNs[-1], axis=3), self.y))
+                    self.cost = 1-self.acc
                     tf.summary.scalar("cost", self.cost)
-                    tf.summary.scalar("cost2", self.cost2)
                 self.output_features = self.features
 
                 self.prediction = DNNs[-1]

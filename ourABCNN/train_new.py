@@ -12,32 +12,36 @@ import os
 import pickle
 from time import time
 
-def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, method, word2vec, dumped_data, num_classes=2):
-    if data_type == "WikiQA":
-        train_data = WikiQA(word2vec=word2vec)
-        train_data.open_file(mode="train")
-    elif data_type == 'Paraphrase':
-        train_data = MSRP(word2vec=word2vec)
-        train_data.open_file(mode="train")
-    elif data_type == 'Complex2Simple':
-        dumped = dumped_data+'_train_'+method+'.pkl'
-        if not os.path.exists(dumped):
-            print("Dumped data not found! Data will be preprocessed")
-            train_data = ComplexSimple(word2vec=word2vec)
-            train_data.open_file(mode="train", method=method)
-        else:
-            print("found pickled state, loading..")
-            train_data = ComplexSimple(word2vec=word2vec)
-            with open(dumped, 'rb') as f:
-                dump_dict = pickle.load(f)
-                for k, v in dump_dict.items():
-                    setattr(train_data, k, v)
-            print("done!")
+def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, num_classes=2):
 
+############################################################################
+#########################   DATA LOADING   #################################
+############################################################################
+    if model_type == 'convolution': method = 'labeled'
+    else: method = 'unlabeled'
+    dumped = 'preprocessed_train_'+method+'.pkl'
+
+    if not os.path.exists(dumped):
+        print("Dumped data not found! Data will be preprocessed")
+        train_data = ComplexSimple(word2vec=Word2Vec())
+        train_data.open_file(mode="train", method=method)
+    else:
+        print("found pickled state, loading..")
+        train_data = ComplexSimple(word2vec=Word2Vec())
+        with open(dumped, 'rb') as f:
+            dump_dict = pickle.load(f)
+            for k, v in dump_dict.items():
+                setattr(train_data, k, v)
+        print("done!")
+############################################################################
     print("=" * 50)
     print("training data size:", train_data.data_size)
     print("training max len:", train_data.max_len)
     print("=" * 50)
+
+############################################################################
+#########################      MODEL      ##################################
+############################################################################
 
     tfconfig = tf.ConfigProto(allow_soft_placement = True)
     with tf.device("/gpu:0"):
@@ -45,83 +49,40 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, data_type, m
                   num_features=train_data.num_features, num_classes=num_classes, num_layers=num_layers)
 
         optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(model.cost)
-
-        # Due to GTX 970 memory issues
-        #gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.7)
-
-        # Initialize all variables
         init = tf.global_variables_initializer()
-
-        # model(parameters) saver
         saver = tf.train.Saver(max_to_keep=100)
         model_path = build_path("./models/", 'BCNN', num_layers, model_type)
 
-    #with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
+        if model_type == 'deconvolution':
+            saver.restore(sess, model_path + "-" + str(100))
+            print(model_path + "-" + str(100), "restored.")
+
+############################################################################
+#########################     TRAINING     #################################
+############################################################################
     with tf.Session(config=tfconfig) as sess:
         train_summary_writer = tf.summary.FileWriter("../tf_logs/train2", sess.graph)
-
         sess.run(init)
-
         print("=" * 50)
         for e in range(1, epoch + 1):
             print("[Epoch " + str(e) + "]")
-
             train_data.reset_index()
-            i = 0
-            MeanCost = 0
-            batchTime = 0
-            modelTime = 0
-
-            if model_type == 'deconvolution':
-                saver.restore(sess, model_path + "-" + str(100))
-                print(model_path + "-" + str(100), "restored.")
-
-            #LR = linear_model.LogisticRegression()
-            #SVM = svm.LinearSVC()
-            #clf_features = []
-
+            i , MeanCost, MeanAcc = 0, 0, 0
             while train_data.is_available():
                 i += 1
-                startBatch = time()
-                batch_x1, batch_x2, batch_y, batch_features = train_data.next_batch(batch_size=batch_size, model_type=model_type)
-                batchTime += time()-startBatch
-
-                startModel = time()
-                merged, _, c, features = sess.run([model.merged, optimizer, model.cost, model.output_features],
-                                                  feed_dict={model.x1: batch_x1,
-                                                             model.x2: batch_x2,
-                                                             model.y: batch_y,
-                                                             model.features: batch_features})
-                modelTime += time()-startModel
+                x1, x2, y, features = train_data.next_batch(batch_size=batch_size, model_type=model_type)
+                merged, _, c, a = sess.run([model.merged, optimizer, model.cost, model.acc],
+                                    feed_dict={model.x1: x1, model.x2: x2,
+                                    model.y: y, model.features: features})
                 MeanCost += c
-
-                #clf_features.append(features)
-
+                MeanAcc += a
                 if i % 100 == 0:
-                    print('[batch {}]  cost: {}'.format(i, c, ))
+                    print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
                 train_summary_writer.add_summary(merged, i)
-            print('Mean Cost: {}'.format(MeanCost/i))
-
+            print('Mean Cost: {}   Mean Accuracy: {}'.format(MeanCost/i, MeanAcc/i))
             if e % 100 == 0:
                 save_path = saver.save(sess, build_path("./models/", 'BCNN', num_layers, model_type), global_step=e)
                 print("model saved as", save_path)
-
-
-
-            #if model_type == 'convolution':
-            #    clf_features = np.concatenate(clf_features)
-            #    LR.fit(clf_features, train_data.labels)
-            #    SVM.fit(clf_features, train_data.labels)
-#
-            #    if e % 50 == 0:
-            #        LR_path = build_path("./models/", data_type, 'BCNN', num_layers, "-" + str(e) + "-LR.pkl")
-            #        SVM_path = build_path("./models/", data_type, 'BCNN', num_layers, "-" + str(e) + "-SVM.pkl")
-            #        joblib.dump(LR, LR_path)
-            #        joblib.dump(SVM, SVM_path)
-#
-            #        print("LR saved as", LR_path)
-            #        print("SVM saved as", SVM_path)
-
         print("training finished!")
         print("=" * 50)
 
@@ -148,7 +109,6 @@ if __name__ == "__main__":
         "batch_size": 128,
         "num_layers": 4,
         "data_type": "Complex2Simple",
-        "dumped_data": "preprocessed_train.pkl",
         "method": "unlabeled",
         "word2vec": Word2Vec()
     }
@@ -166,4 +126,4 @@ if __name__ == "__main__":
 
     train(lr=float(params["lr"]), w=int(params["ws"]), l2_reg=float(params["l2_reg"]), epoch=int(params["epoch"]),
           model_type=params["model_type"], batch_size=int(params["batch_size"]), num_layers=int(params["num_layers"]),
-          data_type=params["data_type"], method=params["method"], word2vec=params["word2vec"], dumped_data=params["dumped_data"])
+          data_type=params["data_type"], method=params["method"], word2vec=params["word2vec"])

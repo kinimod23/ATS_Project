@@ -135,7 +135,7 @@ class ComplexSimple(Data):
                 s1 = word_tokenize(complex_sen.strip().lower())
                 s2 = word_tokenize(simple_sen.strip().lower())
                 if  not len(s1) > 40 and not len(s2) > 40:
-                    if self.word2vec.cntUnknowns(s1, 0.15) and self.word2vec.cntUnknowns(s2, 0.15):
+                    if self.word2vec.cntUnknowns(s1, 0.3) and self.word2vec.cntUnknowns(s2, 0.3):
                         self.s1s.append(s1)
                         self.s2s.append(s2)
                         if method == "labeled":
@@ -201,13 +201,13 @@ class ComplexSimple(Data):
             self.s1_mats, self.s2_mats, self.labels_mats = [], [], []
 
             random.seed(4)
-            self.s1s = random.shuffle(self.s1s)
+            random.shuffle(self.s1s)
             random.seed(4)
-            self.s2s = random.shuffle(self.s2s)
+            random.shuffle(self.s2s)
             random.seed(4)
-            self.labels = random.shuffle(self.labels)
+            random.shuffle(self.labels)
             random.seed(4)
-            self.features = random.shuffle(self.features)
+            random.shuffle(self.features)
 
             word2vec_begin = time.time()
             for i in range(len(self.s1s)):
