@@ -3,7 +3,7 @@ import numpy as np
 import sys
 
 from preprocess_dump import MSRP, WikiQA
-from preprocess_dump2 import Word2Vec, ComplexSimple
+from preprocess_dump2 import Word2Vec, ComplexSimple, FastText
 from ABCNN_reduced import ABCNN
 from utils import build_path
 from sklearn import linear_model, svm
@@ -23,11 +23,11 @@ def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, num_classes=
 
     if not os.path.exists(dumped):
         print("Dumped data not found! Data will be preprocessed")
-        train_data = ComplexSimple(word2vec=Word2Vec())
+        train_data = ComplexSimple(word2vec=FastText())
         train_data.open_file(mode="train", method=method)
     else:
         print("found pickled state, loading..")
-        train_data = ComplexSimple(word2vec=Word2Vec())
+        train_data = ComplexSimple(word2vec=FastText())
         with open(dumped, 'rb') as f:
             dump_dict = pickle.load(f)
             for k, v in dump_dict.items():

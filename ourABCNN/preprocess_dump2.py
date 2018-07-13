@@ -35,6 +35,30 @@ class Word2Vec():
             return True
         return False
 
+class FastText():
+    def __init__(self):
+    # facebook AI's fasttext model trained on Wikipedia 2017, UMBC webbase corpus and statmt.org news dataset (16B tokens).
+    # https://fasttext.cc/docs/en/english-vectors.html
+        self.model = gensim.models.KeyedVectors.load("wiki.dump")
+        self.unknowns = np.random.uniform(-0.01, 0.01, 300).astype("float32")
+
+    def get(self,word):
+        try:
+            return self.model[word]
+        except KeyError:
+            return self.unknowns
+
+    def cntUnknowns(self,sentence,threshold):
+        cnt = 0
+        threshold_amount = len(sentence) * threshold
+        for word in sentence:
+            try:
+                a = self.model[word]
+            except KeyError:
+                cnt +=1
+        if cnt < threshold_amount:
+            return True
+        return False
 
 class Data():
     def __init__(self, word2vec, max_len=50):
