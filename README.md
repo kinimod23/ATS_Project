@@ -6,7 +6,7 @@
 * Other papers: http://www.thespermwhale.com/jaseweston/papers/unified_nlp.pdf \\ https://arxiv.org/pdf/1404.2188.pdf
 * ABCNN: https://arxiv.org/pdf/1512.05193.pdf
 * Recursive Autoencoder for Paraphrase Detection https://papers.nips.cc/paper/4204-dynamic-pooling-and-unfolding-recursive-autoencoders-for-paraphrase-detection.pdf
-
+* Convolutional NN (translation) https://github.com/tobyyouup/conv_seq2seq
 ----------------------------------------------------------------------------------------
 ## ToDo
 * statistics about data
