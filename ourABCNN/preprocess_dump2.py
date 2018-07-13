@@ -153,8 +153,10 @@ class ComplexSimple(Data):
     def open_file(self, mode, method): # mode = test, train etc only for file name
         state_fn = STATE_FN_SCHEME.format(mode, method)
         print("reading data...")
-        with codecs.open("../corpus/wiki_complex_" + mode + ".txt", 'r', encoding="utf-8") as c, \
-        codecs.open("../corpus/wiki_simple_" + mode + ".txt", 'r', encoding="utf-8") as s:
+#        with codecs.open("../corpus/wiki_complex_" + mode + ".txt", 'r', encoding="utf-8") as c, \
+#        codecs.open("../corpus/wiki_simple_" + mode + ".txt", 'r', encoding="utf-8") as s:
+        with codecs.open("../corpus/one_stop_complex" + ".txt", 'r', encoding="utf-8") as c, \
+        codecs.open("../corpus/one_stop_simple" + ".txt", 'r', encoding="utf-8") as s:
             for(complex_sen, simple_sen) in tqdm(zip(c.readlines(), s.readlines())):
                 s1 = word_tokenize(complex_sen.strip().lower())
                 s2 = word_tokenize(simple_sen.strip().lower())

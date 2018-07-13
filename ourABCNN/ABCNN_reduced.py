@@ -160,6 +160,7 @@ class ABCNN():
                 with tf.variable_scope('Cost'):
                     self.acc = (cos_sim(tf.squeeze(DNNs[-1], axis=3), self.y))
                     self.cost = 1-self.acc
+                    print("Output shape and target shape: ",DNNs[-1].shape, self.y.shape)
                     tf.summary.scalar("cost", self.cost)
                 self.output_features = self.features
 
