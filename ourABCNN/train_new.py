@@ -12,22 +12,24 @@ import os
 import pickle
 from time import time
 
-def train(lr, w, l2_reg, epoch, model_type, batch_size, num_layers, num_classes=2):
+def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_layers, num_classes=2):
 
 ############################################################################
 #########################   DATA LOADING   #################################
 ############################################################################
     if model_type == 'convolution': method = 'labeled'
     else: method = 'unlabeled'
-    dumped = 'preprocessed_train_'+method+'.pkl'
+    dumped = 'preprocessed_train_'+method+'_'+data+'_'+word2vec+'.pkl'
+    if word2vec == 'FastText': w2v = FastText()
+    else: w2v = Word2Vec()
 
     if not os.path.exists(dumped):
         print("Dumped data not found! Data will be preprocessed")
-        train_data = ComplexSimple(word2vec=FastText())
-        train_data.open_file(mode="train", method=method)
+        train_data = ComplexSimple(word2vec=w2v)
+        train_data.open_file(mode="train", method=method, data=data, word2vec=word2vec)
     else:
         print("found pickled state, loading..")
-        train_data = ComplexSimple(word2vec=FastText())
+        train_data = ComplexSimple(word2vec=w2v)
         with open(dumped, 'rb') as f:
             dump_dict = pickle.load(f)
             for k, v in dump_dict.items():

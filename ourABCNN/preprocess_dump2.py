@@ -10,7 +10,7 @@ import os
 from tqdm import tqdm
 import _pickle as pickle
 
-STATE_FN_SCHEME = "preprocessed_{}_{}.pkl"
+STATE_FN_SCHEME = "preprocessed_{}_{}_{}_{}.pkl"
 
 class Word2Vec():
     def __init__(self):
@@ -150,18 +150,22 @@ class ComplexSimple(Data):
         print("Took: {}".format(took))
 
 
-    def open_file(self, mode, method): # mode = test, train etc only for file name
-        state_fn = STATE_FN_SCHEME.format(mode, method)
+    def open_file(self, mode, method, data, word2vec): # mode = test, train etc only for file name
+        state_fn = STATE_FN_SCHEME.format(mode, method, data, word2vec)
         print("reading data...")
-#        with codecs.open("../corpus/wiki_complex_" + mode + ".txt", 'r', encoding="utf-8") as c, \
-#        codecs.open("../corpus/wiki_simple_" + mode + ".txt", 'r', encoding="utf-8") as s:
-        with codecs.open("../corpus/one_stop_complex" + ".txt", 'r', encoding="utf-8") as c, \
-        codecs.open("../corpus/one_stop_simple" + ".txt", 'r', encoding="utf-8") as s:
+        if data == 'Wiki' :
+            l1 = "../corpus/wiki_complex_" + mode + ".txt"
+            l2 = "../corpus/wiki_simple_" + mode + ".txt"
+        else:
+            l1 = "../corpus/one_stop_complex" + ".txt"
+            l2 = "../corpus/one_stop_simple" + ".txt"
+        with codecs.open(l1, 'r', encoding="utf-8") as c, \
+        codecs.open(l2, 'r', encoding="utf-8") as s:
             for(complex_sen, simple_sen) in tqdm(zip(c.readlines(), s.readlines())):
                 s1 = word_tokenize(complex_sen.strip().lower())
                 s2 = word_tokenize(simple_sen.strip().lower())
                 if  not len(s1) > 40 and not len(s2) > 40:
-                    if self.word2vec.cntUnknowns(s1, 0.3) and self.word2vec.cntUnknowns(s2, 0.3):
+                    if self.word2vec.cntUnknowns(s1, 0.1) and self.word2vec.cntUnknowns(s2, 0.1):
                         self.s1s.append(s1)
                         self.s2s.append(s2)
                         if method == "labeled":
