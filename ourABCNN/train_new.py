@@ -108,7 +108,9 @@ if __name__ == "__main__":
         "epoch": 50,
         "model_type": "End2End",
         "batch_size": 128,
-        "num_layers": 4
+        "num_layers": 4,
+        "data": 'OneEnglish',
+        "word2vec": 'FastText'
     }
 
     if len(sys.argv) > 1:
@@ -123,4 +125,5 @@ if __name__ == "__main__":
         print(k, ":", params[k])
 
     train(lr=float(params["lr"]), w=int(params["ws"]), l2_reg=float(params["l2_reg"]), epoch=int(params["epoch"]),
-          model_type=params["model_type"], batch_size=int(params["batch_size"]), num_layers=int(params["num_layers"]))
+          model_type=params["model_type"], batch_size=int(params["batch_size"]), num_layers=int(params["num_layers"],
+            data=params["data"], word2vec=params["word2vec"]))
