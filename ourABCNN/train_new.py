@@ -6,8 +6,6 @@ from preprocess_dump import MSRP, WikiQA
 from preprocess_dump2 import Word2Vec, ComplexSimple, FastText
 from ABCNN_reduced import ABCNN
 from utils import build_path
-from sklearn import linear_model, svm
-from sklearn.externals import joblib
 import os
 import pickle
 from time import time
@@ -55,8 +53,8 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         model_path = build_path("./models/", 'BCNN', num_layers, model_type, word2vec)
 
         if model_type == 'deconvolution':
-            saver.restore(sess, model_path + "-" + str(100))
-            print(model_path + "-" + str(100), "restored.")
+            saver.restore(sess, model_path + "-" + str(1000))
+            print(model_path + "-" + str(1000), "restored.")
 
 ############################################################################
 #########################     TRAINING     #################################
@@ -77,7 +75,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                                     model.y: y, model.features: features})
                 MeanCost += c
                 MeanAcc += a
-                if i % 100 == 0:
+                if i % 200 == 0:
                     print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
                 train_summary_writer.add_summary(merged, i)
             print('Mean Cost: {}   Mean Accuracy: {}'.format(MeanCost/i, MeanAcc/i))
