@@ -52,14 +52,14 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         saver = tf.train.Saver(max_to_keep=100)
         model_path = build_path("./models/", 'BCNN', num_layers, model_type, word2vec)
 
-        if model_type == 'deconvolution':
-            saver.restore(sess, model_path + "-" + str(1000))
-            print(model_path + "-" + str(1000), "restored.")
-
 ############################################################################
 #########################     TRAINING     #################################
 ############################################################################
     with tf.Session(config=tfconfig) as sess:
+        if model_type == 'deconvolution':
+            saver.restore(sess, model_path + "-" + str(1000))
+            print(model_path + "-" + str(1000), "restored.")
+
         train_summary_writer = tf.summary.FileWriter("../tf_logs/train2", sess.graph)
         sess.run(init)
         print("=" * 50)
