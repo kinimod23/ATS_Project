@@ -9,10 +9,10 @@
 * Convolutional NN (translation) https://github.com/tobyyouup/conv_seq2seq
 ----------------------------------------------------------------------------------------
 ## ToDo
-* statistics about data  -> Dominik bis 23.08.
+* statistics about data  ----------------> Dominik bis 23.08.
   * how long are sentences (how many are lost if we cut at 50 words)
   * how many sentences have 30%, 40%, 50% of words unknown to word2vec
-* change test.py            -> Simon bis 21.08.
+* change test.py            ----------------> Simon bis 21.08.
   * to evaluate the encoder
   * to evaluate End2End
   * to create some output maybe? or write an inference file which creates output
