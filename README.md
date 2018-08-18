@@ -9,20 +9,19 @@
 * Convolutional NN (translation) https://github.com/tobyyouup/conv_seq2seq
 ----------------------------------------------------------------------------------------
 ## ToDo
-* statistics about data
+* statistics about data  ----------------> Dominik bis 23.08.
   * how long are sentences (how many are lost if we cut at 50 words)
   * how many sentences have 30%, 40%, 50% of words unknown to word2vec
-* change test.py 
+* change test.py            ----------------> Simon bis 21.08.
   * to evaluate the encoder
   * to evaluate End2End
   * to create some output maybe? or write an inference file which creates output
     * reverse word2vec -> vec2word
-* train word2vec on wikipedia data
-  * here are links for wiki corpora [word2vec](https://code.google.com/archive/p/word2vec/)
-  * some othter pretrained things [github](https://github.com/3Top/word2vec-api#where-to-get-a-pretrained-models)
-  * maybe even use fasttext [tutorial](https://github.com/RaRe-Technologies/gensim/blob/develop/docs/notebooks/FastText_Tutorial.ipynb)
+* now using fasttext... 
+ * train on different data ( Wikipedia Data )
 * think about other ideas for loss functions 
   * (currently L2-Norm)
+  * and also Cosine Similarity for End2End
   * maybe better another matrix similarity measure
 
 ----------------------------------------------------------------------------------------
