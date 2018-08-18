@@ -42,7 +42,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
         model = ABCNN(s=test_data.max_len, w=w, l2_reg=l2_reg, model_type=model_type,
                   num_features=test_data.num_features, num_classes=num_classes, num_layers=num_layers)
 
-    model_path = build_path("./models/", 'BCNN', num_layers, model_type, word2vec)
+    model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
     print("=" * 50)
     print("test data size:", test_data.data_size)
 
@@ -70,7 +70,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
                 MeanCost += c
                 Accuracys.append(a)
                 Sentences.append(pred)
-                print(pred.shape)
+                print(pred[0].shape)
                 if i % 200 == 0:
                     print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
             print('Mean Cost: {}   Mean Accuracy: {}'.format(MeanCost/i, np.mean(Accuracys)))
@@ -78,18 +78,18 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
     print("=" * 50)
     print("max accuracy: {}  mean accuracy: {}".format(max(Accuracys), np.mean(Accuracys)))
     print("=" * 50)
-    print('Number Sentences: {}'.format(len(Sentences)))
+    print('Number of Sentences: {}'.format(len(Sentences)))
 
     fasttext = gensim.models.KeyedVectors.load("wiki.dump")
     print('FastText loaded')
     with open('output.txt', 'w') as f:
         for sen in Sentences[:2]:
             string = ''
-            for word in sen:
-                string += fasttext.similar_by_vector(word)[0][0] + ' '
+            for word in range(50):
+                string += fasttext.wv.most_similar(positive=sen[0][:,word,:].T, topn=1)[0][0] + ' '
             string += '\n'
             f.write(string)
-
+    print('Output created!')
 
 if __name__ == "__main__":
 

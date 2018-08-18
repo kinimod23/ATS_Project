@@ -78,7 +78,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 train_summary_writer.add_summary(merged, i)
             print('Mean Cost: {}   Mean Accuracy: {}'.format(MeanCost/i, MeanAcc/i))
             if e % 100 == 0:
-                save_path = saver.save(sess, build_path("./models/", 'BCNN', num_layers, model_type, word2vec), global_step=e)
+                save_path = saver.save(sess, build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec), global_step=e)
                 print("model saved as", save_path)
         print("training finished!")
         print("=" * 50)
