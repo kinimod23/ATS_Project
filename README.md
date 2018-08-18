@@ -17,12 +17,11 @@
   * to evaluate End2End
   * to create some output maybe? or write an inference file which creates output
     * reverse word2vec -> vec2word
-* train word2vec on wikipedia data
-  * here are links for wiki corpora [word2vec](https://code.google.com/archive/p/word2vec/)
-  * some othter pretrained things [github](https://github.com/3Top/word2vec-api#where-to-get-a-pretrained-models)
-  * maybe even use fasttext [tutorial](https://github.com/RaRe-Technologies/gensim/blob/develop/docs/notebooks/FastText_Tutorial.ipynb)
+* now using fasttext... 
+ * train on different data ( Wikipedia Data )
 * think about other ideas for loss functions 
   * (currently L2-Norm)
+  * and also Cosine Similarity for End2End
   * maybe better another matrix similarity measure
 
 ----------------------------------------------------------------------------------------
