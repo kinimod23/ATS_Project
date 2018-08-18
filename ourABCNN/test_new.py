@@ -2,7 +2,6 @@ import tensorflow as tf
 import numpy as np
 import sys
 
-from preprocess_dump import MSRP, WikiQA
 from preprocess_dump2 import Word2Vec, ComplexSimple, FastText
 from ABCNN_reduced import ABCNN
 from utils import build_path
@@ -71,6 +70,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
                 MeanCost += c
                 Accuracys.append(a)
                 Sentences.append(pred)
+                print(pred.shape)
                 if i % 200 == 0:
                     print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
             print('Mean Cost: {}   Mean Accuracy: {}'.format(MeanCost/i, np.mean(Accuracys)))
@@ -107,11 +107,11 @@ if __name__ == "__main__":
     params = {
         "ws": 4,
         "l2_reg": 0.0004,
-        "epoch": 50,
+        "epoch": 1,
         "model_type": "End2End",
         "max_len": 40,
         "num_layers": 4,
-        "data": 'OneEnglish',
+        "data": 'Wiki',
         "word2vec": 'FastText'
     }
 

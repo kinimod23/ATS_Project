@@ -2,7 +2,6 @@ import tensorflow as tf
 import numpy as np
 import sys
 
-from preprocess_dump import MSRP, WikiQA
 from preprocess_dump2 import Word2Vec, ComplexSimple, FastText
 from ABCNN_reduced import ABCNN
 from utils import build_path
@@ -57,10 +56,8 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 ############################################################################
     with tf.Session(config=tfconfig) as sess:
         if model_type == 'deconvolution':
-            conv_path = build_path("./models/", 'BCNN', num_layers, 'convolution', word2vec)
-            saver.restore(sess, conv_path + "-" + str(1000))
-            print(conv_path + "-" + str(1000), "restored.")
-
+            saver.restore(sess, model_path + "-" + str(1000))
+            print(model_path + "-" + str(1000), "restored.")
         train_summary_writer = tf.summary.FileWriter("../tf_logs/train2", sess.graph)
         sess.run(init)
         print("=" * 50)
@@ -108,7 +105,7 @@ if __name__ == "__main__":
         "model_type": "End2End",
         "batch_size": 128,
         "num_layers": 4,
-        "data": 'OneEnglish',
+        "data": 'Wiki',
         "word2vec": 'FastText'
     }
 
