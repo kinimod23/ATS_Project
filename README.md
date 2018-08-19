@@ -12,17 +12,17 @@
 * statistics about data  ----------------> Dominik bis 23.08.
   * how long are sentences (how many are lost if we cut at 50 words)
   * how many sentences have 30%, 40%, 50% of words unknown to word2vec
+  * how does this change with fasttext
 * change test.py            ----------------> Simon bis 21.08.
-  * to evaluate the encoder
-  * to evaluate End2End
-  * to create some output maybe? or write an inference file which creates output
-    * reverse word2vec -> vec2word
-* now using fasttext... 
+  * ( creates output now )
+* now using fasttext...
  * train on different data ( Wikipedia Data )
-* think about other ideas for loss functions 
+* think about other ideas for loss functions
   * (currently L2-Norm)
   * and also Cosine Similarity for End2End
   * maybe better another matrix similarity measure
+* Get deconvolution with pretrained model to work ------------------> Simon/Tim 26.08.
+  * This is really a pain in the ass, i don't know how to do it
 
 ----------------------------------------------------------------------------------------
 
@@ -33,12 +33,12 @@
 * _Attention-based CNN for modeling sentence pairs_
 -> [github](https://github.com/galsang/ABCNN)
 
-* Generalization of CNNs by using graph signal processing applied on any graph structure. Definition of convolutional filters on graphs. 
+* Generalization of CNNs by using graph signal processing applied on any graph structure. Definition of convolutional filters on graphs.
 -> [github](https://github.com/mdeff/cnn_graph)
 
 *ByteNet implementation:*
 
-* Tensor2Tensor library of deep learning models with bytenet partly maintained by google -> [github](https://github.com/tensorflow/tensor2tensor) 
+* Tensor2Tensor library of deep learning models with bytenet partly maintained by google -> [github](https://github.com/tensorflow/tensor2tensor)
 
 * bytenet without target network + training framework missing -> [github](https://github.com/NickShahML/bytenet_tensorflow)
 
@@ -69,7 +69,7 @@ Stajner et al. (2017)
 
 ##### Which data are you planning to use?
 ( Wikipedia simple and complex corpus )
-The above but improved by Hwang et al. (2015) 
+The above but improved by Hwang et al. (2015)
 
 ##### Which specific steps (e.g. milestones) are you going to take towards solving the problem? What's the schedule?
 - determine if the hypothesis of comparability of complex and simplified syntax trees is correct (group effort)
