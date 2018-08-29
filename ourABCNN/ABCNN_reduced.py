@@ -132,13 +132,11 @@ class ABCNN():
                     CNNs.append((LI, RI))
                     sims.append(cos_sim(LO, RO, axis=1))
 
-            if model_type == 'convolution':
-                with tf.variable_scope('Cost'):
-
-                    self.cost = tf.reduce_mean(tf.square(tf.to_float(self.y) - sims[-1]))
-                    self.acc = 1-self.cost
-
-                tf.summary.scalar("cost", self.cost)
+            #if model_type == 'convolution':
+            with tf.variable_scope('Cost1'):
+                self.cost1 = tf.reduce_mean(tf.square(tf.to_float(self.y) - sims[-1]))
+                self.acc1 = 1-self.cost1
+            tf.summary.scalar("cost", self.cost1)
 
 
         with tf.variable_scope("Decoder"):
@@ -155,12 +153,12 @@ class ABCNN():
                 DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=CNNs[-1][0], d=d0)
                 DNNs.append(DO)
 
-            if model_type != 'convolution':
-                with tf.variable_scope('Cost'):
-                    self.acc = (cos_sim(tf.squeeze(DNNs[-1], axis=3), self.y))
-                    self.cost = 1-self.acc
-                    print("Output shape and target shape: ",DNNs[-1].shape, self.y.shape)
-                    tf.summary.scalar("cost", self.cost)
+            #if model_type != 'convolution':
+            with tf.variable_scope('Cost2'):
+                self.acc2 = (cos_sim(tf.squeeze(DNNs[-1], axis=3), self.y))
+                self.cost2 = 1-self.acc2
+                print("Output shape and target shape: ",DNNs[-1].shape, self.y.shape)
+                tf.summary.scalar("cost", self.cost2)
             self.output_features = self.features
 
             self.prediction = DNNs[-1]

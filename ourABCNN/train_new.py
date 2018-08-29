@@ -46,7 +46,11 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         model = ABCNN(s=train_data.max_len, w=w, l2_reg=l2_reg, model_type=model_type,
                   num_features=train_data.num_features, num_classes=num_classes, num_layers=num_layers)
 
-        optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(model.cost)
+        optimizer1 = tf.train.AdagradOptimizer(lr, name="optimizer")
+        if model_type == 'convolution':
+            optimizer = optimizer1.minimize(model.cost1)
+        else:
+            optimizer = optimizer1.minimize(model.cost2)
         init = tf.global_variables_initializer()
         saver = tf.train.Saver(max_to_keep=100)
         if model_type == 'deconvolution':
@@ -70,7 +74,12 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             while train_data.is_available():
                 i += 1
                 x1, x2, y, features = train_data.next_batch(batch_size=batch_size, model_type=model_type)
-                merged, _, c, a = sess.run([model.merged, optimizer, model.cost, model.acc],
+                if model_type == 'convolution':
+                    merged, _, c, a = sess.run([model.merged, optimizer, model.cost1, model.acc1],
+                                    feed_dict={model.x1: x1, model.x2: x2,
+                                    model.y: y, model.features: features})
+                else:
+                    merged, _, c, a = sess.run([model.merged, optimizer, model.cost2, model.acc2],
                                     feed_dict={model.x1: x1, model.x2: x2,
                                     model.y: y, model.features: features})
                 MeanCost += c
