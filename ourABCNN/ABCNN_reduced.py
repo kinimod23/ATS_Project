@@ -21,7 +21,7 @@ class ABCNN():
         self.x1 = tf.placeholder(tf.float32, shape=[None, d0, s], name="x1")
         self.x2 = tf.placeholder(tf.float32, shape=[None, d0, s], name="x2")
         if model_type == 'convolution':
-            self.y = tf.placeholder(tf.int32, shape=[None], name="y")
+            self.y = tf.placeholder(tf.float32, shape=[None], name="y")
         else:
             self.y = tf.placeholder(tf.float32, shape=[None, d0, s], name="y")
         self.features = tf.placeholder(tf.float32, shape=[None, num_features], name="features")
