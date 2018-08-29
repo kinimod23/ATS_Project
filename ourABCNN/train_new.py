@@ -77,11 +77,11 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 if model_type == 'convolution':
                     merged, _, c, a = sess.run([model.merged, optimizer, model.cost1, model.acc1],
                                     feed_dict={model.x1: x1, model.x2: x2,
-                                    model.y: y, model.features: features})
+                                    model.y1: y, model.features: features})
                 else:
                     merged, _, c, a = sess.run([model.merged, optimizer, model.cost2, model.acc2],
                                     feed_dict={model.x1: x1, model.x2: x2,
-                                    model.y: y, model.features: features})
+                                    model.y2: y, model.features: features})
                 MeanCost += c
                 MeanAcc += a
                 if i % 200 == 0:

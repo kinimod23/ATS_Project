@@ -20,10 +20,8 @@ class ABCNN():
 
         self.x1 = tf.placeholder(tf.float32, shape=[None, d0, s], name="x1")
         self.x2 = tf.placeholder(tf.float32, shape=[None, d0, s], name="x2")
-        if model_type == 'convolution':
-            self.y = tf.placeholder(tf.float32, shape=[None], name="y")
-        else:
-            self.y = tf.placeholder(tf.float32, shape=[None, d0, s], name="y")
+        self.y1 = tf.placeholder(tf.int32, shape=[None], name="y")
+        self.y2 = tf.placeholder(tf.float32, shape=[None, d0, s], name="y")
         self.features = tf.placeholder(tf.float32, shape=[None, num_features], name="features")
 
         # zero padding to inputs for wide convolution
@@ -134,7 +132,7 @@ class ABCNN():
 
             #if model_type == 'convolution':
             with tf.variable_scope('Cost1'):
-                self.cost1 = tf.reduce_mean(tf.square(tf.to_float(self.y) - sims[-1]))
+                self.cost1 = tf.reduce_mean(tf.square(tf.to_float(self.y1) - sims[-1]))
                 self.acc1 = 1-self.cost1
             tf.summary.scalar("cost", self.cost1)
 
@@ -155,9 +153,9 @@ class ABCNN():
 
             #if model_type != 'convolution':
             with tf.variable_scope('Cost2'):
-                self.acc2 = (cos_sim(tf.squeeze(DNNs[-1], axis=3), self.y))
+                self.acc2 = (cos_sim(tf.squeeze(DNNs[-1], axis=3), self.y2))
                 self.cost2 = 1-self.acc2
-                print("Output shape and target shape: ",DNNs[-1].shape, self.y.shape)
+                print("Output shape and target shape: ",DNNs[-1].shape, self.y2.shape)
                 tf.summary.scalar("cost", self.cost2)
             self.output_features = self.features
 
