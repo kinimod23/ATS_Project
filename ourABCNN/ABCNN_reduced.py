@@ -145,12 +145,12 @@ class ABCNN():
             if num_layers > 1:
                 DI = DNN_layer(variable_scope='DNN-1', x=CNNs[-1][0], d=di)
                 DNNs = [DI]
-             if num_layers > 2:
-                    for i in range(0, num_layers-2):
-                        DI = DNN_layer(variable_scope="DNN-"+str(i), x=DNNs[i], d=di)
-                        DNNs.append(DI)
-             DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=DNNs[-1], d=d0)
-                DNNs.append(DO)
+            if num_layers > 2:
+                for i in range(0, num_layers-2):
+                    DI = DNN_layer(variable_scope="DNN-"+str(i), x=DNNs[i], d=di)
+                    DNNs.append(DI)
+            DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=DNNs[-1], d=d0)
+            DNNs.append(DO)
             else:
                 DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=CNNs[-1][0], d=d0)
                 DNNs.append(DO)
