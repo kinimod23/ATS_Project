@@ -49,15 +49,17 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(model.cost)
         init = tf.global_variables_initializer()
         saver = tf.train.Saver(max_to_keep=100)
-        model_path = build_path("./models/", 'BCNN', num_layers, model_type, word2vec)
+        if model_type == 'deconvolution':
+            model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
+        model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
 
 ############################################################################
 #########################     TRAINING     #################################
 ############################################################################
     with tf.Session(config=tfconfig) as sess:
         if model_type == 'deconvolution':
-            saver.restore(sess, model_path + "-" + str(1000))
-            print(model_path + "-" + str(1000), "restored.")
+            saver.restore(sess, model_path_old + "-" + str(1))
+            print(model_path + "-" + str(1), "restored.")
         train_summary_writer = tf.summary.FileWriter("../tf_logs/train2", sess.graph)
         sess.run(init)
         print("=" * 50)
@@ -77,7 +79,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                     print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
                 train_summary_writer.add_summary(merged, i)
             print('Mean Cost: {}   Mean Accuracy: {}'.format(MeanCost/i, MeanAcc/i))
-            if e % 100 == 0:
+            if e % 1 == 0:
                 save_path = saver.save(sess, build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec), global_step=e)
                 print("model saved as", save_path)
         print("training finished!")
