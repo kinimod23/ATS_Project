@@ -46,15 +46,9 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         model = ABCNN(s=train_data.max_len, w=w, l2_reg=l2_reg, model_type=model_type,
                   num_features=train_data.num_features, num_classes=num_classes, num_layers=num_layers)
 
-        optimizer1 = tf.train.AdagradOptimizer(lr, name="optimizer")
-        if model_type == 'convolution':
-            optimizer = optimizer1.minimize(model.cost1)
-        else:
-            optimizer = optimizer1.minimize(model.cost2)
+        optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(model.cost)
         init = tf.global_variables_initializer()
         saver = tf.train.Saver(max_to_keep=100)
-        if model_type == 'deconvolution':
-            model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
         model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
 
 ############################################################################
@@ -62,8 +56,8 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 ############################################################################
     with tf.Session(config=tfconfig) as sess:
         if model_type == 'deconvolution':
-            saver.restore(sess, model_path_old + "-" + str(1))
-            print(model_path + "-" + str(1), "restored.")
+            saver.restore(sess, model_path + "-" + str(1000))
+            print(model_path + "-" + str(1000), "restored.")
         train_summary_writer = tf.summary.FileWriter("../tf_logs/train2", sess.graph)
         sess.run(init)
         print("=" * 50)
@@ -73,24 +67,17 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             i , MeanCost, MeanAcc = 0, 0, 0
             while train_data.is_available():
                 i += 1
-                x1, x2, y1, y2, features = train_data.next_batch(batch_size=batch_size, model_type=model_type)
-                print(y1[0])
-                print(y2[0])
-                if model_type == 'convolution':
-                    merged, _, c, a = sess.run([model.merged, optimizer, model.cost1, model.acc1],
+                x1, x2, y, features = train_data.next_batch(batch_size=batch_size, model_type=model_type)
+                merged, _, c, a = sess.run([model.merged, optimizer, model.cost, model.acc],
                                     feed_dict={model.x1: x1, model.x2: x2,
-                                    model.y1: y1, model.y2: y2, model.features: features})
-                else:
-                    merged, _, c, a = sess.run([model.merged, optimizer, model.cost2, model.acc2],
-                                    feed_dict={model.x1: x1, model.x2: x2,
-                                    model.y1: y1, model.y2: y2, model.features: features})
+                                    model.y: y, model.features: features})
                 MeanCost += c
                 MeanAcc += a
                 if i % 200 == 0:
                     print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
                 train_summary_writer.add_summary(merged, i)
             print('Mean Cost: {}   Mean Accuracy: {}'.format(MeanCost/i, MeanAcc/i))
-            if e % 1 == 0:
+            if e % 100 == 0:
                 save_path = saver.save(sess, build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec), global_step=e)
                 print("model saved as", save_path)
         print("training finished!")

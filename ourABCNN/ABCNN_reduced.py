@@ -20,8 +20,10 @@ class ABCNN():
 
         self.x1 = tf.placeholder(tf.float32, shape=[None, d0, s], name="x1")
         self.x2 = tf.placeholder(tf.float32, shape=[None, d0, s], name="x2")
-        self.y1 = tf.placeholder(tf.int32, shape=[None], name="y")
-        self.y2 = tf.placeholder(tf.float32, shape=[None, d0, s], name="y")
+        if model_type == 'convolution':
+            self.y = tf.placeholder(tf.int32, shape=[None], name="y")
+        else:
+            self.y = tf.placeholder(tf.float32, shape=[None, d0, s], name="y")
         self.features = tf.placeholder(tf.float32, shape=[None, num_features], name="features")
 
         # zero padding to inputs for wide convolution
@@ -130,36 +132,39 @@ class ABCNN():
                     CNNs.append((LI, RI))
                     sims.append(cos_sim(LO, RO, axis=1))
 
-            #if model_type == 'convolution':
-            with tf.variable_scope('Cost1'):
-                self.cost1 = tf.reduce_mean(tf.square(tf.to_float(self.y1) - sims[-1]))
-                self.acc1 = 1-self.cost1
-            tf.summary.scalar("cost", self.cost1)
+            if model_type == 'convolution':
+                with tf.variable_scope('Cost'):
 
+                    self.cost = tf.reduce_mean(tf.square(tf.to_float(self.y) - sims[-1]))
+                    self.acc = 1-self.cost
 
-        with tf.variable_scope("Decoder"):
-            if num_layers > 1:
-                DI = DNN_layer(variable_scope='DNN-1', x=CNNs[-1][0], d=di)
-                DNNs = [DI]
-                if num_layers > 2:
-                    for i in range(0, num_layers-2):
-                        DI = DNN_layer(variable_scope="DNN-"+str(i), x=DNNs[i], d=di)
-                        DNNs.append(DI)
-                DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=DNNs[-1], d=d0)
-                DNNs.append(DO)
-            else:
-                DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=CNNs[-1][0], d=d0)
-                DNNs.append(DO)
+                tf.summary.scalar("cost", self.cost)
 
-            #if model_type != 'convolution':
-            with tf.variable_scope('Cost2'):
-                self.acc2 = (cos_sim(tf.squeeze(DNNs[-1], axis=3), self.y2))
-                self.cost2 = 1-self.acc2
-                print("Output shape and target shape: ",DNNs[-1].shape, self.y2.shape)
-                tf.summary.scalar("cost", self.cost2)
-            self.output_features = self.features
+        if model_type != 'convolution':
+            with tf.variable_scope("Decoder"):
+                if num_layers > 1:
+                    DI = DNN_layer(variable_scope='DNN-1', x=CNNs[-1][0], d=di)
+                    DNNs = [DI]
 
-            self.prediction = DNNs[-1]
+                    if num_layers > 2:
+                        for i in range(0, num_layers-2):
+                            DI = DNN_layer(variable_scope="DNN-"+str(i), x=DNNs[i], d=di)
+                            DNNs.append(DI)
+
+                    DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=DNNs[-1], d=d0)
+                    DNNs.append(DO)
+                else:
+                    DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=CNNs[-1][0], d=d0)
+                    DNNs.append(DO)
+
+                with tf.variable_scope('Cost'):
+                    self.acc = (cos_sim(tf.squeeze(DNNs[-1], axis=3), self.y))
+                    self.cost = 1-self.acc
+                    print("Output shape and target shape: ",DNNs[-1].shape, self.y.shape)
+                    tf.summary.scalar("cost", self.cost)
+                self.output_features = self.features
+
+                self.prediction = DNNs[-1]
 
         self.merged = tf.summary.merge_all()
 

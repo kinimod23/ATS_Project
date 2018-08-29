@@ -100,13 +100,15 @@ class Data():
         # [batch_size, d0, s]
         batch_s1s = np.concatenate(s1, axis=0)
         batch_s2s = np.concatenate(s2, axis=0)
-        batch_labels1 = batch_s2s
-        batch_labels2 = self.labels[self.index:self.index + batch_size]
+        if model_type != 'convolution':
+            batch_labels = batch_s2s
+        else:
+            batch_labels = self.labels[self.index:self.index + batch_size]
         batch_features = self.features[self.index:self.index + batch_size]
 
         self.index += batch_size
 
-        return batch_s1s, batch_s2s, batch_labels1, batch_labels2, batch_features
+        return batch_s1s, batch_s2s, batch_labels, batch_features
 
 
 class ComplexSimple(Data):
