@@ -66,8 +66,8 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 ############################################################################
     with tf.Session(config=tfconfig) as sess:
         if model_type == 'deconvolution':
-            saver.restore(sess, model_path_old + "-" + str(1000))
-            print(model_path + "-" + str(1000), "restored.")
+            saver.restore(sess, model_path_old + "-" + str(1))
+            print(model_path + "-" + str(1), "restored.")
         train_summary_writer = tf.summary.FileWriter("../tf_logs/train2", sess.graph)
         sess.run(init)
         print("=" * 50)
@@ -82,17 +82,19 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                     merged, _, c, a = sess.run([encoder.merged, optimizer, encoder.cost, encoder.acc],
                                     feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y: y})
                 else:
-                    preds = sess.run([encoder.prediction],
+                    preds, acc_enc = sess.run([encoder.prediction, encoder.acc],
                                     feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y: y})
                     merged, _, c, a = sess.run([decoder.merged, optimizer, decoder.cost, decoder.acc],
                                     feed_dict={decoder.x: preds, decoder.y: x2})
                 MeanCost += c
                 MeanAcc += a
                 if i % 200 == 0:
+                    if model_type == 'convolution':
+                        print('encoder accuracy: {}'.format(acc_enc))
                     print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
                 train_summary_writer.add_summary(merged, i)
             print('Mean Cost: {}   Mean Accuracy: {}'.format(MeanCost/i, MeanAcc/i))
-            if e % 100 == 0:
+            if e % 1 == 0:
                 save_path = saver.save(sess, build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec), global_step=e)
                 print("model saved as", save_path)
         print("training finished!")
