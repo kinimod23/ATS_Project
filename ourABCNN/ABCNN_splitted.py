@@ -190,7 +190,7 @@ class ABCNN_deconv():
 
         with tf.variable_scope("Decoder"):
             if num_layers > 1:
-                DI = DNN_layer(variable_scope='DNN-1', x=x, d=di)
+                DI = DNN_layer(variable_scope='DNN-1', x=self.x, d=di)
                 DNNs = [DI]
                 if num_layers > 2:
                     for i in range(0, num_layers-2):
@@ -199,7 +199,7 @@ class ABCNN_deconv():
                 DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=DNNs[-1], d=d0)
                 DNNs.append(DO)
             else:
-                DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=CNNs[-1][0], d=d0)
+                DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=self.x, d=d0)
                 DNNs.append(DO)
             with tf.variable_scope('Cost'):
                 self.acc = (cos_sim(tf.squeeze(DNNs[-1], axis=3), self.y))
