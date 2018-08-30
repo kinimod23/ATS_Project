@@ -11,6 +11,19 @@
 ## ToDo
 * statistics about data  ----------------> Dominik bis 23.08.
   * how long are sentences (how many are lost if we cut at 50 words)
+  
+  -> wenn wir beim ursprünglichen bleiben: 
+  (1) wir schmeissen alle Satzpaare raus, die identisch sind
+  (2.1) wir schmeissen alle Satzpaare raus, bei denen der simple sentence um 150% größer ist als der complex sentence
+  
+  dann ist das Ergebnis eine Senkung von 19,64% des ursprünglichen Datensets
+  
+  ->statt 2.1 machen wir nun 2.2:
+  (2.2) wir schmeissen alle Satzpaare raus, deren Wortanzahl (einschl. Satzzeichen) höher als 50 Wörter ist
+  
+  dann ist das Ergebnis eine Senkung von 17,98% des urspr. Datensets
+  
+  
   * how many sentences have 30%, 40%, 50% of words unknown to word2vec
   * how does this change with fasttext
 * change test.py            ----------------> Simon bis 21.08.
