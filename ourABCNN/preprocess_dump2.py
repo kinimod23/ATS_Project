@@ -100,7 +100,7 @@ class Data():
         # [batch_size, d0, s]
         batch_s1s = np.concatenate(s1, axis=0)
         batch_s2s = np.concatenate(s2, axis=0)
-        batch_labels = np.asarray(self.labels[self.index:self.index + batch_size])
+        batch_labels = np.asarray(self.labels[self.index:self.index + batch_size], np.float32)
 
         self.index += batch_size
 
