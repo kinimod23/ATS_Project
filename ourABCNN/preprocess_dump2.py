@@ -88,7 +88,7 @@ class Data():
         else:
             return
 
-    def next_batch(self, batch_size, model_type):
+    def next_batch(self, batch_size):
         batch_size = min(self.data_size - self.index, batch_size)
         s1, s2, label_mats = [], [], []
 
@@ -100,15 +100,11 @@ class Data():
         # [batch_size, d0, s]
         batch_s1s = np.concatenate(s1, axis=0)
         batch_s2s = np.concatenate(s2, axis=0)
-        if model_type != 'convolution':
-            batch_labels = batch_s2s
-        else:
-            batch_labels = self.labels[self.index:self.index + batch_size]
-        batch_features = self.features[self.index:self.index + batch_size]
+        batch_labels = self.labels[self.index:self.index + batch_size]
 
         self.index += batch_size
 
-        return batch_s1s, batch_s2s, batch_labels, batch_features
+        return batch_s1s, batch_s2s, batch_labels
 
 
 class ComplexSimple(Data):
