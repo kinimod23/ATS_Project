@@ -43,6 +43,10 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 
     tfconfig = tf.ConfigProto(allow_soft_placement = True)
     with tf.device("/gpu:0"):
+        saver = tf.train.Saver()
+        model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
+        model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
+
         encoder = ABCNN_conv(s=train_data.max_len, w=w, l2_reg=l2_reg,
                   num_layers=num_layers)
 
@@ -59,12 +63,10 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         if model_type == 'convolution':
             optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(encoder.cost)
         else:
-            model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
             optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(decoder.cost)
 
         init = tf.global_variables_initializer()
-        saver = tf.train.Saver({'encoder': encoder})
-        model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
+
 
 ############################################################################
 #########################     TRAINING     #################################
