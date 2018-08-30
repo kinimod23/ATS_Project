@@ -58,7 +58,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(decoder.cost)
 
         init = tf.global_variables_initializer()
-        saver = tf.train.Saver(max_to_keep=100)
+        saver = tf.train.Saver({'encoder': encoder})
         model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
 
 ############################################################################
