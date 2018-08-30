@@ -46,6 +46,11 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         encoder = ABCNN_conv(s=train_data.max_len, w=w, l2_reg=l2_reg,
                   num_layers=num_layers)
 
+        with tf.Session(config=tfconfig) as sess:
+            if model_type == 'deconvolution':
+                saver.restore(sess, model_path_old + "-" + str(1))
+                print(model_path + "-" + str(1), "restored.")
+
         if model_type != 'convolution':
             decoder = ABCNN_deconv(s=train_data.max_len, w=w, l2_reg=l2_reg,
                       num_layers=num_layers)
@@ -65,9 +70,9 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 #########################     TRAINING     #################################
 ############################################################################
     with tf.Session(config=tfconfig) as sess:
-        if model_type == 'deconvolution':
-            saver.restore(sess, model_path_old + "-" + str(1))
-            print(model_path + "-" + str(1), "restored.")
+        #if model_type == 'deconvolution':
+        #    saver.restore(sess, model_path_old + "-" + str(1))
+        #    print(model_path + "-" + str(1), "restored.")
         train_summary_writer = tf.summary.FileWriter("../tf_logs/train2", sess.graph)
         sess.run(init)
         print("=" * 50)
