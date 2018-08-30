@@ -104,6 +104,7 @@ class ABCNN_conv():
                 self.acc = 1-self.cost
             tf.summary.scalar("cost", self.cost)
         self.prediction = CNNs[-1][0]
+        print('CNN SHAPE: ', CNNs[-1][0].shape)
 
         self.merged = tf.summary.merge_all()
 
