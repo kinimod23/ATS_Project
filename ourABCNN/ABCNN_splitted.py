@@ -131,7 +131,7 @@ class ABCNN_deconv():
         :param num_layers: The number of convolution layers.
         """
 
-        self.x = tf.placeholder(tf.float32, shape=[None, w, 1, di], name="x")
+        self.x = tf.placeholder(tf.float32, shape=[None, di, s, 1], name="x")
         self.y = tf.placeholder(tf.float32, shape=[None, d0, s], name="y")
 
         # zero padding to inputs for wide convolution
