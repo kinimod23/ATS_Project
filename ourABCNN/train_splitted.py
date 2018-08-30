@@ -78,7 +78,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             while train_data.is_available():
                 i += 1
                 x1, x2, y, features = train_data.next_batch(batch_size=batch_size, model_type=model_type)
-                if model_type == 'deconvolution':
+                if model_type == 'convolution':
                     merged, _, c, a = sess.run([encoder.merged, optimizer, encoder.cost, encoder.acc],
                                     feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y: y})
                 else:
@@ -89,7 +89,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 MeanCost += c
                 MeanAcc += a
                 if i % 200 == 0:
-                    if model_type == 'convolution':
+                    if model_type == 'deconvolution':
                         print('encoder accuracy: {}'.format(acc_enc))
                     print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
                 train_summary_writer.add_summary(merged, i)
