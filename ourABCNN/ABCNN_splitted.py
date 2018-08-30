@@ -132,7 +132,6 @@ class ABCNN_deconv():
 
         self.x = tf.placeholder(tf.float32, shape=[None, d0, s], name="x")
         self.y = tf.placeholder(tf.float32, shape=[None, d0, s], name="y")
-        self.features = tf.placeholder(tf.float32, shape=[None, num_features], name="features")
 
         # zero padding to inputs for wide convolution
         def pad_for_wide_conv(x):
@@ -207,7 +206,6 @@ class ABCNN_deconv():
                 self.cost = 1-self.acc
                 print("Output shape and target shape: ",DNNs[-1].shape, self.y.shape)
                 tf.summary.scalar("cost", self.cost)
-            self.output_features = self.features
             self.prediction = DNNs[-1]
 
         self.merged = tf.summary.merge_all()
