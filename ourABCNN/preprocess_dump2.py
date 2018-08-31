@@ -62,11 +62,11 @@ class FastText():
 
 class Data():
     def __init__(self, word2vec, max_len=50):
-        self.s1s, self.s2s, self.labels, self.features = [], [], [], []
+        self.s1s, self.s2s, self.labels = [], [], []
         self.index, self.max_len, self.word2vec = 0, max_len, word2vec
     """
     def __init__(self, max_len=0):
-        self.s1s, self.s2s, self.labels, self.features = [], [], [], []
+        self.s1s, self.s2s, self.labels = [], [], []
         self.index, self.max_len = 0, max_len
     """
     def open_file(self):
@@ -100,7 +100,7 @@ class Data():
         # [batch_size, d0, s]
         batch_s1s = np.concatenate(s1, axis=0)
         batch_s2s = np.concatenate(s2, axis=0)
-        batch_labels = np.concatenate(self.labels[self.index:self.index + batch_size], axis=0)
+        batch_labels = np.array(self.labels[self.index:self.index + batch_size], np.float32)
 
         self.index += batch_size
 
