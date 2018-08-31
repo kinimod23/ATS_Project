@@ -96,10 +96,11 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                     encoder.y1 = graph.get_tensor_by_name('y1:0')
                     preds, acc_enc  = sess.run([encoder.prediction, encoder.acc],
                                       feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
-                    merged, _, c, a = sess.run([decoder.merged, optimizer, decoder.cost, decoder.acc],
+                    merged, output, c, a = sess.run([decoder.merged, decoder.prediction, decoder.cost, decoder.acc],
                                       feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y, decoder.x: preds, decoder.y: x2})
                 MeanCost += c
                 MeanAcc += a
+                Sentences.append(output)
                 if i % 200 == 0:
                     if model_type == 'deconvolution':
                         print('encoder accuracy: {}'.format(acc_enc))
@@ -111,6 +112,17 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 print("model saved as", save_path)
         print("training finished!")
         print("=" * 50)
+
+     fasttext = gensim.models.KeyedVectors.load("wiki.dump")
+    print('FastText loaded')
+    with open('output.txt', 'w') as f:
+        for sen in Sentences[:2]:
+            string = ''
+            for word in range(50):
+                string += fasttext.wv.most_similar(positive=sen[0][:,word,:].T, topn=1)[0][0] + ' '
+            string += '\n'
+            f.write(string)
+    print('Output created!')
 
 
 if __name__ == "__main__":
