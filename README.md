@@ -11,19 +11,19 @@
 ## ToDo
 * statistics about data  ----------------> Dominik bis 23.08.
   * how long are sentences (how many are lost if we cut at 50 words)
-  
-  -> wenn wir beim ursprünglichen bleiben: 
+
+  -> wenn wir beim ursprünglichen bleiben:
   (1) wir schmeissen alle Satzpaare raus, die identisch sind
   (2.1) wir schmeissen alle Satzpaare raus, bei denen der simple sentence um 150% größer ist als der complex sentence
-  
+
   dann ist das Ergebnis eine Senkung von 19,64% des ursprünglichen Datensets
-  
+
   ->statt 2.1 machen wir nun 2.2:
   (2.2) wir schmeissen alle Satzpaare raus, deren Wortanzahl (einschl. Satzzeichen) höher als 50 Wörter ist
-  
+
   dann ist das Ergebnis eine Senkung von 17,98% des urspr. Datensets
-  
-  
+
+
   * how many sentences have 30%, 40%, 50% of words unknown to word2vec
   * how does this change with fasttext
 * change test.py            ----------------> Simon bis 21.08.
@@ -38,7 +38,21 @@
   * This is really a pain in the ass, i don't know how to do it
 
 ----------------------------------------------------------------------------------------
+## What we have done
+* Implemented model with attention and all that
+    * tried a lot but had exploding gradients
+* removed attention, since it doesn't make sense anyway
+    * because we can't feed complex and simple for sentences other than our training set
+      but that is the goal right?
+* restructured code to allow for siamese net as encoder ( concolutional ) and deconvolution as decoder. also to use both together as End2End
+    * deconvolution hard to implement because of lack of knowledge regarding tensorflows options for that
+    * implemented an image deconvolution with tf.image.resize (not real deconvolution i think)
+* tried End2End in various forms, for thousends of epochs but didn't get good results
+    * changed cost function
+* tried to implement the loading and restoring of models so that we can train the encoder with cosine similarity as target and later on use this pretrained thing to create inputs for the decoder
+    * took me a lot of hours to get this to work. i rebuilt the model various times and now we have a splitted model. one for encoder one for decoder
 
+----------------------------------------------------------------------------------------
 #### feasible NN implementations we could use
 
 *CNN implementation:*
