@@ -53,7 +53,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 
         with tf.Session(config=tfconfig) as sess:
             if model_type == 'deconvolution':
-                new_saver = tf.train.import_meta_graph( model_path_old + "-" + str(1))
+                new_saver = tf.train.import_meta_graph( model_path_old + "-" + str(1)+'.meta')
                 new_saver.restore(sess, tf.train.latest_checkpoint('./'))
                 #saver.restore(sess, model_path_old + "-" + str(1))
                 print(model_path + "-" + str(1), "restored.")
