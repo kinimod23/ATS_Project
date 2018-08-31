@@ -97,7 +97,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                     preds, acc_enc  = sess.run([encoder.prediction, encoder.acc],
                                       feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
                     merged, _, c, a = sess.run([decoder.merged, optimizer, decoder.cost, decoder.acc],
-                                      feed_dict={decoder.x: preds, decoder.y: x2})
+                                      feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y, decoder.x: preds, decoder.y: x2})
                 MeanCost += c
                 MeanAcc += a
                 if i % 200 == 0:
