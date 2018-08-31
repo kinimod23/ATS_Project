@@ -53,7 +53,9 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 
         with tf.Session(config=tfconfig) as sess:
             if model_type == 'deconvolution':
-                saver.restore(sess, model_path_old + "-" + str(1))
+                new_saver = tf.train.import_meta_graph( model_path_old + "-" + str(1))
+                new_saver.restore(sess, tf.train.latest_checkpoint('./'))
+                #saver.restore(sess, model_path_old + "-" + str(1))
                 print(model_path + "-" + str(1), "restored.")
 
         if model_type != 'convolution':
@@ -90,10 +92,10 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                     merged, _, c, a = sess.run([encoder.merged, optimizer, encoder.cost, encoder.acc],
                                       feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
                 else:
-                    graph = tf.get_default_graph()
-                    encoder.x1 = graph.get_tensor_by_name('x1:0')
-                    encoder.x2 = graph.get_tensor_by_name('x2:0')
-                    encoder.y1 = graph.get_tensor_by_name('y1:0')
+                    #graph = tf.get_default_graph()
+                    #encoder.x1 = graph.get_tensor_by_name('x1:0')
+                    #encoder.x2 = graph.get_tensor_by_name('x2:0')
+                    #encoder.y1 = graph.get_tensor_by_name('y1:0')
                     preds, acc_enc  = sess.run([encoder.prediction, encoder.acc],
                                       feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
                     merged, _, c, a = sess.run([decoder.merged, optimizer, decoder.cost, decoder.acc],
