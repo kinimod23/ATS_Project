@@ -47,7 +47,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         encoder = ABCNN_conv(s=train_data.max_len, w=w, l2_reg=l2_reg,
                   num_layers=num_layers)
 
-        saver = tf.train.Saver()
+        saver = tf.train.Saver(max_to_keep=2)
         model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
         model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
 
@@ -80,6 +80,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         sess.run(init)
         print("=" * 50)
         for e in range(1, epoch + 1):
+            Sentences[]
             print("[Epoch " + str(e) + "]")
             train_data.reset_index()
             i , MeanCost, MeanAcc = 0, 0, 0
@@ -107,7 +108,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                     print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
                 train_summary_writer.add_summary(merged, i)
             print('Mean Cost: {}   Mean Accuracy: {}'.format(MeanCost/i, MeanAcc/i))
-            if e % 1 == 0:
+            if e % 100 == 0:
                 save_path = saver.save(sess, build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec), global_step=e)
                 print("model saved as", save_path)
         print("training finished!")
@@ -116,7 +117,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
     fasttext = gensim.models.KeyedVectors.load("wiki.dump")
     print('FastText loaded')
     with open('output.txt', 'w') as f:
-        for sen in Sentences[:2]:
+        for sen in Sentences[-2:]:
             string = ''
             for word in range(50):
                 string += fasttext.wv.most_similar(positive=sen[0][:,word,:].T, topn=1)[0][0] + ' '
