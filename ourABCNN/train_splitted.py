@@ -14,7 +14,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 ############################################################################
 #########################   DATA LOADING   #################################
 ############################################################################
-    if model_type == 'convolution': method = 'labeled'
+    if model_type == 'convolution' or model_type == 'deconvolution': method = 'labeled'
     else: method = 'unlabeled'
     dumped = 'preprocessed_train_'+method+'_'+data+'_'+word2vec+'.pkl'
     if word2vec == 'FastText': w2v = FastText()
