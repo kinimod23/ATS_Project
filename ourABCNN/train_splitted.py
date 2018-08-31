@@ -90,7 +90,9 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                     merged, _, c, a = sess.run([encoder.merged, optimizer, encoder.cost, encoder.acc],
                                       feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
                 else:
-                    merged, _, c, a = sess.run([encoder.merged, optimizer, encoder.cost, encoder.acc],
+                    #graph = tf.get_default_graph()
+                    #encoder.x1 = graph.get_tensor_by_name
+                    merged, _, c, a = sess.run([encoder.merged, encoder.cost, encoder.acc],
                                       feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
                     #preds, acc_enc  = sess.run([encoder.prediction, encoder.acc],
                     #                  feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
