@@ -80,7 +80,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         sess.run(init)
         print("=" * 50)
         for e in range(1, epoch + 1):
-            Sentences[]
+            Sentences = []
             print("[Epoch " + str(e) + "]")
             train_data.reset_index()
             i , MeanCost, MeanAcc = 0, 0, 0
