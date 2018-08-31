@@ -94,7 +94,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                     #encoder.x1 = graph.get_tensor_by_name('x1:0')
                     #encoder.x2 = graph.get_tensor_by_name('x2:0')
                     #encoder.y1 = graph.get_tensor_by_name('y1:0')
-                    merged, c, a = sess.run([encoder.merged, encoder.cost, encoder.acc],
+                    merged, preds, c, a = sess.run([encoder.merged, encoder.prediction, encoder.cost, encoder.acc],
                                       feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
                     #preds, acc_enc  = sess.run([encoder.prediction, encoder.acc],
                     #                  feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
