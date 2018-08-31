@@ -21,7 +21,7 @@ class ABCNN_conv():
 
         self.x1 = tf.placeholder(tf.float32, shape=[None, d0, s], name="x1")
         self.x2 = tf.placeholder(tf.float32, shape=[None, d0, s], name="x2")
-        self.y = tf.placeholder(tf.int32, shape=[None], name="y")
+        self.y1 = tf.placeholder(tf.int32, shape=[None], name="y1")
 
         # zero padding to inputs for wide convolution
         def pad_for_wide_conv(x):
@@ -100,7 +100,7 @@ class ABCNN_conv():
                     sims.append(cos_sim(LO, RO, axis=1))
 
             with tf.variable_scope('Cost'):
-                self.cost = tf.reduce_mean(tf.square(tf.to_float(self.y) - sims[-1]))
+                self.cost = tf.reduce_mean(tf.square(tf.to_float(self.y1) - sims[-1]))
                 self.acc = 1-self.cost
             tf.summary.scalar("cost", self.cost)
         self.prediction = CNNs[-1][0]
@@ -202,6 +202,7 @@ class ABCNN_deconv():
             else:
                 DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=self.x, d=d0)
                 DNNs.append(DO)
+
             with tf.variable_scope('Cost'):
                 self.acc = (cos_sim(tf.squeeze(DNNs[-1], axis=3), self.y))
                 self.cost = 1-self.acc

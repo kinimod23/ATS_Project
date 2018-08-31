@@ -88,10 +88,10 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 x1, x2, y = train_data.next_batch(batch_size=batch_size)
                 if model_type == 'convolution':
                     merged, _, c, a = sess.run([encoder.merged, optimizer, encoder.cost, encoder.acc],
-                                    feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y: y})
+                                    feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
                 else:
                     preds, acc_enc = sess.run([encoder.prediction, encoder.acc],
-                                    feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y: y})
+                                    feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
                     merged, _, c, a = sess.run([decoder.merged, optimizer, decoder.cost, decoder.acc],
                                     feed_dict={decoder.x: preds, decoder.y: x2})
                 MeanCost += c
