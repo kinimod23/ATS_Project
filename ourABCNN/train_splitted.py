@@ -119,7 +119,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             #        print('encoder accuracy: {}'.format(acc_enc))
             #    print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
             train_summary_writer.add_summary(merged, i)
-        print('Mean Encoder Accuracy: {:1.3f} Mean Cost: {:1.3f}   Mean Accuracy: {:1.3f}'.format(MeanEncAcc/i, MeanCost/i, MeanAcc/i))
+        print('Mean Encoder Accuracy: {:1.4f} Mean Cost: {:1.4f}   Mean Accuracy: {:1.4f}'.format(MeanEncAcc/i, MeanCost/i, MeanAcc/i))
         if e % 100 == 0:
             save_path = saver.save(sess, build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec), global_step=e)
             print("model saved as", save_path)
