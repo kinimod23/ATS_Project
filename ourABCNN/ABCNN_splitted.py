@@ -81,7 +81,7 @@ class ABCNN_conv():
 
                 return left_wp, left_ap, right_wp, right_ap
 
-        with tf.variable_scope('Encoder'):
+        with tf.name_scope('Encoder'):
             x1_expanded = tf.expand_dims(self.x1, -1)
             x2_expanded = tf.expand_dims(self.x2, -1)
 
@@ -103,8 +103,9 @@ class ABCNN_conv():
                 self.cost = tf.reduce_mean(tf.square(tf.to_float(self.y1) - sims[-1]))
                 self.acc = 1-self.cost
             tf.summary.scalar("cost", self.cost)
-        self.prediction = CNNs[-1][0]
-        print('Cost Shape {}  Preds shape {}'.format(self.cost.shape, self.prediction.shape))
+            self.prediction = CNNs[-1][0]
+            print('Cost Shape {}  Preds shape {}'.format(self.cost.shape, self.prediction.shape))
+            self.opimizer = tf.train.AdamOptimizer(lr, name="optimizer").minimize(encoder.cost)
         self.merged = tf.summary.merge_all()
 
 class ABCNN_deconv():
@@ -181,7 +182,7 @@ class ABCNN_deconv():
                 return DI
 
 
-        with tf.variable_scope("Decoder"):
+        with tf.name_scope("Decoder"):
             if num_layers > 1:
                 DI = DNN_layer(variable_scope='DNN-1', x=self.x, d=di)
                 DNNs = [DI]
@@ -201,5 +202,7 @@ class ABCNN_deconv():
                 tf.summary.scalar("cost", self.cost)
             self.prediction = tf.squeeze(DNNs[-1], axis=3)
             print('Cost Shape {}  Preds shape {}'.format(self.cost.shape, self.prediction.shape))
+
+            self.optimizer = tf.train.AdamOptimizer(lr, name="optimizer").minimize(decoder.cost, var_list=tf.trainable_variables(scope='Decoder'))
 
         self.merged = tf.summary.merge_all()
