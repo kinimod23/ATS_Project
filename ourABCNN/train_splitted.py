@@ -47,7 +47,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 
     with tf.device("/gpu:0"):
 
-        encoder = ABCNN_conv(s=train_data.max_len, w=w, l2_reg=l2_reg,
+        encoder = ABCNN_conv(lr=lr, s=train_data.max_len, w=w, l2_reg=l2_reg,
                   num_layers=num_layers)
 
         saver = tf.train.Saver(max_to_keep=2)
@@ -59,7 +59,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             print(model_path + "-" + str(1000), "restored.")
 
         if model_type != 'convolution':
-            decoder = ABCNN_deconv(s=train_data.max_len, w=w, l2_reg=l2_reg,
+            decoder = ABCNN_deconv(lr=lr, s=train_data.max_len, w=w, l2_reg=l2_reg,
                       num_layers=num_layers)
 
 

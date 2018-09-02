@@ -7,7 +7,7 @@ import numpy as np
 #    implement conv and deconv as seperate models
 
 class ABCNN_conv():
-    def __init__(self, s, w, l2_reg, d0=300, di=52, num_layers=2):
+    def __init__(self, lr, s, w, l2_reg, d0=300, di=52, num_layers=2):
         """
         Implmenentaion of ABCNNs
         (https://arxiv.org/pdf/1512.05193.pdf)
@@ -105,11 +105,11 @@ class ABCNN_conv():
             tf.summary.scalar("cost", self.cost)
             self.prediction = CNNs[-1][0]
             print('Cost Shape {}  Preds shape {}'.format(self.cost.shape, self.prediction.shape))
-            self.opimizer = tf.train.AdamOptimizer(lr, name="optimizer").minimize(encoder.cost)
+            self.optimizer = tf.train.AdamOptimizer(lr, name="optimizer").minimize(encoder.cost)
         self.merged = tf.summary.merge_all()
 
 class ABCNN_deconv():
-    def __init__(self, s, w, l2_reg, d0=300, di=52, num_classes=2, num_layers=2):
+    def __init__(self, lr, s, w, l2_reg, d0=300, di=52, num_classes=2, num_layers=2):
         """
         Implmenentaion of ABCNNs
         (https://arxiv.org/pdf/1512.05193.pdf)
