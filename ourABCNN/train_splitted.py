@@ -82,7 +82,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         Sentences = []
         print("[Epoch " + str(e) + "]")
         train_data.reset_index()
-        i , MeanCost, MeanAcc = 0, 0, 0
+        i , MeanCost, MeanAcc, MeanEncAcc = 0, 0, 0, 0
         while train_data.is_available():
             i += 1
             x1, x2, y = train_data.next_batch(batch_size=batch_size)
@@ -99,14 +99,16 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 merged, output, c, a = sess.run([decoder.merged, decoder.prediction, decoder.cost, decoder.acc],
                                   feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y, decoder.x: preds, decoder.y: x2})
                 Sentences.append(output)
+                MeanEncAcc += acc_enc
             MeanCost += c
             MeanAcc += a
-            if i % 200 == 0:
-                if model_type == 'deconvolution':
-                    print('encoder accuracy: {}'.format(acc_enc))
-                print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
+
+            #if i % 200 == 0:
+            #    if model_type == 'deconvolution':
+            #        print('encoder accuracy: {}'.format(acc_enc))
+            #    print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
             train_summary_writer.add_summary(merged, i)
-        print('Mean Cost: {}   Mean Accuracy: {}'.format(MeanCost/i, MeanAcc/i))
+        print('Mean Encoder Accuracy: {} Mean Cost: {}   Mean Accuracy: {}'.format(MeanEncAcc/i, MeanCost/i, MeanAcc/i))
         if e % 100 == 0:
             save_path = saver.save(sess, build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec), global_step=e)
             print("model saved as", save_path)
