@@ -33,6 +33,8 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             for k, v in dump_dict.items():
                 setattr(train_data, k, v)
         print("done!")
+    for i in range(3):
+        print(' ')
     print("=" * 50)
     print("training data size:", train_data.data_size)
     print("training max len:", train_data.max_len)
@@ -83,9 +85,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 ############################################################################
 #########################     TRAINING     #################################
 ############################################################################
-    #if model_type == 'deconvolution':
-    #    saver.restore(sess, model_path_old + "-" + str(1))
-    #    print(model_path + "-" + str(1), "restored.")
+
     train_summary_writer = tf.summary.FileWriter("../tf_logs/train2", sess.graph)
     sess.run(init)
     print("=" * 50)
@@ -101,13 +101,9 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 merged, _, c, a = sess.run([encoder.merged, optimizer, encoder.cost, encoder.acc],
                                   feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
             else:
-                #graph = tf.get_default_graph()
-                #encoder.x1 = graph.get_tensor_by_name('x1:0')
-                #encoder.x2 = graph.get_tensor_by_name('x2:0')
-                #encoder.y1 = graph.get_tensor_by_name('y1:0')
                 preds, acc_enc  = sess.run([encoder.prediction, encoder.acc],
                                   feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
-                merged, output, c, a = sess.run([decoder.merged, decoder.prediction, decoder.cost, decoder.acc],
+                merged, output, _, c, a = sess.run([decoder.merged, decoder.prediction, optimizer, decoder.cost, decoder.acc],
                                   feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y, decoder.x: preds, decoder.y: x2})
                 Sentences.append(output)
                 MeanEncAcc += acc_enc
