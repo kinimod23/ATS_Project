@@ -65,7 +65,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
                 pred, c, a = sess.run([encoder.prediction, encoder.cost, encoder.acc],
                                            feed_dict={encoder.x1: np.expand_dims(s1s[i], axis=0),
                                                       encoder.x2: np.expand_dims(s2s[i], axis=0),
-                                                      encoder.y: np.expand_dims(labels[i], axis=0)})
+                                                      encoder.y1: np.expand_dims(labels[i], axis=0)})
                 MeanCost += c
                 Accuracys.append(a)
                 Sentences.append(pred)
