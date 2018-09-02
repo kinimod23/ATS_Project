@@ -34,7 +34,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 setattr(train_data, k, v)
         print("done!")
     for i in range(3):
-        print(' ')
+        print('\n')
     print("=" * 50)
     print("training data size:", train_data.data_size)
     print("training max len:", train_data.max_len)
@@ -79,7 +79,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 print(v.name, v.shape)
             print("=" * 50)
 
-        init = tf.variables_initializer(tf.trainable_variables(scope='Decoder'))
+        init = tf.variables_initializer([tf.trainable_variables(scope='Decoder'), optimizer._beta1_power, optimizer._beta2_power])
 
 
 ############################################################################
