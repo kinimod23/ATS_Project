@@ -71,7 +71,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 print(v.name, v.shape)
             print("=" * 50)
         else:
-            opt = tf.train.AdamOptimizer(lr, name="optimizer")
+            opt = tf.train.AdagradOptimizer(lr, name="optimizer")
             optimizer = opt.minimize(decoder.cost, var_list=tf.trainable_variables(scope='Decoder'), name='opt_minimize')
 
             variables = tf.trainable_variables(scope='Decoder') + opt.variables()
@@ -116,7 +116,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             if i % 1000 == 0:
                 #if model_type == 'deconvolution':
                 #    print('encoder accuracy: {}'.format(acc_enc))
-                print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
+                print('[batch {}]  cost: {:1.4f}  accuracy: {:1.4f}'.format(i, c, a))
             train_summary_writer.add_summary(merged, i)
         print('Mean Encoder Accuracy: {:1.4f} Mean Cost: {:1.4f}   Mean Accuracy: {:1.4f}'.format(MeanEncAcc/i, MeanCost/i, MeanAcc/i))
         if e % 100 == 0:
