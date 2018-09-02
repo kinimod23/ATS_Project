@@ -74,9 +74,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             opt = tf.train.AdamOptimizer(lr, name="optimizer")
             optimizer = opt.minimize(decoder.cost, var_list=tf.trainable_variables(scope='Decoder'), name='opt_minimize')
 
-            variables = tf.trainable_variables(scope='Decoder')
-            print(variables)
-            print(list(opt._get_beta_accumulators()))
+            variables = tf.trainable_variables(scope='Decoder') + list(opt._get_beta_accumulators())
             print("=" * 50)
             print("List of Variables:")
             for v in variables:
@@ -85,8 +83,8 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             graph = tf.get_default_graph()
             for v in sess.run(tf.report_uninitialized_variables()):
                 print(v)
-                print(str(v)[3:-2])
-                variables.append(graph.get_tensor_by_name(str(v)[3:-2]+':0'))
+                print(str(v)[2:-1])
+                variables.append(graph.get_tensor_by_name(str(v)[2:-1]+':0'))
 
         init = tf.variables_initializer(variables)
 
