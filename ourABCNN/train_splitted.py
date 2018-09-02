@@ -66,7 +66,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         else:
             optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(decoder.cost)
 
-        init = tf.global_variables_initializer()
+        init = tf.variables_initializer(trainable_variables)
 
 
 ############################################################################
