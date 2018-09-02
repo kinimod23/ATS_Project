@@ -79,7 +79,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 print(v.name, v.shape)
             print("=" * 50)
 
-        init = tf.variables_initializer(tf.trainable_variables(scope='Decoder').extend(opt._get_beta_accumulators()))
+        init = tf.variables_initializer(tf.trainable_variables(scope='Decoder').extend([tf.get_variable('beta1_power'), tf.get_variable('beta2_power')]))
 
 ############################################################################
 #########################     TRAINING     #################################
