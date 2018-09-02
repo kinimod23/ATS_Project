@@ -105,7 +105,6 @@ class ABCNN_conv():
             tf.summary.scalar("cost", self.cost)
             self.prediction = CNNs[-1][0]
             print('Cost Shape {}  Preds shape {}'.format(self.cost.shape, self.prediction.shape))
-            self.optimizer = tf.train.AdamOptimizer(lr, name="optimizer").minimize(self.cost)
         self.merged = tf.summary.merge_all()
 
 class ABCNN_deconv():
