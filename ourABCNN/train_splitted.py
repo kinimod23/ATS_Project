@@ -110,10 +110,10 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             MeanCost += c
             MeanAcc += a
 
-            #if i % 200 == 0:
-            #    if model_type == 'deconvolution':
-            #        print('encoder accuracy: {}'.format(acc_enc))
-            #    print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
+            if i % 1000 == 0:
+                #if model_type == 'deconvolution':
+                #    print('encoder accuracy: {}'.format(acc_enc))
+                print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
             train_summary_writer.add_summary(merged, i)
         print('Mean Encoder Accuracy: {:1.4f} Mean Cost: {:1.4f}   Mean Accuracy: {:1.4f}'.format(MeanEncAcc/i, MeanCost/i, MeanAcc/i))
         if e % 100 == 0:
