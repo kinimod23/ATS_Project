@@ -187,12 +187,12 @@ class ABCNN_deconv():
                 DNNs = [DI]
                 if num_layers > 2:
                     for i in range(0, num_layers-2):
-                        DI = DNN_layer(variable_scope="DNN-"+str(i), x=DNNs[i], d=di)
+                        DI = DNN_layer(variable_scope="DNN-"+str(i+2), x=DNNs[i], d=di)
                         DNNs.append(DI)
                 DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=DNNs[-1], d=d0)
                 DNNs.append(DO)
             else:
-                DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=self.x, d=d0)
+                DO = DNN_layer(variable_scope='DNN-'+str(num_layers-1), x=self.x, d=d0)
                 DNNs.append(DO)
 
             with tf.variable_scope('Cost'):
