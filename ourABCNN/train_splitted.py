@@ -64,7 +64,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         if model_type == 'convolution':
             optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(encoder.cost)
         else:
-            optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(decoder.cost, var_list=trainable_variables(scope='Decoder'))
+            optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(decoder.cost, var_list=tf.trainable_variables(scope='Decoder'))
 
         init = tf.variables_initializer(tf.trainable_variables(scope='Decoder'))
 
