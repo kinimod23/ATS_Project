@@ -69,7 +69,6 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
                 MeanCost += c
                 Accuracys.append(a)
                 Sentences.append(pred)
-                print(pred[0].shape)
                 if i % 200 == 0:
                     print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
             print('Mean Cost: {}   Mean Accuracy: {}'.format(MeanCost/i, np.mean(Accuracys)))
