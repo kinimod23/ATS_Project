@@ -83,8 +83,8 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             print("=" * 50)
             graph = tf.get_default_graph()
             for v in sess.run(tf.report_uninitialized_variables()):
-                print(v)
-                variables.append(graph.get_tensor_by_name(v))
+                print(v[2:-1])
+                variables.append(graph.get_tensor_by_name(v[2:-1]))
 
         init = tf.variables_initializer(variables)
 
