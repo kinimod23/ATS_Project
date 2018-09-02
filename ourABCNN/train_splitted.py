@@ -33,8 +33,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             for k, v in dump_dict.items():
                 setattr(train_data, k, v)
         print("done!")
-    for i in range(3):
-        print('\n')
+
     print("=" * 50)
     print("training data size:", train_data.data_size)
     print("training max len:", train_data.max_len)
@@ -72,14 +71,15 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 print(v.name, v.shape)
             print("=" * 50)
         else:
-            optimizer = tf.train.AdamOptimizer(lr, name="optimizer").minimize(decoder.cost, var_list=tf.trainable_variables(scope='Decoder'))
+            opt = tf.train.AdamOptimizer(lr, name="optimizer")
+            optimizer = opt.minimize(decoder.cost, var_list=tf.trainable_variables(scope='Decoder'))
             print("=" * 50)
             print("List of Variables:")
             for v in tf.trainable_variables(scope='Decoder'):
                 print(v.name, v.shape)
             print("=" * 50)
 
-        init = tf.variables_initializer([tf.trainable_variables(scope='Decoder'), optimizer._beta1_power, optimizer._beta2_power])
+        init = tf.variables_initializer([tf.trainable_variables(scope='Decoder'), opt._beta1_power, opt._beta2_power])
 
 
 ############################################################################
@@ -165,6 +165,8 @@ if __name__ == "__main__":
             v = arg.split("=")[1]
             params[k] = v
 
+    for i in range(3):
+        print('\n')
     print("=" * 50)
     print("Parameters:")
     for k in sorted(params.keys()):
