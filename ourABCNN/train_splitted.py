@@ -80,7 +80,6 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             print("=" * 50)
 
         init = tf.variables_initializer(tf.trainable_variables(scope='Decoder').extend(opt._get_beta_accumulators()))
-        print(sess.run(tf.report_uninitialized_variables()))
 
 ############################################################################
 #########################     TRAINING     #################################
@@ -88,6 +87,8 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 
     train_summary_writer = tf.summary.FileWriter("../tf_logs/train2", sess.graph)
     sess.run(init)
+    print(sess.run(tf.report_uninitialized_variables()))
+
     print("=" * 50)
     for e in range(1, epoch + 1):
         Sentences = []
