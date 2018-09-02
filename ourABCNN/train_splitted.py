@@ -1,3 +1,4 @@
+import os
 import tensorflow as tf
 import numpy as np
 import sys
@@ -5,9 +6,9 @@ import sys
 from preprocess_dump2 import Word2Vec, ComplexSimple, FastText
 from ABCNN_splitted import ABCNN_conv, ABCNN_deconv
 from utils import build_path
-import os
 import pickle
 from time import time
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_layers, num_classes=2):
 
@@ -63,8 +64,18 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 
         if model_type == 'convolution':
             optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(encoder.cost)
+            print("=" * 50)
+            print("List of Variables:")
+            for v in tf.trainable_variables():
+                print(v.name, v.shape)
+            print("=" * 50)
         else:
             optimizer = tf.train.AdagradOptimizer(lr, name="optimizer").minimize(decoder.cost, var_list=tf.trainable_variables(scope='Decoder'))
+            print("=" * 50)
+            print("List of Variables:")
+            for v in tf.trainable_variables(scope='Decoder'):
+                print(v.name, v.shape)
+            print("=" * 50)
 
         init = tf.variables_initializer(tf.trainable_variables(scope='Decoder'))
 

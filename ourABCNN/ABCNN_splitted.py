@@ -104,16 +104,7 @@ class ABCNN_conv():
                 self.acc = 1-self.cost
             tf.summary.scalar("cost", self.cost)
         self.prediction = CNNs[-1][0]
-        print('CNN SHAPE: ', CNNs[-1][0].shape)
-
         self.merged = tf.summary.merge_all()
-
-        print("=" * 50)
-        print("List of Variables:")
-        for v in tf.trainable_variables():
-            print(v.name, v.shape)
-        print("=" * 50)
-
 
 class ABCNN_deconv():
     def __init__(self, s, w, l2_reg, d0=300, di=52, num_classes=2, num_layers=2):
@@ -211,9 +202,3 @@ class ABCNN_deconv():
             self.prediction = DNNs[-1]
 
         self.merged = tf.summary.merge_all()
-
-        print("=" * 50)
-        print("List of Variables:")
-        for v in tf.trainable_variables():
-            print(v.name, v.shape)
-        print("=" * 50)
