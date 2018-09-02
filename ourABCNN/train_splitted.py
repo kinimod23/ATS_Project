@@ -79,7 +79,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 print(v.name, v.shape)
             print("=" * 50)
 
-        init = tf.variables_initializer(tf.trainable_variables(scope='Decoder'))
+        init = tf.variables_initializer(tf.trainable_variables(scope='Decoder').extend(list(opt._get_beta_accumulators())))
 
 ############################################################################
 #########################     TRAINING     #################################
@@ -99,12 +99,12 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             i += 1
             x1, x2, y = train_data.next_batch(batch_size=batch_size)
             if model_type == 'convolution':
-                merged, _, c, a = sess.run([encoder.merged, encoder.optimizer, encoder.cost, encoder.acc],
+                merged, _, c, a = sess.run([encoder.merged, optimizer, encoder.cost, encoder.acc],
                                   feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
             else:
                 preds, acc_enc  = sess.run([encoder.prediction, encoder.acc],
                                   feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
-                merged, output, _, c, a = sess.run([decoder.merged, decoder.prediction, decoder.optimizer, decoder.cost, decoder.acc],
+                merged, output, _, c, a = sess.run([decoder.merged, decoder.prediction, optimizer, decoder.cost, decoder.acc],
                                   feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y, decoder.x: preds, decoder.y: x2})
                 Sentences.append(output)
                 MeanEncAcc += acc_enc
