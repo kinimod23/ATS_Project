@@ -202,27 +202,7 @@ class ComplexSimple(Data):
             else:
                 raise NameError(method)
 
-
-            # create features
-            feature_begin = time.time()
-            for (s1, s2) in zip(self.s1s, self.s2s):
-                word_cnt = len([word for word in s1 if word in s2])
-                self.features.append([len(s1), len(s2), word_cnt])
-                local_max_len = max(len(s1), len(s2))
-                if local_max_len > self.max_len:
-                    self.max_len = local_max_len
-
             self.data_size = len(self.s1s)
-
-            idf_feature_begin = time.time()
-            for i in range(self.data_size):
-                wgt_word_cnt = sum([idf[word] for word in self.s1s[i] if (word in self.s2s[i])])
-                self.features[i].append(wgt_word_cnt)
-            print("idf feature creation took: {}".format(time.time() - idf_feature_begin))
-            self.num_features = len(self.features[0])
-            feature_took = time.time() - feature_begin
-            print("features took: {}".format(feature_took))
-
 
             self.s1_mats, self.s2_mats, self.labels_mats = [], [], []
 
@@ -232,8 +212,6 @@ class ComplexSimple(Data):
             random.shuffle(self.s2s)
             random.seed(4)
             random.shuffle(self.labels)
-            random.seed(4)
-            random.shuffle(self.features)
 
             word2vec_begin = time.time()
             for i in range(len(self.s1s)):
