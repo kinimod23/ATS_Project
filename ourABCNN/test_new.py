@@ -78,16 +78,17 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
     print("=" * 50)
     print('Number of Sentences: {}'.format(len(Sentences)))
 
-    fasttext = gensim.models.KeyedVectors.load("wiki.dump")
-    print('FastText loaded')
-    with open('output.txt', 'w') as f:
-        for sen in Sentences[:2]:
-            string = ''
-            for word in range(50):
-                string += fasttext.wv.most_similar(positive=sen[0][:,word,:].T, topn=1)[0][0] + ' '
-            string += '\n'
-            f.write(string)
-    print('Output created!')
+    if model_type != 'convolution':
+        fasttext = gensim.models.KeyedVectors.load("wiki.dump")
+        print('FastText loaded')
+        with open('output.txt', 'w') as f:
+            for sen in Sentences[:2]:
+                string = ''
+                for word in range(50):
+                    string += fasttext.wv.most_similar(positive=sen[0][:,word,:].T, topn=1)[0][0] + ' '
+                string += '\n'
+                f.write(string)
+        print('Output created!')
 
 if __name__ == "__main__":
 
