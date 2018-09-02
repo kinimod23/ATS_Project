@@ -81,7 +81,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             for v in variables:
                 print(v.name, v.shape)
             print("=" * 50)
-            for v in tf.report_uninitialized_variables():
+            for v in sess.run(tf.report_uninitialized_variables()):
                 variables.append(tf.contrib.framework.get_variables_by_name(v))
 
         init = tf.variables_initializer(variables)
