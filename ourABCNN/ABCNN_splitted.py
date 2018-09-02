@@ -81,7 +81,7 @@ class ABCNN_conv():
 
                 return left_wp, left_ap, right_wp, right_ap
 
-        with tf.name_scope('Encoder'):
+        with tf.variable_scope('Encoder'):
             x1_expanded = tf.expand_dims(self.x1, -1)
             x2_expanded = tf.expand_dims(self.x2, -1)
 
@@ -182,7 +182,7 @@ class ABCNN_deconv():
                 return DI
 
 
-        with tf.name_scope("Decoder"):
+        with tf.variable_scope("Decoder"):
             if num_layers > 1:
                 DI = DNN_layer(variable_scope='DNN-1', x=self.x, d=di)
                 DNNs = [DI]
