@@ -75,6 +75,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             optimizer = opt.minimize(decoder.cost, var_list=tf.trainable_variables(scope='Decoder'), name='opt_minimize')
 
             variables = tf.trainable_variables(scope='Decoder') + tf.trainable_variables(scope='opt_minimize')
+            print(len(tf.trainable_variables(scope='opt_minimize')))
             print("=" * 50)
             print("List of Variables:")
             for v in variables:
