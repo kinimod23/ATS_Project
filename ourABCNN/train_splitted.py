@@ -81,11 +81,6 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 print(v.name, v.shape)
 
             print("=" * 50)
-            graph = tf.get_default_graph()
-            #for v in sess.run(tf.report_uninitialized_variables()):
-            #    print(v)
-            #    print(str(v)[2:-1])
-            #    variables.append(tf.contrib.framework.get_variables_by_name()(str(v)[2:-1]))
 
         init = tf.variables_initializer(variables)
 
@@ -95,7 +90,6 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 
     train_summary_writer = tf.summary.FileWriter("../tf_logs/train2", sess.graph)
     sess.run(init)
-    print(sess.run(tf.report_uninitialized_variables()))
 
     print("=" * 50)
     for e in range(1, epoch + 1):
