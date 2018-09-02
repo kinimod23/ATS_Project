@@ -105,7 +105,7 @@ class ABCNN_conv():
             tf.summary.scalar("cost", self.cost)
             self.prediction = CNNs[-1][0]
             print('Cost Shape {}  Preds shape {}'.format(self.cost.shape, self.prediction.shape))
-            self.optimizer = tf.train.AdamOptimizer(lr, name="optimizer").minimize(encoder.cost)
+            self.optimizer = tf.train.AdamOptimizer(lr, name="optimizer").minimize(self.cost)
         self.merged = tf.summary.merge_all()
 
 class ABCNN_deconv():
@@ -203,6 +203,6 @@ class ABCNN_deconv():
             self.prediction = tf.squeeze(DNNs[-1], axis=3)
             print('Cost Shape {}  Preds shape {}'.format(self.cost.shape, self.prediction.shape))
 
-            self.optimizer = tf.train.AdamOptimizer(lr, name="optimizer").minimize(decoder.cost, var_list=tf.trainable_variables(scope='Decoder'))
+            self.optimizer = tf.train.AdamOptimizer(lr, name="optimizer").minimize(self.cost)
 
         self.merged = tf.summary.merge_all()
