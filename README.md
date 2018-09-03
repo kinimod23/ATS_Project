@@ -47,6 +47,8 @@
 * restructured code to allow for siamese net as encoder ( concolutional ) and deconvolution as decoder. also to use both together as End2End
     * deconvolution hard to implement because of lack of knowledge regarding tensorflows options for that
     * implemented an image deconvolution with tf.image.resize (not real deconvolution i think)
+* used Word2Vec embeddings trained on 100billion words (google news)
+    * there were a lot of unknown words hence we switched to FAIRs fasttext trained on english wikipedia
 * tried End2End in various forms, for thousends of epochs but didn't get good results
     * changed cost function
 * tried to implement the loading and restoring of models so that we can train the encoder with cosine similarity as target and later on use this pretrained thing to create inputs for the decoder
