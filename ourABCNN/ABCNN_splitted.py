@@ -173,7 +173,7 @@ class ABCNN_deconv():
                     biases2 = tf.get_variable('biases')
                     tf.summary.histogram('biases', biases2)
                     #deconv_trans = tf.transpose(deconv, [0, 3, 2, 1])
-                    return deconv_trans
+                    return deconv
 
         def DNN_layer(variable_scope, x, d):
             # x1, x2 = [batch, d, s, 1]
