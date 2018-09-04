@@ -160,12 +160,13 @@ class ABCNN_deconv():
             with tf.name_scope("deconv"):
                 with tf.variable_scope("deconv") as scope:
                     deconv = tf.contrib.layers.conv2d_transpose(
-                    inputs= x,  num_outputs=1, kernel_size=(di,w), stride=1, #int(d/di),
-                    padding='SAME', data_format="NHWC", activation_fn=tf.nn.tanh,
-                    weights_initializer=tf.contrib.layers.xavier_initializer_conv2d(),
-                    weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
-                    biases_initializer=tf.constant_initializer(1e-04),
-                    reuse=reuse, trainable=trainable, scope=scope )
+                        inputs= x,  num_outputs=1,
+                        kernel_size=(d,w), stride=1, padding='VALID',
+                        weights_initializer=tf.contrib.layers.xavier_initializer_conv2d(),
+                        weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
+                        biases_initializer=tf.constant_initializer(1e-04),
+                        reuse=reuse, trainable=trainable, scope=scope )
+
                     tf.get_variable_scope().reuse_variables()
                     weights2 = tf.get_variable('weights')
                     tf.summary.histogram('weights', weights2)
