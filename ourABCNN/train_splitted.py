@@ -55,8 +55,8 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
 
         if model_type == 'deconvolution':
-            saver.restore(sess, model_path_old + "-" + str(1000))
-            print(model_path + "-" + str(1000), "restored.")
+            saver.restore(sess, model_path_old + "-" + str(1))
+            print(model_path + "-" + str(1), "restored.")
 
         if model_type != 'convolution':
             decoder = ABCNN_deconv(lr=lr, s=train_data.max_len, w=w, l2_reg=l2_reg,
@@ -71,7 +71,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 print(v.name, v.shape)
             print("=" * 50)
         else:
-            opt = tf.train.AdagradOptimizer(lr, name="optimizer")
+            opt = tf.train.AdamOptimizer(lr, name="optimizer")
             optimizer = opt.minimize(decoder.cost, var_list=tf.trainable_variables(scope='Decoder'), name='opt_minimize')
 
             variables = tf.trainable_variables(scope='Decoder') + opt.variables()
@@ -119,7 +119,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 print('[batch {}]  cost: {:1.4f}  accuracy: {:1.4f}'.format(i, c, a))
             train_summary_writer.add_summary(merged, i)
         print('Mean Encoder Accuracy: {:1.4f} Mean Cost: {:1.4f}   Mean Accuracy: {:1.4f}'.format(MeanEncAcc/i, MeanCost/i, MeanAcc/i))
-        if e % 100 == 0:
+        if e % 1 == 0:
             save_path = saver.save(sess, build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec), global_step=e)
             print("model saved as", save_path)
     print("training finished!")
