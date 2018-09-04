@@ -115,7 +115,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             MeanCost += c
             MeanAcc += a
 
-            if i % 1000 == 0:
+            #if i % 1000 == 0:
                 #if model_type == 'deconvolution':
                 #    print('encoder accuracy: {}'.format(acc_enc))
                 #print('[batch {}]  cost: {:1.4f}  accuracy: {:1.4f}'.format(i, c, a))
