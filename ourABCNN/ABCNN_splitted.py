@@ -176,10 +176,9 @@ class ABCNN_deconv():
         def DNN_layer(variable_scope, x, d):
             # x1, x2 = [batch, d, s, 1]
             with tf.variable_scope(variable_scope):
-                x_upsampled = tf.image.resize_images(x, size=(d,s), method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
-
-                DI = deconvolution(x=x_upsampled, d=d, reuse=tf.AUTO_REUSE, trainable=True)
-                print('X shape: {}   X_upsampled shape: {}  DI shaoe: {}'.format(x.shape, x_upsampled.shape, DI.shape))
+                #x_upsampled = tf.image.resize_images(x, size=(d,s), method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
+                DI = deconvolution(x=x, d=d, reuse=tf.AUTO_REUSE, trainable=True)
+                #print('X shape: {}   X_upsampled shape: {}  DI shaoe: {}'.format(x.shape, x_upsampled.shape, DI.shape))
                 return DI
 
 
