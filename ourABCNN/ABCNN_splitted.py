@@ -160,7 +160,7 @@ class ABCNN_deconv():
             with tf.name_scope("deconv"):
                 with tf.variable_scope("deconv") as scope:
                     deconv = tf.contrib.layers.conv2d_transpose(
-                    inputs= x,  num_outputs=1, kernel_size=(di,w), stride= 1, #int(d/di),
+                    inputs= x,  num_outputs=1, kernel_size=(di,w), stride=int(d/di),
                     padding='SAME', data_format="NHWC", activation_fn=tf.nn.tanh,
                     weights_initializer=tf.contrib.layers.xavier_initializer_conv2d(),
                     weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
