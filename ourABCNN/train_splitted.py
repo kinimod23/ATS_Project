@@ -65,7 +65,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 
         if model_type == 'convolution':
             optimizer = tf.train.AdamOptimizer(lr, name="optimizer").minimize(encoder.cost)
-            variables = tf.trainable_variables(scope='Encoder') + opt.variables()
+            variables = tf.trainable_variables(scope='Encoder')
             print("=" * 50)
             print("List of Variables:")
             for v in tf.trainable_variables():
