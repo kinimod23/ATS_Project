@@ -7,7 +7,7 @@ import numpy as np
 #    implement conv and deconv as seperate models
 
 class ABCNN_conv():
-    def __init__(self, lr, s, w, l2_reg, d0=300, di=52, num_layers=2):
+    def __init__(self, lr, s, w, l2_reg, d0=300, di=50, num_layers=2):
         """
         Implmenentaion of ABCNNs
         (https://arxiv.org/pdf/1512.05193.pdf)
@@ -160,8 +160,8 @@ class ABCNN_deconv():
             with tf.name_scope("deconv"):
                 with tf.variable_scope("deconv") as scope:
                     deconv = tf.contrib.layers.conv2d_transpose(
-                        inputs= x,  num_outputs=d,
-                        kernel_size=(d,1), stride=1, padding='SAME',
+                        inputs= x,  num_outputs=1,
+                        kernel_size=(d,w), stride=int(d/di), padding='SAME',
                         weights_initializer=tf.contrib.layers.xavier_initializer_conv2d(),
                         weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
                         biases_initializer=tf.constant_initializer(1e-04),
