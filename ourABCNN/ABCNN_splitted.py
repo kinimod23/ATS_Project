@@ -74,10 +74,12 @@ class ABCNN_conv():
             with tf.variable_scope(variable_scope):
                 left_conv = convolution(name_scope="left", x=pad_for_wide_conv(x1), d=d, reuse=tf.AUTO_REUSE, trainable=True)
                 right_conv = convolution(name_scope="right", x=pad_for_wide_conv(x2), d=d, reuse=tf.AUTO_REUSE, trainable=True)
+
                 left_wp = w_pool(variable_scope="left", x=left_conv)
                 left_ap = all_pool(variable_scope="left", x=left_conv)
                 right_wp = w_pool(variable_scope="right", x=right_conv)
                 right_ap = all_pool(variable_scope="right", x=right_conv)
+                print('input: {}   conv-res: {}   pool res: {}'.format(pad_wide_conv(x1).shape, left_conv.shape, left_wp.shape))
 
                 return left_wp, left_ap, right_wp, right_ap
 
@@ -108,7 +110,7 @@ class ABCNN_conv():
         self.merged = tf.summary.merge_all()
 
 class ABCNN_deconv():
-    def __init__(self, lr, s, w, l2_reg, d0=300, di=52, num_classes=2, num_layers=2):
+    def __init__(self, lr, s, w, l2_reg, d0=300, di=50, num_classes=2, num_layers=2):
         """
         Implmenentaion of ABCNNs
         (https://arxiv.org/pdf/1512.05193.pdf)
