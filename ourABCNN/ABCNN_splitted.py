@@ -79,7 +79,7 @@ class ABCNN_conv():
                 left_ap = all_pool(variable_scope="left", x=left_conv)
                 right_wp = w_pool(variable_scope="right", x=right_conv)
                 right_ap = all_pool(variable_scope="right", x=right_conv)
-                print('input: {}   conv-res: {}   pool res: {}'.format(pad_wide_conv(x1).shape, left_conv.shape, left_wp.shape))
+                print('input: {}   conv-res: {}   pool res: {}'.format(pad_for_wide_conv(x1).shape, left_conv.shape, left_wp.shape))
 
                 return left_wp, left_ap, right_wp, right_ap
 
