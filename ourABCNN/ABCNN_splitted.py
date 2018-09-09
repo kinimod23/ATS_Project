@@ -7,7 +7,7 @@ import numpy as np
 #    implement conv and deconv as seperate models
 
 class ABCNN_conv():
-    def __init__(self, lr, s, w, l2_reg, d0=300, di=50, num_layers=2):
+    def __init__(self, lr=0.08, s, w, l2_reg, d0=300, di=50, num_layers=2):
         """
         Implmenentaion of ABCNNs
         (https://arxiv.org/pdf/1512.05193.pdf)
@@ -110,7 +110,7 @@ class ABCNN_conv():
         self.merged = tf.summary.merge_all()
 
 class ABCNN_deconv():
-    def __init__(self, lr, s, w, l2_reg, d0=300, di=50, num_classes=2, num_layers=2):
+    def __init__(self, lr=0.08, s, w, l2_reg, d0=300, di=50, num_layers=2):
         """
         Implmenentaion of ABCNNs
         (https://arxiv.org/pdf/1512.05193.pdf)
@@ -121,7 +121,6 @@ class ABCNN_deconv():
         :param num_features: The number of pre-set features(not coming from CNN) used in the output layer.
         :param d0: dimensionality of word embedding(default: 300)
         :param di: The number of convolution kernels (default: 50)
-        :param num_classes: The number of classes for answers.
         :param num_layers: The number of convolution layers.
         """
 
