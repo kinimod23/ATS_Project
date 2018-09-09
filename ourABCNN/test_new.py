@@ -63,38 +63,36 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
 #########################     TRAINING     #################################
 ############################################################################
     Accuracys = []
-    with tf.Session(config=tfconfig) as sess:
+    Sentences = []
+    for e in range(1, epoch + 1):
+        print("[Epoch " + str(e) + "]")
+        test_data.reset_index()
+        i , MeanCost, MeanAcc, MeanEncAcc = 0, 0, 0, 0
+        s1s, s2s, labels = test_data.next_batch(batch_size=test_data.data_size)
+        for i in range(test_data.data_size):
 
-        Sentences = []
-        for e in range(1, epoch + 1):
-            print("[Epoch " + str(e) + "]")
-            test_data.reset_index()
-            i , MeanCost, MeanAcc, MeanEncAcc = 0, 0, 0, 0
-            s1s, s2s, labels = test_data.next_batch(batch_size=test_data.data_size)
-            for i in range(test_data.data_size):
+            if model_type == 'convolution':
+                pred, c2, a2 = sess.run([encoder.prediction, encoder.cost, encoder.acc],
+                                       feed_dict={encoder.x1: np.expand_dims(s1s[i], axis=0),
+                                                  encoder.x2: np.expand_dims(s2s[i], axis=0),
+                                                  encoder.y1: np.expand_dims(labels[i], axis=0)})
+            elif model_type == 'deconvolution':
+                pred, c1, a1 = sess.run([encoder.prediction, encoder.cost, encoder.acc],
+                                       feed_dict={encoder.x1: np.expand_dims(s1s[i], axis=0),
+                                                  encoder.x2: np.expand_dims(s2s[i], axis=0),
+                                                  encoder.y1: np.expand_dims(labels[i], axis=0)})
+                output, c2, a2 = sess.run([decoder.prediction, decoder.cost, decoder.acc],
+                                        feed_dict={encoder.x1: np.expand_dims(s1s[i], axis=0),
+                                                  encoder.x2: np.expand_dims(s2s[i], axis=0),
+                                                  encoder.y1: np.expand_dims(labels[i], axis=0),
+                                                  decoder.x: np.expand_dims(preds[i], axis=0),
+                                                  decoder.y: np.expand_dims(s2s[i], axis=0)})
+                Sentences.append(output)
+                MeanEncAcc += c1
 
-                if model_type == 'convolution':
-                    pred, c2, a2 = sess.run([encoder.prediction, encoder.cost, encoder.acc],
-                                           feed_dict={encoder.x1: np.expand_dims(s1s[i], axis=0),
-                                                      encoder.x2: np.expand_dims(s2s[i], axis=0),
-                                                      encoder.y1: np.expand_dims(labels[i], axis=0)})
-                elif model_type == 'deconvolution':
-                    pred, c1, a1 = sess.run([encoder.prediction, encoder.cost, encoder.acc],
-                                           feed_dict={encoder.x1: np.expand_dims(s1s[i], axis=0),
-                                                      encoder.x2: np.expand_dims(s2s[i], axis=0),
-                                                      encoder.y1: np.expand_dims(labels[i], axis=0)})
-                    output, c2, a2 = sess.run([decoder.prediction, decoder.cost, decoder.acc],
-                                            feed_dict={encoder.x1: np.expand_dims(s1s[i], axis=0),
-                                                      encoder.x2: np.expand_dims(s2s[i], axis=0),
-                                                      encoder.y1: np.expand_dims(labels[i], axis=0),
-                                                      decoder.x: np.expand_dims(preds[i], axis=0),
-                                                      decoder.y: np.expand_dims(s2s[i], axis=0)})
-                    Sentences.append(output)
-                    MeanEncAcc += c1
-
-                MeanCost += c2
-                Accuracys.append(a2)
-            print('Mean Cost: {}   Mean Accuracy: {}'.format(MeanCost/i, np.mean(Accuracys)))
+            MeanCost += c2
+            Accuracys.append(a2)
+        print('Mean Cost: {}   Mean Accuracy: {}'.format(MeanCost/i, np.mean(Accuracys)))
 
     print("=" * 50)
     print("max accuracy: {}  mean accuracy: {}".format(max(Accuracys), np.mean(Accuracys)))
