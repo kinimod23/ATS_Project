@@ -8,6 +8,7 @@ from ABCNN_splitted import ABCNN_conv, ABCNN_deconv
 from utils import build_path
 import pickle
 from time import time
+import gensim
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_layers, num_classes=2):

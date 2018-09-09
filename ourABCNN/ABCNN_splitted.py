@@ -79,7 +79,6 @@ class ABCNN_conv():
                 left_ap = all_pool(variable_scope="left", x=left_conv)
                 right_wp = w_pool(variable_scope="right", x=right_conv)
                 right_ap = all_pool(variable_scope="right", x=right_conv)
-                print('input: {}   conv-res: {}   pool res: {}'.format(pad_for_wide_conv(x1).shape, left_conv.shape, left_wp.shape))
 
                 return left_wp, left_ap, right_wp, right_ap
 
@@ -106,7 +105,6 @@ class ABCNN_conv():
                 self.acc = 1-self.cost
             tf.summary.scalar("cost", self.cost)
             self.prediction = CNNs[-1][0]
-            print('Cost Shape {}  Preds shape {}'.format(self.cost.shape, self.prediction.shape))
         self.merged = tf.summary.merge_all()
 
 class ABCNN_deconv():
@@ -181,7 +179,6 @@ class ABCNN_deconv():
             with tf.variable_scope(variable_scope):
                 x_upsampled = tf.image.resize_images(x, size=(d,s), method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
                 DI = deconvolution(x=x, d=d, reuse=tf.AUTO_REUSE, trainable=True)
-                print('X shape: {}   X_upsampled shape: {}  DI shape: {}'.format(x.shape, x_upsampled.shape, DI.shape))
                 return DI
 
 
@@ -204,6 +201,5 @@ class ABCNN_deconv():
                 self.cost = 1-self.acc
                 tf.summary.scalar("cost", self.cost)
             self.prediction = tf.squeeze(DNNs[-1], axis=3)
-            print('Cost Shape {}  Preds shape {}'.format(self.cost.shape, self.prediction.shape))
 
         self.merged = tf.summary.merge_all()
