@@ -38,6 +38,8 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
 #########################      MODEL      ##################################
 ############################################################################
     tfconfig = tf.ConfigProto(allow_soft_placement = True)
+    sess = tf.Session(config=tfconfig)
+
     with tf.device("/gpu:0"):
         encoder = ABCNN_conv(s=test_data.max_len, w=w, l2_reg=l2_reg,
                   num_layers=num_layers)
@@ -46,31 +48,61 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
     print("=" * 50)
     print("test data size:", test_data.data_size)
 
+
+    with tf.device("/gpu:0"):
+
+        encoder = ABCNN_conv(s=test_data.max_len, w=w, l2_reg=l2_reg,
+                  num_layers=num_layers)
+
+        saver = tf.train.Saver(max_to_keep=2)
+        model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
+        model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
+
+        if model_type == 'deconvolution':
+            saver.restore(sess, model_path_old + "-" + str(1000))
+            print(model_path + "-" + str(1000), "restored.")
+
+        if model_type != 'convolution':
+            decoder = ABCNN_deconv(lr=lr, s=train_data.max_len, w=w, l2_reg=l2_reg,
+                      num_layers=num_layers)
+            saver.restore(sess, model_path + "-" + str(1000))
+
+
 ############################################################################
 #########################     TRAINING     #################################
 ############################################################################
     Accuracys = []
     with tf.Session(config=tfconfig) as sess:
-        saver = tf.train.Saver()
-        saver.restore(sess, model_path + "-" + str(1000))
-        print(model_path + "-" + str(1000), "restored.")
 
         Sentences = []
         for e in range(1, epoch + 1):
             print("[Epoch " + str(e) + "]")
             test_data.reset_index()
-            i, MeanCost = 0, 0
+            i , MeanCost, MeanAcc, MeanEncAcc = 0, 0, 0, 0
             s1s, s2s, labels = test_data.next_batch(batch_size=test_data.data_size)
             for i in range(test_data.data_size):
-                pred, c, a = sess.run([encoder.prediction, encoder.cost, encoder.acc],
+
+                if model_type == 'convolution':
+                    pred, c2, a2 = sess.run([encoder.prediction, encoder.cost, encoder.acc],
                                            feed_dict={encoder.x1: np.expand_dims(s1s[i], axis=0),
                                                       encoder.x2: np.expand_dims(s2s[i], axis=0),
                                                       encoder.y1: np.expand_dims(labels[i], axis=0)})
-                MeanCost += c
-                Accuracys.append(a)
-                Sentences.append(pred)
-                if i % 200 == 0:
-                    print('[batch {}]  cost: {}  accuracy: {}'.format(i, c, a))
+                elif model_type == 'deconvolution':
+                    pred, c1, a1 = sess.run([encoder.prediction, encoder.cost, encoder.acc],
+                                           feed_dict={encoder.x1: np.expand_dims(s1s[i], axis=0),
+                                                      encoder.x2: np.expand_dims(s2s[i], axis=0),
+                                                      encoder.y1: np.expand_dims(labels[i], axis=0)})
+                    output, c2, a2 = sess.run([decoder.prediction, decoder.cost, decoder.acc],
+                                            feed_dict={encoder.x1: np.expand_dims(s1s[i], axis=0),
+                                                      encoder.x2: np.expand_dims(s2s[i], axis=0),
+                                                      encoder.y1: np.expand_dims(labels[i], axis=0),
+                                                      decoder.x: np.expand_dims(preds[i], axis=0),
+                                                      decoder.y: np.expand_dims(s2s[i], axis=0)})
+                    Sentences.append(output)
+                    MeanEncAcc += c1
+
+                MeanCost += c2
+                Accuracys.append(a2)
             print('Mean Cost: {}   Mean Accuracy: {}'.format(MeanCost/i, np.mean(Accuracys)))
 
     print("=" * 50)
