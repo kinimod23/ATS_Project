@@ -55,23 +55,23 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             decoder = ABCNN_deconv(lr=lr, s=train_data.max_len, w=w, l2_reg=l2_reg,
                       num_layers=num_layers)
 
-        saver = tf.train.Saver(max_to_keep=2)
-        model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
-        model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
-
-        if model_type == 'deconvolution':
-            saver.restore(sess, model_path_old + "-" + str(1000))
-            print(model_path_old + "-" + str(1000), "restored.")
-
         opt = tf.train.AdamOptimizer(lr, name="optimizer")
+        variables_enc = tf.trainable_variables(scope='Encoder')
         optimizer_enc = opt.minimize(encoder.cost)
-        variables_enc = tf.global_variables()
+
         optimizer_dec = opt.minimize(decoder.cost, var_list=tf.trainable_variables(scope='Decoder'), name='opt_minimize')
         variables_dec = tf.trainable_variables(scope='Decoder') + opt.variables()
+
+        enc_saver = tf.train.Saver(var_list = variables_enc, max_to_keep=2)
+        dec_saver = tf.train.Saver(var_list = variables_dec, max_to_keep=2)
+        model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
+        model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
 
         if model_type == 'convolution':
             init = tf.variables_initializer(variables_enc)
         elif model_type == 'deconvolution':
+            enc_saver.restore(sess, model_path_old + "-" + str(1000))
+            print(model_path_old + "-" + str(1000), "restored.")
             init = tf.variables_initializer(variables_dec)
         else:
             init = tf.variables_initializer(tf.global_variables())
@@ -117,7 +117,10 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             train_summary_writer.add_summary(merged, i)
         print('Mean Encoder Accuracy: {:1.4f} Mean Cost: {:1.4f}   Mean Accuracy: {:1.4f}'.format(MeanEncAcc/i, MeanCost/i, MeanAcc/i))
         if e % 100 == 0:
-            save_path = saver.save(sess, build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec), global_step=e)
+            if model_type == 'convolution':
+                save_path = enc_saver.save(sess, build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec), global_step=e)
+            elif model_type == 'deconvolution':
+                save_path = dec_saver.save(sess, build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec), global_step=e)
             print("model saved as", save_path)
     print("training finished!")
     print("=" * 50)
