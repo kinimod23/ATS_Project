@@ -8,6 +8,7 @@ from utils import build_path
 import pickle
 import os
 import gensim
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 
 def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_classes=2):
@@ -50,8 +51,8 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
         model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
 
         if model_type == 'deconvolution':
-            saver.restore(sess, model_path_old + "-" + str(1000))
-            print(model_path_old + "-" + str(1000), "restored.")
+            #saver.restore(sess, model_path_old + "-" + str(1000))
+            #print(model_path_old + "-" + str(1000), "restored.")
 
         if model_type != 'convolution':
             decoder = ABCNN_deconv(lr=0.08, s=test_data.max_len, w=w, l2_reg=l2_reg,
