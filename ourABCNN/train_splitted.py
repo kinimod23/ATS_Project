@@ -127,6 +127,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         with open('output.txt', 'w') as f:
             for sen in Sentences[-2:]:
                 string = ''
+                print(sen.shape)
                 for word in range(50):
                     string += fasttext.wv.most_similar(positive=sen[0][:,word,:].T, topn=1)[0] + ' '
                 string += '\n'
