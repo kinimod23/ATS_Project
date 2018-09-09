@@ -50,7 +50,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
         model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
         model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
 
-        if model_type == 'deconvolution':
+        #if model_type == 'deconvolution':
             #saver.restore(sess, model_path_old + "-" + str(1000))
             #print(model_path_old + "-" + str(1000), "restored.")
 
