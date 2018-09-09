@@ -7,7 +7,7 @@ import numpy as np
 #    implement conv and deconv as seperate models
 
 class ABCNN_conv():
-    def __init__(self, lr=0.08, s, w, l2_reg, d0=300, di=50, num_layers=2):
+    def __init__(self, lr, s, w, l2_reg, d0=300, di=50, num_layers=2):
         """
         Implmenentaion of ABCNNs
         (https://arxiv.org/pdf/1512.05193.pdf)
@@ -110,7 +110,7 @@ class ABCNN_conv():
         self.merged = tf.summary.merge_all()
 
 class ABCNN_deconv():
-    def __init__(self, lr=0.08, s, w, l2_reg, d0=300, di=50, num_layers=2):
+    def __init__(self, lr, s, w, l2_reg, d0=300, di=50, num_layers=2):
         """
         Implmenentaion of ABCNNs
         (https://arxiv.org/pdf/1512.05193.pdf)
