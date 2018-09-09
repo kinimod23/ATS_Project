@@ -128,7 +128,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             for sen in Sentences[-2:]:
                 string = ''
                 for word in range(50):
-                    string += fasttext.wv.most_similar(positive=sen[0][:,word,:].T, topn=1)[0][0] + ' '
+                    string += fasttext.wv.most_similar(positive=sen[0][:,word,:].T, topn=1)[0] + ' '
                 string += '\n'
                 f.write(string)
         print('Output created!')
