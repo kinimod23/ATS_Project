@@ -41,15 +41,6 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
     sess = tf.Session(config=tfconfig)
 
     with tf.device("/gpu:0"):
-        encoder = ABCNN_conv(lr=0.08, s=test_data.max_len, w=w, l2_reg=l2_reg,
-                  num_layers=num_layers)
-
-    model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
-    print("=" * 50)
-    print("test data size:", test_data.data_size)
-
-
-    with tf.device("/gpu:0"):
 
         encoder = ABCNN_conv(lr= 0.08, s=test_data.max_len, w=w, l2_reg=l2_reg,
                   num_layers=num_layers)
@@ -63,7 +54,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
             print(model_path + "-" + str(1000), "restored.")
 
         if model_type != 'convolution':
-            decoder = ABCNN_deconv(lr=lr, s=train_data.max_len, w=w, l2_reg=l2_reg,
+            decoder = ABCNN_deconv(lr=0.08, s=train_data.max_len, w=w, l2_reg=l2_reg,
                       num_layers=num_layers)
             saver.restore(sess, model_path + "-" + str(1000))
 
