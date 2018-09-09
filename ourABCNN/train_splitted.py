@@ -108,7 +108,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                                   feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
                 merged, output, _, c, a, a2 = sess.run([decoder.merged, decoder.prediction, optimizer_dec, decoder.cost, decoder.acc, encoder.acc],
                                   feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y, decoder.x: preds, decoder.y: x2})
-                Sentences.append(output)
+                Sentences.extend(output)
                 MeanEncAcc += a2
 
             MeanCost += c
@@ -129,7 +129,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                 string = ''
                 print(sen.shape)
                 for word in range(50):
-                    string += fasttext.wv.most_similar(positive=sen[0][:,word,:].T, topn=1)[0] + ' '
+                    string += fasttext.wv.similar_by_vector(sen[:,word], topn=1)[0] + ' '
                 string += '\n'
                 f.write(string)
         print('Output created!')
