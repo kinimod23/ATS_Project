@@ -41,7 +41,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
     sess = tf.Session(config=tfconfig)
 
     with tf.device("/gpu:0"):
-        encoder = ABCNN_conv(s=test_data.max_len, w=w, l2_reg=l2_reg,
+        encoder = ABCNN_conv(lr=0.08, s=test_data.max_len, w=w, l2_reg=l2_reg,
                   num_layers=num_layers)
 
     model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
@@ -51,7 +51,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
 
     with tf.device("/gpu:0"):
 
-        encoder = ABCNN_conv(s=test_data.max_len, w=w, l2_reg=l2_reg,
+        encoder = ABCNN_conv(lr= 0.08, s=test_data.max_len, w=w, l2_reg=l2_reg,
                   num_layers=num_layers)
 
         saver = tf.train.Saver(max_to_keep=2)
