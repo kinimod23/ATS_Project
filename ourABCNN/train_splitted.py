@@ -57,7 +57,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 
         if model_type == 'deconvolution':
             saver.restore(sess, model_path_old + "-" + str(1000))
-            print(model_path + "-" + str(1000), "restored.")
+            print(model_path_old + "-" + str(1000), "restored.")
 
         if model_type != 'convolution':
             decoder = ABCNN_deconv(lr=lr, s=train_data.max_len, w=w, l2_reg=l2_reg,
@@ -72,7 +72,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         if model_type == 'convolution':
             init = tf.variables_initializer(variables_enc)
         elif model_type == 'deconvolution':
-            init = tf.variables_initializer(variables_enc)
+            init = tf.variables_initializer(variables_dec)
         else:
             init = tf.variables_initializer(tf.global_variables())
 
@@ -178,22 +178,22 @@ if __name__ == "__main__":
 
 
 
-if model_type != 'convolution':
-        fasttext = gensim.models.KeyedVectors.load("wiki.dump")
-        print('FastText loaded')
-        models  = [NgramModel(i, train_data.s1s+train_data.s2s, mlp) for i in range(5)]
-        print('Ngram Models created')
-        with open('output.txt', 'w') as f:
-            for sen in Sentences[-2:]:
-                text = []
-                string = ''
-                for word in range(50):
-                    candidates = fasttext.wv.most_similar(positive=sen[0][:,word,:].T, topn=5)
-                    candidates = [(w, s*model[min(word, 4)].prob(w, text[max(0, word-3)::])) for (w, s) in candidates]
-                    text.append(sorted(candidates, key=lambda tup:tup[1])[0])
-                    #string += fasttext.wv.most_similar(positive=sen[0][:,word,:].T, topn=1)[0][0] + ' '
-                for w in text:
-                    string += w + ' '
-                string += '\n'
-                f.write(string)
-        print('Output created!')
+#if model_type != 'convolution':
+#        fasttext = gensim.models.KeyedVectors.load("wiki.dump")
+#        print('FastText loaded')
+#        models  = [NgramModel(i, train_data.s1s+train_data.s2s, mlp) for i in range(5)]
+#        print('Ngram Models created')
+#        with open('output.txt', 'w') as f:
+#            for sen in Sentences[-2:]:
+#                text = []
+#                string = ''
+#                for word in range(50):
+#                    candidates = fasttext.wv.most_similar(positive=sen[0][:,word,:].T, topn=5)
+#                    candidates = [(w, s*model[min(word, 4)].prob(w, text[max(0, word-3)::])) for (w, s) in candidates]
+#                    text.append(sorted(candidates, key=lambda tup:tup[1])[0])
+#                    #string += fasttext.wv.most_similar(positive=sen[0][:,word,:].T, topn=1)[0][0] + ' '
+#                for w in text:
+#                    string += w + ' '
+#                string += '\n'
+#                f.write(string)
+#        print('Output created!')
