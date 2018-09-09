@@ -51,6 +51,10 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         encoder = ABCNN_conv(lr=lr, s=train_data.max_len, w=w, l2_reg=l2_reg,
                   num_layers=num_layers)
 
+        if model_type != 'convolution':
+            decoder = ABCNN_deconv(lr=lr, s=train_data.max_len, w=w, l2_reg=l2_reg,
+                      num_layers=num_layers)
+
         saver = tf.train.Saver(max_to_keep=2)
         model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
         model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
@@ -58,10 +62,6 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         if model_type == 'deconvolution':
             saver.restore(sess, model_path_old + "-" + str(1000))
             print(model_path_old + "-" + str(1000), "restored.")
-
-        if model_type != 'convolution':
-            decoder = ABCNN_deconv(lr=lr, s=train_data.max_len, w=w, l2_reg=l2_reg,
-                      num_layers=num_layers)
 
         opt = tf.train.AdamOptimizer(lr, name="optimizer")
         optimizer_enc = opt.minimize(encoder.cost)
@@ -125,7 +125,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         fasttext = gensim.models.KeyedVectors.load("wiki.dump")
         print('FastText loaded')
         with open('output.txt', 'w') as f:
-            for sen in Sentences[-2:]:
+            for sen in Sentences[-100:]:
                 string = ''
                 print(sen.shape)
                 for word in range(50):
