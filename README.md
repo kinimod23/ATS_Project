@@ -11,21 +11,52 @@
 ## ToDo
 * statistics about data  ----------------> Dominik bis 23.08.
   * how long are sentences (how many are lost if we cut at 50 words)
-
-  -> wenn wir beim ursprünglichen bleiben:
-  (1) wir schmeissen alle Satzpaare raus, die identisch sind
-  (2.1) wir schmeissen alle Satzpaare raus, bei denen der simple sentence um 150% größer ist als der complex sentence
-
-  dann ist das Ergebnis eine Senkung von 19,64% des ursprünglichen Datensets
-
-  ->statt 2.1 machen wir nun 2.2:
-  (2.2) wir schmeissen alle Satzpaare raus, deren Wortanzahl (einschl. Satzzeichen) höher als 50 Wörter ist
-
-  dann ist das Ergebnis eine Senkung von 17,98% des urspr. Datensets
-
-
+  
+  cut at 40:
+  85.94% are remaining
+  
+  cut at 50:
+  94.18% are remaining
+  
+  
   * how many sentences have 30%, 40%, 50% of words unknown to word2vec
+  (continued with cut at 40)
+  
+  10% unknown to word2vec:
+  0.47% remaining
+  
+  20% unknown to word2vec:
+  9.57% remaining
+  
+  30% unknown to word2vec:
+  41.20% remaining
+  
+  40% unknown to word2vec:
+  68.22% remaining
+  
+  50% unknown to word2vec:
+  79.77% remaining
+
+  
   * how does this change with fasttext
+  
+  1% unknown to fasttext:
+  46.67% remaining
+  
+  5% unknown to fasttext:
+  54.69% remaining
+  
+  10% unknown to fasttext:
+  70.68% remaining
+  
+  20% unknown to fasttext:
+  82.86% remaining
+  
+  50% unknown to fasttext:
+  85.87% remaining
+
+  
+  
 * change test.py            ----------------> Simon bis 21.08.
   * ( creates output now )
 * now using fasttext...
