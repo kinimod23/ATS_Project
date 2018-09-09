@@ -62,29 +62,19 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             decoder = ABCNN_deconv(lr=lr, s=train_data.max_len, w=w, l2_reg=l2_reg,
                       num_layers=num_layers)
 
+        opt = tf.train.AdamOptimizer(lr, name="optimizer")
+        optimizer_enc = opt.minimize(encoder.cost)
+        variables_enc = tf.global_variables()
+        optimizer_dec = opt.minimize(decoder.cost, var_list=tf.trainable_variables(scope='Decoder'), name='opt_minimize')
+        variables_dec = tf.trainable_variables(scope='Decoder') + opt.variables()
 
         if model_type == 'convolution':
-            opt = tf.train.AdamOptimizer(lr, name="optimizer")
-            optimizer = opt.minimize(encoder.cost)
-            variables = tf.global_vaiables()
-            print("=" * 50)
-            print("List of Variables:")
-            for v in tf.trainable_variables():
-                print(v.name, v.shape)
-            print("=" * 50)
+            init = tf.variables_initializer(variables_enc)
+        elif model_type == 'deconvolution':
+            init = tf.variables_initializer(variables_enc)
         else:
-            opt = tf.train.AdamOptimizer(lr, name="optimizer")
-            optimizer = opt.minimize(decoder.cost, var_list=tf.trainable_variables(scope='Decoder'), name='opt_minimize')
+            init = tf.variables_initializer(tf.global_variables())
 
-            variables = tf.trainable_variables(scope='Decoder') + opt.variables()
-            print("=" * 50)
-            print("List of Variables:")
-            for v in variables:
-                print(v.name, v.shape)
-
-            print("=" * 50)
-
-        init = tf.variables_initializer(variables)
 
 ############################################################################
 #########################     TRAINING     #################################
@@ -103,22 +93,26 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             i += 1
             x1, x2, y = train_data.next_batch(batch_size=batch_size)
             if model_type == 'convolution':
-                merged, _, c, a = sess.run([encoder.merged, optimizer, encoder.cost, encoder.acc],
+                merged, _, c, a = sess.run([encoder.merged, optimizer_enc, encoder.cost, encoder.acc],
                                   feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
-            else:
+            elif model_type == 'deconvolution':
                 preds, acc_enc  = sess.run([encoder.prediction, encoder.acc],
                                   feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
-                merged, output, _, c, a = sess.run([decoder.merged, decoder.prediction, optimizer, decoder.cost, decoder.acc],
+                merged, output, _, c, a = sess.run([decoder.merged, decoder.prediction, optimizer_dec, decoder.cost, decoder.acc],
                                   feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y, decoder.x: preds, decoder.y: x2})
                 Sentences.append(output)
                 MeanEncAcc += acc_enc
+            else:
+                preds, _, acc_enc = sess.run([encoder.prediction, optimizer_enc, encoder.acc],
+                                  feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y})
+                merged, output, _, c, a, a2 = sess.run([decoder.merged, decoder.prediction, optimizer_dec, decoder.cost, decoder.acc, encoder.acc],
+                                  feed_dict={encoder.x1: x1, encoder.x2: x2, encoder.y1: y, decoder.x: preds, decoder.y: x2})
+                Sentences.append(output)
+                MeanEncAcc += a2
+
             MeanCost += c
             MeanAcc += a
 
-            #if i % 1000 == 0:
-                #if model_type == 'deconvolution':
-                #    print('encoder accuracy: {}'.format(acc_enc))
-                #print('[batch {}]  cost: {:1.4f}  accuracy: {:1.4f}'.format(i, c, a))
             train_summary_writer.add_summary(merged, i)
         print('Mean Encoder Accuracy: {:1.4f} Mean Cost: {:1.4f}   Mean Accuracy: {:1.4f}'.format(MeanEncAcc/i, MeanCost/i, MeanAcc/i))
         if e % 100 == 0:
@@ -126,7 +120,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             print("model saved as", save_path)
     print("training finished!")
     print("=" * 50)
-    if model_type == 'deconvolution':
+    if model_type != 'convolution':
         fasttext = gensim.models.KeyedVectors.load("wiki.dump")
         print('FastText loaded')
         with open('output.txt', 'w') as f:
@@ -180,3 +174,25 @@ if __name__ == "__main__":
     train(lr=float(params["lr"]), w=int(params["ws"]), l2_reg=float(params["l2_reg"]), epoch=int(params["epoch"]),
           model_type=params["model_type"], batch_size=int(params["batch_size"]), num_layers=int(params["num_layers"]),
             data=params["data"], word2vec=params["word2vec"])
+
+
+
+if model_type != 'convolution':
+        fasttext = gensim.models.KeyedVectors.load("wiki.dump")
+        print('FastText loaded')
+        models  = [NgramModel(i, train_data.s1s+train_data.s2s, mlp) for i in range(5)]
+        print('Ngram Models created')
+        with open('output.txt', 'w') as f:
+            for sen in Sentences[-2:]:
+                text = []
+                string = ''
+                for word in range(50):
+                    candidates = fasttext.wv.most_similar(positive=sen[0][:,word,:].T, topn=5)
+                    candidates = [(w, s*model[min(word, 4)].prob(w, text[max(0, word-3)::])) for (w, s) in candidates]
+                    text.append(sorted(candidates, key=lambda tup:tup[1])[0])
+                    #string += fasttext.wv.most_similar(positive=sen[0][:,word,:].T, topn=1)[0][0] + ' '
+                for w in text:
+                    string += w + ' '
+                string += '\n'
+                f.write(string)
+        print('Output created!')

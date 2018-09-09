@@ -51,12 +51,14 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
 
         if model_type == 'deconvolution':
             saver.restore(sess, model_path_old + "-" + str(1000))
-            print(model_path + "-" + str(1000), "restored.")
+            print(model_path_old + "-" + str(1000), "restored.")
 
         if model_type != 'convolution':
             decoder = ABCNN_deconv(lr=0.08, s=test_data.max_len, w=w, l2_reg=l2_reg,
                       num_layers=num_layers)
             saver.restore(sess, model_path + "-" + str(1000))
+            print(model_path + "-" + str(1000), "restored.")
+
 
 
 ############################################################################
@@ -85,7 +87,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
                                         feed_dict={encoder.x1: np.expand_dims(s1s[i], axis=0),
                                                   encoder.x2: np.expand_dims(s2s[i], axis=0),
                                                   encoder.y1: np.expand_dims(labels[i], axis=0),
-                                                  decoder.x: np.expand_dims(preds[i], axis=0),
+                                                  decoder.x: np.expand_dims(pred[i], axis=0),
                                                   decoder.y: np.expand_dims(s2s[i], axis=0)})
                 Sentences.append(output)
                 MeanEncAcc += c1
