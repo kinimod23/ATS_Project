@@ -105,7 +105,6 @@ class ABCNN_conv():
                 self.acc = 1-self.cost
             tf.summary.scalar("cost", self.cost)
             self.prediction = CNNs[-1][0]
-            print(self.prediction.shape)
         self.merged = tf.summary.merge_all()
 
 class ABCNN_deconv():
@@ -162,6 +161,7 @@ class ABCNN_deconv():
                     deconv = tf.contrib.layers.conv2d_transpose(
                         inputs= x,  num_outputs=1,
                         kernel_size=(d,w), stride=(int(d/di+0.5),1), padding='SAME',
+                        activation_fn=tf.nn.tanh,
                         weights_initializer=tf.contrib.layers.xavier_initializer_conv2d(),
                         weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
                         biases_initializer=tf.constant_initializer(1e-04),
