@@ -115,7 +115,8 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
             for sen in Sentences[:2]:
                 string = ''
                 for word in range(50):
-                    print(fasttext.wv.similar_by_vector(sen[0,:,word], topn=3))
+                    print(sen[0,:,word])
+                    #print(fasttext.wv.similar_by_vector(sen[0,:,word], topn=3))
                     string += fasttext.wv.similar_by_vector(sen[0,:,word], topn=1)[0][0] + ' '
                 string += '\n'
                 f.write(string)
