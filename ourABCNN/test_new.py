@@ -77,7 +77,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
         test_data.reset_index()
         i , MeanCost, MeanAcc, MeanEncAcc = 0, 0, 0, 0
         s1s, s2s, labels = test_data.next_batch(batch_size=test_data.data_size)
-        for i in range(test_data.data_size):
+        for i in range(20):
 
             if model_type == 'convolution':
                 pred, c2, a2 = sess.run([encoder.prediction, encoder.cost, encoder.acc],
@@ -115,6 +115,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
             for sen in Sentences[:2]:
                 string = ''
                 for word in range(50):
+                    sen[:,word].shape
                     string += fasttext.wv.similar_by_vector(sen[:,word], topn=1)[0] + ' '
                 string += '\n'
                 f.write(string)
