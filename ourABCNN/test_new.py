@@ -64,7 +64,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
             nc_saver.restore(sess, model_path_old + "-" + str(1000))
         elif model_type == 'deconvolution':
             enc_saver.restore(sess, model_path_old + "-" + str(1000))
-            dec_saver.restore(sess, model_path + "-" + str(1000))
+            dec_saver.restore(sess, model_path + "-" + str(300))
 
 
 ############################################################################
@@ -84,6 +84,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
                                        feed_dict={encoder.x1: np.expand_dims(s1s[i], axis=0),
                                                   encoder.x2: np.expand_dims(s2s[i], axis=0),
                                                   encoder.y1: np.expand_dims(labels[i], axis=0)})
+                print(pred.shape)
             elif model_type == 'deconvolution':
                 pred, c1, a1 = sess.run([encoder.prediction, encoder.cost, encoder.acc],
                                        feed_dict={encoder.x1: np.expand_dims(s1s[i], axis=0),
@@ -93,7 +94,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
                                         feed_dict={encoder.x1: np.expand_dims(s1s[i], axis=0),
                                                   encoder.x2: np.expand_dims(s2s[i], axis=0),
                                                   encoder.y1: np.expand_dims(labels[i], axis=0),
-                                                  decoder.x: np.expand_dims(pred[i], axis=0),
+                                                  decoder.x: np.expand_dims(pred, axis=0),
                                                   decoder.y: np.expand_dims(s2s[i], axis=0)})
                 Sentences.append(output)
                 MeanEncAcc += c1
