@@ -46,27 +46,25 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
         encoder = ABCNN_conv(lr= 0.08, s=test_data.max_len, w=w, l2_reg=l2_reg,
                   num_layers=num_layers)
 
+        if model_type != 'convolution':
+            decoder = ABCNN_deconv(lr=0.08, s=test_data.max_len, w=w, l2_reg=l2_reg,
+                      num_layers=num_layers)
+
         saver = tf.train.Saver(max_to_keep=2)
         model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
         model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
 
-        print('Before:')
-        print(sess.run(tf.report_uninitialized_variables()))
-        if model_type == 'deconvolution':
-            saver.restore(sess, model_path_old + "-" + str(1000))
-            print(model_path_old + "-" + str(1000), "restored.")
-        print('Middle:')
-        print(sess.run(tf.report_uninitialized_variables()))
+        variables_enc = tf.trainable_variables(scope='Encoder')
+        variables_dec = tf.trainable_variables(scope='Decoder')
 
-        if model_type != 'convolution':
-            decoder = ABCNN_deconv(lr=0.08, s=test_data.max_len, w=w, l2_reg=l2_reg,
-                      num_layers=num_layers)
-            print('2. Middle:')
-            print(sess.run(tf.report_uninitialized_variables()))
-            saver.restore(sess, model_path + "-" + str(1000))
-            print(model_path + "-" + str(1000), "restored.")
-    print('After:')
-    print(sess.run(tf.report_uninitialized_variables()))
+        enc_saver = tf.train.Saver(var_list = variables_enc, max_to_keep=2)
+        dec_saver = tf.train.Saver(var_list = variables_dec, max_to_keep=2)
+
+        if model_type == 'convolution':
+            nc_saver.restore(sess, model_path_old + "-" + str(1000))
+        elif model_type == 'deconvolution':
+            enc_saver.restore(sess, model_path_old + "-" + str(1000))
+            dec_saver.restore(sess, model_path + "-" + str(1000))
 
 
 ############################################################################
