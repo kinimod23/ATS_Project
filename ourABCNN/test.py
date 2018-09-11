@@ -2,8 +2,8 @@ import tensorflow as tf
 import numpy as np
 import sys
 
-from preprocess_dump2 import Word2Vec, ComplexSimple, FastText
-from ABCNN_splitted import ABCNN_conv, ABCNN_deconv
+from preprocess import Word2Vec, ComplexSimple, FastText
+from BCNN import ABCNN_conv, ABCNN_deconv
 from utils import build_path
 import pickle
 import os
@@ -123,16 +123,6 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
         print('Output created!')
 
 if __name__ == "__main__":
-
-    # Paramters
-    # --ws: window_size
-    # --l2_reg: l2_reg modifier
-    # --epoch: epoch
-    # --max_len: max sentence length
-    # --model_type: model type
-    # --num_layers: number of convolution layers
-    # --data_type: MSRP or WikiQA data
-    # --classifier: Final layout classifier(model, LR, SVM)
 
     # default parameters
     params = {
