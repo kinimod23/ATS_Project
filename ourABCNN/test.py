@@ -50,15 +50,15 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
             decoder = ABCNN_deconv(lr=0.08, s=test_data.max_len, w=w, l2_reg=l2_reg,
                       num_layers=num_layers)
 
-        saver = tf.train.Saver(max_to_keep=2)
         model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
         model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
 
         variables_enc = tf.trainable_variables(scope='Encoder')
-        variables_dec = tf.trainable_variables(scope='Decoder')
-
         enc_saver = tf.train.Saver(var_list = variables_enc, max_to_keep=2)
-        dec_saver = tf.train.Saver(var_list = variables_dec, max_to_keep=2)
+
+        if model_type != 'convolution':
+            variables_dec = tf.trainable_variables(scope='Decoder')
+            dec_saver = tf.train.Saver(var_list = variables_dec, max_to_keep=2)
 
         if model_type == 'convolution':
             nc_saver.restore(sess, model_path_old + "-" + str(1000))
@@ -77,7 +77,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
         test_data.reset_index()
         i , MeanCost, MeanAcc, MeanEncAcc = 0, 0, 0, 0
         s1s, s2s, labels = test_data.next_batch(batch_size=test_data.data_size)
-        for i in range(20):
+        for i in range(50):
 
             if model_type == 'convolution':
                 pred, c2, a2 = sess.run([encoder.prediction, encoder.cost, encoder.acc],
@@ -112,9 +112,9 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
         fasttext = gensim.models.KeyedVectors.load("wiki.dump")
         print('FastText loaded')
         with open('output.txt', 'w') as f:
-            for sen in Sentences[:2]:
+            for sen in Sentences:
                 string = ''
-                for word in range(50):
+                for word in range(40):
                     print(sen[0,:,word])
                     #print(fasttext.wv.similar_by_vector(sen[0,:,word], topn=3))
                     string += fasttext.wv.similar_by_vector(sen[0,:,word], topn=1)[0][0] + ' '
