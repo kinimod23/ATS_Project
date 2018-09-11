@@ -1,11 +1,6 @@
 import tensorflow as tf
 import numpy as np
 
-
-############################################################################
-# ToDo:
-#    implement conv and deconv as seperate models
-
 class ABCNN_conv():
     def __init__(self, lr, s, w, l2_reg, d0=300, di=50, num_layers=2):
         """
@@ -106,6 +101,12 @@ class ABCNN_conv():
             self.prediction = CNNs[-1][0]
         self.merged = tf.summary.merge_all()
 
+        print("=" * 50)
+        print("List of Variables:")
+        for v in tf.trainable_variables():
+            print('{} : {}'.format(v.name, v.shape))
+        print("=" * 50)
+
 class ABCNN_deconv():
     def __init__(self, lr, s, w, l2_reg, d0=300, di=50, num_layers=2):
         """
@@ -177,3 +178,8 @@ class ABCNN_deconv():
             self.prediction = tf.squeeze(DNNs[-1], axis=3)
 
         self.merged = tf.summary.merge_all()
+        print("=" * 50)
+        print("List of Variables:")
+        for v in tf.trainable_variables():
+            print('{} : {}'.format(v.name, v.shape))
+        print("=" * 50)

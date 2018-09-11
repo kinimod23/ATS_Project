@@ -16,8 +16,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 ############################################################################
 #########################   DATA LOADING   #################################
 ############################################################################
-    if model_type == 'convolution' or model_type == 'deconvolution': method = 'labeled'
-    else: method = 'unlabeled'
+    method = 'labeled'
     dumped = 'preprocessed_train_'+method+'_'+data+'_'+word2vec+'.pkl'
     if word2vec == 'FastText': w2v = FastText()
     else: w2v = Word2Vec()
@@ -56,8 +55,8 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
                       num_layers=num_layers)
 
         opt = tf.train.AdagradOptimizer(lr, name="optimizer")
-        variables_enc = tf.trainable_variables(scope='Encoder')
         optimizer_enc = opt.minimize(encoder.cost)
+        variables_enc = tf.trainable_variables(scope='Encoder')
         enc_saver = tf.train.Saver(var_list = variables_enc, max_to_keep=2)
 
         if model_type != 'convolution':
@@ -68,7 +67,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
 
         if model_type == 'convolution':
-            init = tf.variables_initializer(variables_enc)
+            init = tf.variables_initializer(variables_enc + opt.variables())
         elif model_type == 'deconvolution':
             enc_saver.restore(sess, model_path_old + "-" + str(1000))
             print(model_path_old + "-" + str(1000), "restored.")
