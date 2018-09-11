@@ -55,7 +55,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             decoder = ABCNN_deconv(lr=lr, s=train_data.max_len, w=w, l2_reg=l2_reg,
                       num_layers=num_layers)
 
-        opt = tf.train.AdamOptimizer(lr, name="optimizer")
+        opt = tf.train.AdagradOptimizer(lr, name="optimizer")
         variables_enc = tf.trainable_variables(scope='Encoder')
         optimizer_enc = opt.minimize(encoder.cost)
 
