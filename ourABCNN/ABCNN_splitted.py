@@ -160,7 +160,7 @@ class ABCNN_deconv():
                 with tf.variable_scope("deconv") as scope:
                     deconv = tf.contrib.layers.conv2d_transpose(
                         inputs= x,  num_outputs=1,
-                        kernel_size=(d,w), stride=(int(d/di+0.5),1), padding='SAME',
+                        kernel_size=(d,w), stride=(int(d/di+0.5),1), padding='Valid',
                         activation_fn=tf.nn.tanh,
                         weights_initializer=tf.contrib.layers.xavier_initializer_conv2d(),
                         weights_regularizer=tf.contrib.layers.l2_regularizer(scale=l2_reg),
@@ -172,14 +172,13 @@ class ABCNN_deconv():
                     tf.summary.histogram('weights', weights2)
                     biases2 = tf.get_variable('biases')
                     tf.summary.histogram('biases', biases2)
-                    #deconv_trans = tf.transpose(deconv, [0, 3, 2, 1])
                     return deconv
 
         def DNN_layer(variable_scope, x, d):
             # x1, x2 = [batch, d, s, 1]
             with tf.variable_scope(variable_scope):
-                x_upsampled = tf.image.resize_images(x, size=(d,s), method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
                 DI = deconvolution(x=x, d=d, reuse=tf.AUTO_REUSE, trainable=True)
+                print('Deconv Dims: {}'.format(DI.shape))
                 return DI
 
 
