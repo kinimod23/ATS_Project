@@ -4,7 +4,7 @@ import numpy as np
 import sys
 
 from preprocess import Word2Vec, ComplexSimple, FastText
-from BCNN import BCNN_conv, BCNN_deconv
+from BCNN import ABCNN_conv, ABCNN_deconv
 from utils import build_path
 import pickle
 from time import time
@@ -58,12 +58,12 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
         opt = tf.train.AdagradOptimizer(lr, name="optimizer")
         variables_enc = tf.trainable_variables(scope='Encoder')
         optimizer_enc = opt.minimize(encoder.cost)
-
-        optimizer_dec = opt.minimize(decoder.cost, var_list=tf.trainable_variables(scope='Decoder'), name='opt_minimize')
-        variables_dec = tf.trainable_variables(scope='Decoder') + opt.variables()
-
         enc_saver = tf.train.Saver(var_list = variables_enc, max_to_keep=2)
-        dec_saver = tf.train.Saver(var_list = variables_dec, max_to_keep=2)
+
+        if model_type != 'convolution':
+            optimizer_dec = opt.minimize(decoder.cost, var_list=tf.trainable_variables(scope='Decoder'), name='opt_minimize')
+            variables_dec = tf.trainable_variables(scope='Decoder') + opt.variables()
+            dec_saver = tf.train.Saver(var_list = variables_dec, max_to_keep=2)
         model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
         model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
 
@@ -114,9 +114,9 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             MeanCost += c
             MeanAcc += a
 
-            train_summary_writer.add_summary(merged, i)
+        train_summary_writer.add_summary(merged, i)
         print('Mean Encoder Accuracy: {:1.4f} Mean Cost: {:1.4f}   Mean Accuracy: {:1.4f}'.format(MeanEncAcc/i, MeanCost/i, MeanAcc/i))
-        if e % 100 == 0:
+        if e % 10 == 0:
             if model_type == 'convolution':
                 save_path = enc_saver.save(sess, build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec), global_step=e)
             elif model_type == 'deconvolution':
@@ -141,16 +141,6 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
 
 
 if __name__ == "__main__":
-
-    # Paramters
-    # --lr: learning rate
-    # --ws: window_size
-    # --l2_reg: l2_reg modifier
-    # --epoch: epoch
-    # --batch_size: batch size
-    # --model_type: model type
-    # --num_layers: number of convolution layers
-    # --data_type: MSRP or WikiQA data
 
     # default parameters
     params = {

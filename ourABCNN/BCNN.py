@@ -9,8 +9,7 @@ import numpy as np
 class ABCNN_conv():
     def __init__(self, lr, s, w, l2_reg, d0=300, di=50, num_layers=2):
         """
-        Implmenentaion of ABCNNs
-        (https://arxiv.org/pdf/1512.05193.pdf)
+        :param lr: learning rate
         :param s: sentence length
         :param w: filter width
         :param l2_reg: L2 regularization coefficient
@@ -110,13 +109,10 @@ class ABCNN_conv():
 class ABCNN_deconv():
     def __init__(self, lr, s, w, l2_reg, d0=300, di=50, num_layers=2):
         """
-        Implmenentaion of ABCNNs
-        (https://arxiv.org/pdf/1512.05193.pdf)
+        :param lr: learning rate
         :param s: sentence length
         :param w: filter width
         :param l2_reg: L2 regularization coefficient
-        :param model_type: Type of the network(BCNN, ABCNN1, ABCNN2, ABCNN3).
-        :param num_features: The number of pre-set features(not coming from CNN) used in the output layer.
         :param d0: dimensionality of word embedding(default: 300)
         :param di: The number of convolution kernels (default: 50)
         :param num_layers: The number of convolution layers.
@@ -125,34 +121,12 @@ class ABCNN_deconv():
         self.x = tf.placeholder(tf.float32, shape=[None, di, s, 1], name="x")
         self.y = tf.placeholder(tf.float32, shape=[None, d0, s], name="y")
 
-        # zero padding to inputs for wide convolution
-        def pad_for_wide_conv(x):
-            return tf.pad(x, np.array([[0, 0], [0, 0], [w - 1, w - 1], [0, 0]]), "CONSTANT", name="pad_wide_conv")
-
         def cos_sim(v1, v2, axis=None):
             norm1 = tf.sqrt(tf.reduce_sum(tf.square(v1), axis=axis))
             norm2 = tf.sqrt(tf.reduce_sum(tf.square(v2), axis=axis))
             dot_products = tf.reduce_sum(v1 * v2, axis=axis, name="cos_sim")
 
             return dot_products / (norm1 * norm2)
-
-        def w_pool(variable_scope, x):
-            with tf.variable_scope(variable_scope + "-w_pool"):
-                w_ap = tf.layers.average_pooling2d(
-                    inputs=x, pool_size=(1, w),
-                    strides=1, padding="VALID", name="w_ap")
-                return w_ap
-
-        def all_pool(variable_scope, x):
-            with tf.variable_scope(variable_scope + "-all_pool"):
-                if variable_scope.startswith("input"):
-                    pool_width, d = s, d0
-                else: pool_width, d = s + w - 1, di
-                all_ap = tf.layers.average_pooling2d(
-                    inputs=x, pool_size=(1, pool_width),
-                    strides=1, padding="VALID", name="all_ap")
-                all_ap_reshaped = tf.reshape(all_ap, [-1, d])
-                return all_ap_reshaped
 
         def deconvolution( x, d,reuse,trainable):
             # x = [batch, di, s, 1]
