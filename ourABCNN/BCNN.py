@@ -176,7 +176,7 @@ class ABCNN_deconv():
                 FC = tf.layers.dense(tf.reshape(DNNs[-1], [-1, di*s]), d0*s, activation=tf.nn.tanh,
                     kernel_initializer=tf.random_uniform_initializer(minval=-0.2, maxval=0.2),
                     bias_initializer=tf.constant_initializer(0.01), name="FullConn")
-                DO = tf.reshape(FC, [d0,s])
+                DO = tf.reshape(FC, [-1, d0,s])
                 DNNs.append(DO)
 
             with tf.variable_scope('Cost'):
