@@ -166,14 +166,14 @@ class ABCNN_deconv():
                         DI = DNN_layer(variable_scope="DNN-"+str(i+2), x=DNNs[i], d=di)
                         DNNs.append(DI)
                 #DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=DNNs[-1], d=d0)
-                FC = tf.layers.dense(tf.reshape(DNNs[-1], [-1, 50*50]), d0*s, activation=tf.nn.tanh,
+                FC = tf.layers.dense(tf.reshape(DNNs[-1], [-1, di*s]), d0*s, activation=tf.nn.tanh,
                     kernel_initializer=tf.random_uniform_initializer(minval=-0.2, maxval=0.2),
                     bias_initializer=tf.constant_initializer(0.01), name="FullConn")
                 DO = tf.reshape(FC, [d0,s])
                 DNNs.append(DO)
             else:
                 #DO = DNN_layer(variable_scope='DNN-'+str(num_layers-1), x=self.x, d=d0)
-                FC = tf.layers.dense(tf.reshape(DNNs[-1], [-1, 50*50]), d0*s, activation=tf.nn.tanh,
+                FC = tf.layers.dense(tf.reshape(DNNs[-1], [-1, di*s]), d0*s, activation=tf.nn.tanh,
                     kernel_initializer=tf.random_uniform_initializer(minval=-0.2, maxval=0.2),
                     bias_initializer=tf.constant_initializer(0.01), name="FullConn")
                 DO = tf.reshape(FC, [d0,s])
