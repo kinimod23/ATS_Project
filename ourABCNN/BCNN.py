@@ -165,10 +165,16 @@ class ABCNN_deconv():
                     for i in range(0, num_layers-2):
                         DI = DNN_layer(variable_scope="DNN-"+str(i+2), x=DNNs[i], d=di)
                         DNNs.append(DI)
-                DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=DNNs[-1], d=d0)
+                #DO = DNN_layer(variable_scope='DNN-'+str(num_layers), x=DNNs[-1], d=d0)
+                DO = tf.layers.dense(tf.reshape(DNNs[-1], [-1, 50*50]), 1024, activation=tf.nn.tanh,
+                    kernel_initializer=tf.random_uniform_initializer(minval=-0.2, maxval=0.2),
+                    bias_initializer=tf.constant_initializer(0.01), name="FullConn")
                 DNNs.append(DO)
             else:
-                DO = DNN_layer(variable_scope='DNN-'+str(num_layers-1), x=self.x, d=d0)
+                #DO = DNN_layer(variable_scope='DNN-'+str(num_layers-1), x=self.x, d=d0)
+                DO = tf.layers.dense(tf.reshape(DNNs[-1], [-1, 50*50]), 1024, activation=tf.nn.tanh,
+                    kernel_initializer=tf.random_uniform_initializer(minval=-0.2, maxval=0.2),
+                    bias_initializer=tf.constant_initializer(0.01), name="FullConn")
                 DNNs.append(DO)
 
             with tf.variable_scope('Cost'):

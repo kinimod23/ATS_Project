@@ -51,7 +51,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
                       num_layers=num_layers)
 
         model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
-        model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
+        model_path_old = build_path("./models/", data, 'BCNN', 3, 'convolution', word2vec)
 
         variables_enc = tf.trainable_variables(scope='Encoder')
         enc_saver = tf.train.Saver(var_list = variables_enc, max_to_keep=2)
@@ -64,7 +64,7 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
             nc_saver.restore(sess, model_path_old + "-" + str(1000))
         elif model_type == 'deconvolution':
             enc_saver.restore(sess, model_path_old + "-" + str(1000))
-            dec_saver.restore(sess, model_path + "-" + str(300))
+            dec_saver.restore(sess, model_path + "-" + str(170))
 
 
 ############################################################################
@@ -115,8 +115,6 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
             for sen in Sentences:
                 string = ''
                 for word in range(40):
-                    print(sen[0,:,word])
-                    #print(fasttext.wv.similar_by_vector(sen[0,:,word], topn=3))
                     string += fasttext.wv.similar_by_vector(sen[0,:,word], topn=1)[0][0] + ' '
                 string += '\n'
                 f.write(string)
