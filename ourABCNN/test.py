@@ -65,7 +65,9 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
         elif model_type == 'deconvolution':
             enc_saver.restore(sess, model_path_old + "-" + str(1000))
             dec_saver.restore(sess, model_path + "-" + str(170))
-
+        else:
+            enc_saver.restore(sess, model_path + "-" + str(240))
+            dec_saver.restore(sess, model_path + "-" + str(240))
 
 ############################################################################
 #########################     TRAINING     #################################
