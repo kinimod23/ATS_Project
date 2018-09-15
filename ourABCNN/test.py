@@ -16,9 +16,8 @@ def test(w, l2_reg, epoch, max_len, model_type, data, word2vec, num_layers, num_
 ############################################################################
 #########################   DATA LOADING   #################################
 ############################################################################
-    if model_type == 'convolution' or model_type == 'deconvolution': method = 'labeled'
-    else: method = 'unlabeled'
-    dumped = 'preprocessed_test_'+method+'_'+data+'_'+word2vec+'.pkl'
+    method = 'labeled'
+    dumped = 'preprocessed_train_'+method+'_'+data+'_'+word2vec+'.pkl'
     if word2vec == 'FastText': w2v = FastText()
     else: w2v = Word2Vec()
 
