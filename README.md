@@ -9,55 +9,8 @@
 * Convolutional NN (translation) https://github.com/tobyyouup/conv_seq2seq
 ----------------------------------------------------------------------------------------
 ## ToDo
-* statistics about data  ----------------> Dominik bis 23.08.
-  * how long are sentences (how many are lost if we cut at 50 words)
-  
-  cut at 40:
-  85.94% are remaining
-  
-  cut at 50:
-  94.18% are remaining
-  
-  
-  * how many sentences have 30%, 40%, 50% of words unknown to word2vec
-  (continued with cut at 40)
-  
-  10% unknown to word2vec:
-  0.47% remaining
-  
-  20% unknown to word2vec:
-  9.57% remaining
-  
-  30% unknown to word2vec:
-  41.20% remaining
-  
-  40% unknown to word2vec:
-  68.22% remaining
-  
-  50% unknown to word2vec:
-  79.77% remaining
-
-  
-  * how does this change with fasttext
-  
-  1% unknown to fasttext:
-  46.67% remaining
-  
-  5% unknown to fasttext:
-  54.69% remaining
-  
-  10% unknown to fasttext:
-  70.68% remaining
-  
-  20% unknown to fasttext:
-  82.86% remaining
-  
-  50% unknown to fasttext:
-  85.87% remaining
-
-  
-  
-* change test.py            ----------------> Simon bis 21.08.
+* statistics about data
+* change test.py          
   * ( creates output now )
 * now using fasttext...
  * train on different data ( Wikipedia Data )
@@ -65,7 +18,7 @@
   * (currently L2-Norm)
   * and also Cosine Similarity for End2End
   * maybe better another matrix similarity measure
-* Get deconvolution with pretrained model to work ------------------> Simon/Tim 26.08.
+* Get deconvolution with pretrained model to work
   * This is really a pain in the ass, i don't know how to do it
 
 ----------------------------------------------------------------------------------------
@@ -109,10 +62,11 @@
 *Recursive Neural Nets:*
 * Recursive Neural Networks with tree structure in Tensorflow -> [github](https://github.com/erickrf/treernn)
 
-#### Project Organisation
+#### Project Organisation (not up to date....)
 
 #### A short memorable project title.
-Convolutional Syntax Tree Translation
+Coupling a Bi-CNN Encoder and a CNN decoder
+to automatically simplify English Sentences
 
 #### What is the problem you want to address? How do you determine whether you have solved it?
 Taking syntax trees of complex sentences, we want to "translate" them into one or moresyntax trees of simpler sentences while keeping the meaning.

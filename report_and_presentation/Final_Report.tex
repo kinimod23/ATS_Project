@@ -1,0 +1,91 @@
+%%%%%%%%%%%%%%%%%%%%%%% file typeinst.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is the LaTeX source for the instructions to authors using
+% the LaTeX document class 'llncs.cls' for contributions to
+% the Lecture Notes in Computer Sciences series.
+% http://www.springer.com/lncs       Springer Heidelberg 2006/05/04
+%
+% It may be used as a template for your own input - copy it
+% to a new file with a new name and use it as the basis
+% for your article.
+%
+% NB: the document class 'llncs' has its own and detailed documentation, see
+% ftp://ftp.springer.de/data/pubftp/pub/tex/latex/llncs/latex2e/llncsdoc.pdf
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[runningheads,a4paper]{llncs}
+
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage{graphicx}
+
+\usepackage{url}
+\urldef{\mailsa}\path|{tpatzelt, dpfuetze, untergasser, sluytergaeth}@uni-potsdam.de|  
+\newcommand{\keywords}[1]{\par\addvspace\baselineskip
+\noindent\keywordname\enspace\ignorespaces#1}
+
+\begin{document}
+
+\mainmatter  % start of an individual contribution
+
+% first the title is needed
+\title{Automatic Text Simplification using a Siamese Convolutional Neural Network}
+
+% a short form should be given in case it is too long for the running head
+\titlerunning{Automatic Text Simplification using Siamese CNN}
+
+% the name(s) of the author(s) follow(s) next
+%
+\author{Tim Patzelt, Dominik Pfuetze, Henny Sluyter-Gaethje, Simon Untergasser%
+%\thanks{Potsdam University}
+%\thanks{Matr-Nr. 794769, }%
+}
+%
+\authorrunning{Automatic Text Simplification using Siamese CNN}
+% (feature abused for this document to repeat the title also on left hand pages)
+
+% the affiliations are given next; don't give your e-mail address
+% unless you accept that it will be published
+\institute{Potsdam University\\
+Matr.-Nr. 794948, 794948\\
+\mailsa
+}
+
+%
+% NB: a more complex sample for affiliations and the mapping to the
+% corresponding authors can be found in the file "llncs.dem"
+% (search for the string "\mainmatter" where a contribution starts).
+% "llncs.dem" accompanies the document class "llncs.cls".
+%
+
+\toctitle{Automatic Text Simplification using Siamese CNN}
+\maketitle
+
+
+\begin{abstract}
+Text simplification is the act of reducing the linguistic complexity of a text while preserving the information expressed in the text. Many approaches to perform this task
+automatically rely on the concept of neural machine translation. In our work we investigate whether having both a complex and a simple sentence as input for a neural network improves over networks having only one sentence as input. 
+
+\keywords{Text Simplification, Siamese Network, CNN}
+\end{abstract}
+
+
+\section{Introduction}
+\section{Related work}
+\section{Approach}
+\subsection{ABCNN}
+\subsection{Data and preprocessing}
+
+\subsection{Changes to the network}
+
+\section{Results}
+
+\section{Conclusion}
+
+\section{Future work}
+
+\bibliography{lit}
+\bibliographystyle{alpha}
+\end{document}
