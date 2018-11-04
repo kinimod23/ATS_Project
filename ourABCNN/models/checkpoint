@@ -1,2 +1,2 @@
-model_checkpoint_path: "Complex2Simple-ABCNN3-2-1"
-all_model_checkpoint_paths: "Complex2Simple-ABCNN3-2-1"
+model_checkpoint_path: "BCNN-End2End-2-FastText-Layers-100"
+all_model_checkpoint_paths: "BCNN-End2End-2-FastText-Layers-100"

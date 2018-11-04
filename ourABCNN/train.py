@@ -48,13 +48,13 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
     with tf.device("/gpu:0"):
 
         encoder = ABCNN_conv(lr=lr, s=train_data.max_len, w=w, l2_reg=l2_reg,
-                  num_layers=num_layers)
+                  num_layers=3)
 
         if model_type != 'convolution':
             decoder = ABCNN_deconv(lr=lr, s=train_data.max_len, w=w, l2_reg=l2_reg,
                       num_layers=num_layers)
 
-        opt = tf.train.AdamOptimizer(lr, name="optimizer")
+        opt = tf.train.AdagradOptimizer(lr, name="optimizer")
         optimizer_enc = opt.minimize(encoder.cost)
         variables_enc = tf.trainable_variables(scope='Encoder')
         enc_saver = tf.train.Saver(var_list = variables_enc, max_to_keep=2)
@@ -64,7 +64,7 @@ def train(lr, w, l2_reg, epoch, model_type, data, word2vec, batch_size, num_laye
             variables_dec = tf.trainable_variables(scope='Decoder') + opt.variables()
             dec_saver = tf.train.Saver(var_list = variables_dec, max_to_keep=2)
         model_path = build_path("./models/", data, 'BCNN', num_layers, model_type, word2vec)
-        model_path_old = build_path("./models/", data, 'BCNN', num_layers, 'convolution', word2vec)
+        model_path_old = build_path("./models/", data, 'BCNN', 3, 'convolution', word2vec)
 
         if model_type == 'convolution':
             init = tf.variables_initializer(variables_enc + opt.variables())
